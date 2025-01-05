@@ -11,7 +11,7 @@ export const orderService = {
         return response.data;
     },
     updateOrderStatus :async(orderId,status)=>{
-        const response = await Axios.patch(API_ENDPOINTS.orders.updateStatus(orderId),{status});
+        const response = await Axios.put(API_ENDPOINTS.orders.updateStatus(orderId),{status});
         return response.data;
     }
 }

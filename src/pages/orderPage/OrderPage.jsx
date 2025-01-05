@@ -1,33 +1,24 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; // React Query for data fetching
-import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import axios from "axios";
-import { useOrders } from "@/features/orders/hooks/useOrders";
-import { useUpdateOrderStatus } from "@/features/orders/hooks/useUpdateOrderStatus";
+import { useOrders, useUpdatateOrderStatus } from "@/features/orders/hooks/useOrders";
 
 export function OrderPage() {
 
-  const { data: orders, isLoading, error } = useOrders();
-  // const updateOrderStatus = useUpdateOrderStatus();
+  const { data: orders, isLoading, error, refetch } = useOrders();
+  const { mutate: updateStatus } = useUpdatateOrderStatus();
 
   if (isLoading) return <p>Loading orders...</p>;
   if (error) return <p>Error loading orders: {error.message}</p>;
 
-  // const handleStatusChange = (orderId, status) => {
-  //   if (!status) return;
-  //   updateOrderStatus.mutate({ orderId, status },
-  //     {
-  //       onError: (error) => {
-  //         alert(`Error: ${error.message}`);
-  //       },
-  //       onSuccess: () => {
-  //         alert("Order status updated successfully.");
-  //       }
-  //     }
-  //   );
-  // };
+  const handleStatusChange = (orderId, status) => {
+    if (!status) return;
+    updateStatus({ orderId, status }, {
+      onSuccess: () => {
+        refetch();
+      }
+    });
+  };
 
   return (
     <div className="space-y-4">
@@ -40,9 +31,10 @@ export function OrderPage() {
             <TableHead>Order ID</TableHead>
             <TableHead>Customer Name</TableHead>
             <TableHead>Order Date</TableHead>
-            <TableHead>Status</TableHead>
+            <TableHead>Payment Status</TableHead>
+            <TableHead>Order Status</TableHead>
             <TableHead>Total Amount</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead>Update Order Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -52,6 +44,11 @@ export function OrderPage() {
               <TableCell>{order.shipping_address.full_name}</TableCell>
               <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
               <TableCell>
+                <Badge variant={order.payment.status === "Pending" ? "warning" : "success"}>
+                  {order.payment.status}
+                </Badge>
+              </TableCell>
+              <TableCell>
                 <Badge variant={order.status === "Pending" ? "warning" : "success"}>
                   {order.status}
                 </Badge>
@@ -60,13 +57,14 @@ export function OrderPage() {
               <TableCell>
                 <Select onValueChange={(status) => handleStatusChange(order._id, status)}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Update Status" />
+                    <SelectValue placeholder="Update" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Pending">Pending</SelectItem>
+                    <SelectItem value="Processing">Processing</SelectItem>
                     <SelectItem value="Shipped">Shipped</SelectItem>
                     <SelectItem value="Delivered">Delivered</SelectItem>
-                    <SelectItem value="Canceled">Canceled</SelectItem>
+                    <SelectItem value="Cancelled">Cancelled</SelectItem>
                   </SelectContent>
                 </Select>
               </TableCell>

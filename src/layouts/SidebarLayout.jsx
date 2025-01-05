@@ -1,4 +1,4 @@
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
 import { AppSidebar } from "@/components/common/app-sidebar";
 
@@ -15,6 +15,7 @@ export default function SideBarLayout() {
           <header className="sticky top-0 z-50 w-full h-14 bg-background/95 border-b backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="flex h-full items-center px-4 justify-between">
               {/* Add Header Content Here */}
+              <SidebarTrigger />
               <h1 className="text-lg font-semibold">Dashboard</h1>
               <button className="text-muted-foreground hover:text-primary">
                 Logout

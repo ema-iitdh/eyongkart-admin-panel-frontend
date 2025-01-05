@@ -16,6 +16,7 @@ export default function AppRoutes() {
                     <Route element={<SideBarLayout />}>
                         <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
                         <Route path={ROUTES.ORDERPAGE} element={<OrderPage />} />
+                        {/* <Route path={ROUTES.SPECIFICORDER} element={<OrderDetails />} /> */}
                     </Route>
                 </Route>
 

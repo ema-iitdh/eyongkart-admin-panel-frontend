@@ -1,5 +1,5 @@
 import { orderService } from "@/api/services/order.service"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 
 export const useOrders = () => {
     return useQuery({
@@ -8,3 +8,10 @@ export const useOrders = () => {
         select:(data)=>data.orders,
     });
 };
+
+export const useUpdatateOrderStatus = () => {
+    return useMutation({
+        mutationKey: ["order"],
+        mutationFn: ({ orderId, status }) => orderService.updateOrderStatus(orderId, status),
+    })
+}

@@ -5,6 +5,11 @@ export const ROUTES = {
     SIGNUP: '/signup',
     ORDERPAGE: '/dashboard/orders',
     SPECIFICORDER: '/dashboard/orders/:orderId',
+    ALLCUSTOMERS: '/dashboard/customers',
+    SPECIFICCUSTOMER: '/dashboard/customers/:customerId',
+    ALLCATEGORIES: '/dashboard/categories/',
+    SPECIFICCATEGORY: '/dashboard/categories/:categoryId',
+    EDITCATEGORY: '/dashboard/categories/:categoryId/edit',
     
     COLLECTIONS: '/collections',
     COLLECTIONS_PRODUCTS: '/collections/:title',

@@ -7,6 +7,12 @@ import Signup from "@/pages/auth/Signup";
 import Dashboard from "@/pages/dashboard/Dashboard";
 import SideBarLayout from "@/layouts/SidebarLayout";
 import { OrderPage } from "@/pages/orderPage/OrderPage";
+import { OrderDetail } from "@/pages/orderDetail/OrderDetail"
+import CustomerPage from "@/pages/customerPage/CustomerPage";
+import CustomerDetail from "@/pages/customerDetail/CustomerDetail";
+import CategoryPage from "@/pages/categoryPage/CategoryPage";
+import CategoryDetail from "@/pages/categoryDetail/CategoryDetail";
+import CategoryUpdate from "@/pages/categoryUpdate/CategoryUpdate";
 
 export default function AppRoutes() {
     return (
@@ -16,7 +22,12 @@ export default function AppRoutes() {
                     <Route element={<SideBarLayout />}>
                         <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
                         <Route path={ROUTES.ORDERPAGE} element={<OrderPage />} />
-                        {/* <Route path={ROUTES.SPECIFICORDER} element={<OrderDetails />} /> */}
+                        <Route path={ROUTES.SPECIFICORDER} element={<OrderDetail />} />
+                        <Route path={ROUTES.ALLCUSTOMERS} element={<CustomerPage />} />
+                        <Route path={ROUTES.SPECIFICCUSTOMER} element={<CustomerDetail />} />
+                        <Route path={ROUTES.ALLCATEGORIES} element={<CategoryPage />} />
+                        <Route path={ROUTES.SPECIFICCATEGORY} element={<CategoryDetail />} />
+                        <Route path={ROUTES.EDITCATEGORY} element={<CategoryUpdate />} />
                     </Route>
                 </Route>
 

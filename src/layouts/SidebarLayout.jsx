@@ -1,11 +1,11 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { Outlet } from "react-router-dom";
-import { AppSidebar } from "@/components/common/app-sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { Outlet } from "react-router-dom"
+import { AppSidebar } from "@/components/common/app-sidebar"
 
 export default function SideBarLayout() {
   return (
     <SidebarProvider>
-      <div className="flex h-screen w-full">
+      <div className="flex min-h-screen w-full">
         {/* Sidebar */}
         <AppSidebar />
 
@@ -14,7 +14,6 @@ export default function SideBarLayout() {
           {/* Header */}
           <header className="sticky top-0 z-50 w-full h-14 bg-background/95 border-b backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="flex h-full items-center px-4 justify-between">
-              {/* Add Header Content Here */}
               <SidebarTrigger />
               <h1 className="text-lg font-semibold">Dashboard</h1>
               <button className="text-muted-foreground hover:text-primary">
@@ -24,11 +23,14 @@ export default function SideBarLayout() {
           </header>
 
           {/* Main Outlet (Dashboard Content) */}
-          <main className="flex-1 p-6 bg-background">
-            <Outlet />
+          <main className="flex-1 overflow-auto bg-background">
+            <div className="container mx-auto p-6">
+              <Outlet />
+            </div>
           </main>
         </div>
       </div>
     </SidebarProvider>
-  );
+  )
 }
+

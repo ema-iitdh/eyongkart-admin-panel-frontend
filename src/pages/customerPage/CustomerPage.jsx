@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useOrders, useUpdatateOrderStatus } from "@/features/orders/hooks/useOrders";
+
 import {
   Table,
   TableBody,
@@ -9,14 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -28,88 +20,53 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { OrderStatus } from "@/constants";
+import { useGetAllCustomers } from "@/features/customer/hooks/useCustomer";
 import { Loader } from "@/components/common/loader";
 
-
-export function OrderPage() {
+export function CustomerPage() {
   const navigate = useNavigate();
-  const { data: orders = [], isLoading, error, refetch } = useOrders();
-  const { mutate: updateStatus } = useUpdatateOrderStatus();
+  const { data: customers = [], isLoading, error } = useGetAllCustomers();
   const [sorting, setSorting] = React.useState([]);
   const [globalFilter, setGlobalFilter] = React.useState("");
 
-  const handleStatusChange = (e, orderId, status) => {
-    e.stopPropagation(); // Prevent row click when changing status
-    if (!status) return;
-    updateStatus(
-      { orderId, status },
-      {
-        onSuccess: () => {
-          refetch();
-        },
-      }
-    );
-  };
-
+  // Define columns for customer data
   const columns = [
     {
       accessorKey: "_id",
-      header: "Order ID",
+      header: "Customer ID",
     },
     {
-      accessorKey: "shipping_address.full_name",
-      header: "Customer Name",
+      accessorKey: "userName",
+      header: "Name",
     },
     {
-      accessorKey: "createdAt",
-      header: "Order Date",
-      cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
+      accessorKey: "email",
+      header: "Email",
     },
     {
-      accessorKey: "payment.status",
-      header: "Payment Status",
-      cell: ({ row }) => (
-        <Badge
-          variant={
-            row.original.payment.status === "Pending" ? "warning" : "success"
-          }
-        >
-          {row.original.payment.status}
-        </Badge>
-      ),
+      accessorKey: "phone",
+      header: "Phone",
+      cell: ({ row }) => row.original.phone || "N/A",
     },
     {
-      accessorKey: "amount",
-      header: "Total Amount",
-      cell: ({ row }) => `₹${row.original.amount.toFixed(2)}`,
+      accessorKey: "address",
+      header: "Default Address",
+      cell: ({ row }) => {
+        const defaultAddress = row.original.address.find((addr) => addr.isDefault);
+        return defaultAddress
+          ? `${defaultAddress.address}, ${defaultAddress.district}, ${defaultAddress.state} - ${defaultAddress.pincode}`
+          : "No address";
+      },
     },
     {
-      accessorKey: "status",
-      header: "Order Status",
-      cell: ({ row }) => (
-        <Select
-          onValueChange={(status) =>
-            handleStatusChange(event, row.original._id, status)
-          }
-        >
-          <SelectTrigger>
-            <SelectValue placeholder={row.original.status} />
-          </SelectTrigger>
-          <SelectContent>
-            {Object.keys(OrderStatus).map((status) => (
-              <SelectItem key={status} value={status}>
-                {status}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      ),
+      accessorKey: "cart",
+      header: "Cart Items",
+      cell: ({ row }) => row.original.cart.length,
     },
   ];
 
   const table = useReactTable({
-    data: orders,
+    data: customers,
     columns,
     state: {
       sorting,
@@ -124,21 +81,21 @@ export function OrderPage() {
   });
 
   if (isLoading) return <Loader />
-  if (error) return <p>Error loading orders: {error.message}</p>;
+  if (error) return <p>Error loading customers: {error.message}</p>;
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">All Orders</h1>
+        <h1 className="text-xl font-semibold">All Customers</h1>
         <Input
-          placeholder="Search orders..."
+          placeholder="Search customers..."
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
           className="max-w-sm"
         />
       </div>
 
-      <div className="rounded-lg border shadow-2xl">
+      <div className="rounded-md border shadow-2xl">
         <Table>
           <TableHeader className="bg-gray-200">
             {table.getHeaderGroups().map((headerGroup) => (
@@ -158,10 +115,8 @@ export function OrderPage() {
                           header.column.columnDef.header,
                           header.getContext()
                         )}
-                        {{
-                          asc: <ChevronUp className="w-4 h-4" />,
-                          desc: <ChevronDown className="w-4 h-4" />,
-                        }[header.column.getIsSorted()] ?? null}
+                        {header.column.getIsSorted() === "asc" && <ChevronUp className="w-4 h-4" />}
+                        {header.column.getIsSorted() === "desc" && <ChevronDown className="w-4 h-4" />}
                       </div>
                     )}
                   </TableHead>
@@ -173,7 +128,7 @@ export function OrderPage() {
             {table.getRowModel().rows.map((row) => (
               <TableRow 
                 key={row.id}
-                onClick={() => navigate(`/dashboard/orders/${row.original._id}`)}
+                onClick={() => navigate(`/dashboard/customers/${row.original._id}`)}
                 className="cursor-pointer hover:bg-muted/50"
               >
                 {row.getVisibleCells().map((cell) => (
@@ -194,7 +149,7 @@ export function OrderPage() {
             table.getState().pagination.pageSize * (table.getState().pagination.pageIndex + 1),
             table.getFilteredRowModel().rows.length
           )}{" "}
-          of {table.getFilteredRowModel().rows.length} orders
+          of {table.getFilteredRowModel().rows.length} customers
         </div>
         <div className="space-x-2">
           <Button
@@ -219,4 +174,4 @@ export function OrderPage() {
   );
 }
 
-export default OrderPage;
+export default CustomerPage;

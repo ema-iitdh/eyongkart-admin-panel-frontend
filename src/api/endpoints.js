@@ -24,6 +24,7 @@ export const API_ENDPOINTS = {
     },
     categories: {
       list: (filter) => `/category/get-all?${filter}`,
+      getAll: '/category/get-all',
       // !!! FOR ADMIN ONLY
       add: '/category/create',
       update: (categoryId) => `/category/update/${categoryId}`,
@@ -82,5 +83,8 @@ export const API_ENDPOINTS = {
       // !! Implement this ASAP
       list: '/shop/getAllShops',
     },
+    customer: {
+      getAllCustomer: '/user/getAllCustomers'
+    }
   };
   

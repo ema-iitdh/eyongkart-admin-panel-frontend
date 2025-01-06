@@ -19,7 +19,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Eye } from "lucide-react";
 import {
   flexRender,
   getCoreRowModel,
@@ -38,18 +38,24 @@ export function OrderPage() {
   const [sorting, setSorting] = React.useState([]);
   const [globalFilter, setGlobalFilter] = React.useState("");
 
-  const handleStatusChange = React.useCallback((e, orderId, status) => {
-    e.stopPropagation(); // Prevent row click when changing status
-    if (!status) return;
-    updateStatus(
-      { orderId, status },
-      {
-        onSuccess: () => {
-          refetch();
-        },
-      }
-    );
-  }, [updateStatus, refetch]);
+  const handleViewOrder = (orderId) => {
+    navigate(`/dashboard/orders/${orderId}`)
+  }
+  const handleStatusChange = React.useCallback(
+    (e, orderId, status) => {
+      e.stopPropagation(); // Prevent event bubbling
+      if (!status) return;
+      updateStatus(
+        { orderId, status },
+        {
+          onSuccess: () => {
+            refetch();
+          },
+        }
+      );
+    },
+    [updateStatus, refetch]
+  );
 
   const columns = React.useMemo(
     () => [
@@ -106,8 +112,23 @@ export function OrderPage() {
           </Select>
         ),
       },
+      {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="flex items-center gap-2"
+            onClick={() => navigate(`/dashboard/orders/${row.original._id}`)}
+          >
+            <Eye className="w-4 h-4" />
+            View
+          </Button>
+        ),
+      },
     ],
-    [handleStatusChange]
+    [handleStatusChange, navigate]
   );
 
   const table = useReactTable({
@@ -149,7 +170,7 @@ export function OrderPage() {
           {/* Mobile view */}
           <div className="md:hidden space-y-4">
             {filteredRows.map((row) => (
-              <div key={row.id} className="bg-white rounded-lg shadow-2xl p-4">
+              <div key={row.id} className="bg-white rounded-lg shadow-md p-4">
                 <h3 className="font-semibold text-lg mb-2">
                   Order ID: {row.original._id}
                 </h3>
@@ -163,9 +184,9 @@ export function OrderPage() {
                   Payment Status:{" "}
                   <Badge
                     variant={
-                      row.original.payment.status === "Pending"
-                        ? "destructive"
-                        : "success"
+                      row.original.payment.status === "Paid"
+                        ? "success"
+                        : "destructive"
                     }
                   >
                     {row.original.payment.status}
@@ -174,28 +195,11 @@ export function OrderPage() {
                 <p className="text-sm text-gray-600 mb-1">
                   Amount: ₹{row.original.amount.toFixed(2)}
                 </p>
-                <div className="mb-2">
-                  <Select
-                    onValueChange={(status) =>
-                      handleStatusChange(event, row.original._id, status)
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder={row.original.status} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.keys(OrderStatus).map((status) => (
-                        <SelectItem key={status} value={status}>
-                          {status}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Button
-                  className="w-full"
-                  onClick={() => navigate(`/dashboard/orders/${row.original._id}`)}
+                <Button 
+                  className="w-full flex items-center justify-center gap-2"
+                  onClick={() => handleViewOrder(row.original._id)}
                 >
+                  <Eye className="w-4 h-4" />
                   View Details
                 </Button>
               </div>
@@ -203,10 +207,10 @@ export function OrderPage() {
           </div>
 
           {/* Desktop view */}
-          <div className="rounded-lg border shadow-2xl overflow-hidden hidden md:block">
+          <div className="rounded-md border shadow-md overflow-hidden hidden md:block">
             <div className="overflow-x-auto">
               <Table>
-                <TableHeader className="bg-gray-200">
+                <TableHeader>
                   {table.getHeaderGroups().map((headerGroup) => (
                     <TableRow key={headerGroup.id}>
                       {headerGroup.headers.map((header) => (
@@ -239,11 +243,7 @@ export function OrderPage() {
                 </TableHeader>
                 <TableBody>
                   {filteredRows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      onClick={() => navigate(`/dashboard/orders/${row.original._id}`)}
-                      className="cursor-pointer hover:bg-muted/50"
-                    >
+                    <TableRow key={row.id} className="hover:bg-gray-50">
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id} className="whitespace-nowrap">
                           {flexRender(

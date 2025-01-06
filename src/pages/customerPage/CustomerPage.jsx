@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, Eye } from "lucide-react";
 import {
   flexRender,
   getCoreRowModel,
@@ -28,6 +28,7 @@ export function CustomerPage() {
   const [sorting, setSorting] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
 
+  // Columns for the table
   const columns = [
     {
       accessorKey: "_id",
@@ -62,6 +63,24 @@ export function CustomerPage() {
       accessorKey: "cart",
       header: "Cart Items",
       cell: ({ row }) => row.original.cart?.length || 0,
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="flex items-center gap-2"
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent event bubbling
+            navigate(`/dashboard/customers/${row.original._id}`);
+          }}
+        >
+          <Eye className="w-4 h-4" />
+          View
+        </Button>
+      ),
     },
   ];
 
@@ -104,31 +123,34 @@ export function CustomerPage() {
           {/* Mobile view */}
           <div className="md:hidden space-y-4">
             {filteredRows.map((row) => (
-              <div key={row.id} className="bg-white rounded-lg shadow-2xl drop-shadow-2xl p-4">
+              <div key={row.id} className="bg-white rounded-lg shadow-md p-4">
                 <h3 className="font-semibold text-lg mb-2">{row.original.userName}</h3>
                 <p className="text-sm text-gray-600 mb-1">ID: {row.original._id}</p>
                 <p className="text-sm text-gray-600 mb-1">{row.original.email}</p>
                 <p className="text-sm text-gray-600 mb-1">Phone: {row.original.phone || "N/A"}</p>
                 <p className="text-sm text-gray-600 mb-1">Cart Items: {row.original.cart?.length || 0}</p>
-                <Button 
-                  className="mt-2" 
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="flex items-center gap-2 mt-2"
                   onClick={() => navigate(`/dashboard/customers/${row.original._id}`)}
                 >
-                  View Details
+                  <Eye className="w-4 h-4" />
+                  View
                 </Button>
               </div>
             ))}
           </div>
 
           {/* Desktop view */}
-          <div className="rounded-md border shadow-2xl overflow-hidden hidden md:block">
+          <div className="rounded-md border shadow-md overflow-hidden hidden md:block">
             <div className="overflow-x-auto custom-scrollbar">
               <Table>
-                <TableHeader className="bg-gray-200">
+                <TableHeader>
                   {table.getHeaderGroups().map((headerGroup) => (
                     <TableRow key={headerGroup.id}>
                       {headerGroup.headers.map((header) => (
-                        <TableHead key={header.id} className="whitespace-nowrap">
+                        <TableHead key={header.id}>
                           {header.isPlaceholder ? null : (
                             <div
                               className={
@@ -138,10 +160,7 @@ export function CustomerPage() {
                               }
                               onClick={header.column.getToggleSortingHandler()}
                             >
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
+                              {flexRender(header.column.columnDef.header, header.getContext())}
                               {header.column.getIsSorted() === "asc" && <ChevronUp className="w-4 h-4" />}
                               {header.column.getIsSorted() === "desc" && <ChevronDown className="w-4 h-4" />}
                             </div>
@@ -153,13 +172,9 @@ export function CustomerPage() {
                 </TableHeader>
                 <TableBody>
                   {filteredRows.map((row) => (
-                    <TableRow 
-                      key={row.id}
-                      onClick={() => navigate(`/dashboard/customers/${row.original._id}`)}
-                      className="cursor-pointer hover:bg-muted/50"
-                    >
+                    <TableRow key={row.id} className="hover:bg-gray-50">
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id} className="whitespace-nowrap">
+                        <TableCell key={cell.id}>
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </TableCell>
                       ))}

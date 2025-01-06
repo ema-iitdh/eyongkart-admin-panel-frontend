@@ -17,10 +17,13 @@ export const ROUTES = {
     SEARCH_RESULTS: '/search/:searchTerm',
     ABOUT: '/about',
     CART: '/cart',
+
     PRODUCT: {
-      LIST: '/product',
-      DETAIL: ':productId',
+      LIST: '/dashboard/products',
+      DETAIL: '/dashboard/products/:productId',
+
     },
+
     SORTED: '/sorted/:categoryId/:subcategoryId?',
     CATEGORY: '/category',
     CHECKOUT_FROM_CART: '/checkout',

@@ -13,6 +13,8 @@ import CustomerDetail from "@/pages/customerDetail/CustomerDetail";
 import CategoryPage from "@/pages/categoryPage/CategoryPage";
 import CategoryDetail from "@/pages/categoryDetail/CategoryDetail";
 import CategoryUpdate from "@/pages/categoryUpdate/CategoryUpdate";
+import { ProductPage } from "@/pages/productPage/ProductPage";
+import ProductDetail from "@/pages/productDetail/ProductDetail";
 
 export default function AppRoutes() {
     return (
@@ -28,6 +30,8 @@ export default function AppRoutes() {
                         <Route path={ROUTES.ALLCATEGORIES} element={<CategoryPage />} />
                         <Route path={ROUTES.SPECIFICCATEGORY} element={<CategoryDetail />} />
                         <Route path={ROUTES.EDITCATEGORY} element={<CategoryUpdate />} />
+                        <Route path={ROUTES.PRODUCT.LIST} element={<ProductPage />} />
+                        <Route path={ROUTES.PRODUCT.DETAIL} element={<ProductDetail />} />
                     </Route>
                 </Route>
 

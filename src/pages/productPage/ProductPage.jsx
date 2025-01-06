@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useOrders, useUpdatateOrderStatus } from "@/features/orders/hooks/useOrders";
+import { useProducts } from "@/features/products/hooks/useProducts";
 import {
   Table,
   TableBody,
@@ -9,14 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -28,90 +20,82 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { OrderStatus } from "@/constants";
 import { Loader } from "@/components/common/loader";
 
-export function OrderPage() {
+export function ProductPage() {
   const navigate = useNavigate();
-  const { data: orders = [], isLoading, error, refetch } = useOrders();
-  const { mutate: updateStatus } = useUpdatateOrderStatus();
+  const [page, setPage] = React.useState(() => {
+    const savedPage = sessionStorage.getItem("currentPage");
+    return savedPage ? parseInt(savedPage, 10) : 1;
+  });
   const [sorting, setSorting] = React.useState([]);
   const [globalFilter, setGlobalFilter] = React.useState("");
+  const limit = 100;
 
-  const handleStatusChange = React.useCallback((e, orderId, status) => {
-    e.stopPropagation(); // Prevent row click when changing status
-    if (!status) return;
-    updateStatus(
-      { orderId, status },
-      {
-        onSuccess: () => {
-          refetch();
-        },
-      }
-    );
-  }, [updateStatus, refetch]);
+  React.useEffect(() => {
+    sessionStorage.setItem("currentPage", page.toString());
+  }, [page]);
+
+  const { 
+    data = { products: [], pagination: {} }, 
+    isLoading, 
+    error 
+  } = useProducts({ 
+    filter: `page=${page}&limit=${limit}` 
+  });
+
+  const products = data.products;
+  const {
+    currentPage,
+    totalPages,
+    hasNextPage,
+    hasPrevPage,
+  } = data.pagination;
 
   const columns = React.useMemo(
     () => [
       {
         accessorKey: "_id",
-        header: "Order ID",
-      },
-      {
-        accessorKey: "shipping_address.full_name",
-        header: "Customer Name",
-      },
-      {
-        accessorKey: "createdAt",
-        header: "Order Date",
-        cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
-      },
-      {
-        accessorKey: "payment.status",
-        header: "Payment Status",
+        header: "Product ID",
         cell: ({ row }) => (
-          <Badge
-            variant={
-              row.original.payment.status === "Pending" ? "destructive" : "success"
-            }
-          >
-            {row.original.payment.status}
-          </Badge>
+          <div className="font-medium">{row.original._id}</div>
         ),
       },
       {
-        accessorKey: "amount",
-        header: "Total Amount",
-        cell: ({ row }) => `₹${row.original.amount.toFixed(2)}`,
+        accessorKey: "name",
+        header: "Product Name",
       },
       {
-        accessorKey: "status",
-        header: "Order Status",
-        cell: ({ row }) => (
-          <Select
-            onValueChange={(status) =>
-              handleStatusChange(event, row.original._id, status)
-            }
-          >
-            <SelectTrigger>
-              <SelectValue placeholder={row.original.status} />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.keys(OrderStatus).map((status) => (
-                <SelectItem key={status} value={status}>
-                  {status}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        ),
+        accessorKey: "productquantity",
+        header: "Product Quantity",
+        cell: ({ row }) => row.original.productquantity || 0,
+      },
+      {
+        accessorKey: "price",
+        header: "Price/item",
+        cell: ({ row }) => `₹${row.original.price.toFixed(2)}`,
+      },
+      {
+        accessorKey: "discount",
+        header: "Discount",
+        cell: ({ row }) => `${row.original.discount}%`,
+      },
+      {
+        accessorKey: "discountedPrice",
+        header: "Discounted Price",
+        cell: ({ row }) => `₹${row.original.discountedPrice.toFixed(2)}`,
+      },
+      {
+        accessorKey: "gender",
+        header: "Gender",
+        cell: ({ row }) => row.original.gender || "Unisex",
       },
     ],
-    [handleStatusChange]
+    []
   );
 
   const table = useReactTable({
-    data: orders,
+    data: products,
     columns,
     state: {
       sorting,
@@ -126,16 +110,16 @@ export function OrderPage() {
   });
 
   if (isLoading) return <Loader />;
-  if (error) return <div className="text-red-500">Error loading orders: {error.message}</div>;
+  if (error) return <div className="text-red-500">Error loading products: {error.message}</div>;
 
   const filteredRows = table.getRowModel().rows;
 
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <h1 className="text-xl font-semibold">All Orders</h1>
+        <h1 className="text-xl font-semibold">All Products</h1>
         <Input
-          placeholder="Search orders..."
+          placeholder="Search products..."
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
           className="max-w-sm"
@@ -143,7 +127,7 @@ export function OrderPage() {
       </div>
 
       {filteredRows.length === 0 ? (
-        <div className="text-center py-4">No orders found</div>
+        <div className="text-center py-4">No products found</div>
       ) : (
         <>
           {/* Mobile view */}
@@ -151,50 +135,29 @@ export function OrderPage() {
             {filteredRows.map((row) => (
               <div key={row.id} className="bg-white rounded-lg shadow-2xl p-4">
                 <h3 className="font-semibold text-lg mb-2">
-                  Order ID: {row.original._id}
+                  {row.original.name}
                 </h3>
                 <p className="text-sm text-gray-600 mb-1">
-                  Customer: {row.original.shipping_address.full_name}
+                  ID: {row.original._id}
                 </p>
                 <p className="text-sm text-gray-600 mb-1">
-                  Date: {new Date(row.original.createdAt).toLocaleDateString()}
+                  Quantity: {row.original.productquantity || 0}
                 </p>
-                <div className="text-sm text-gray-600 mb-1">
-                  Payment Status:{" "}
-                  <Badge
-                    variant={
-                      row.original.payment.status === "Pending"
-                        ? "destructive"
-                        : "success"
-                    }
-                  >
-                    {row.original.payment.status}
-                  </Badge>
-                </div>
                 <p className="text-sm text-gray-600 mb-1">
-                  Amount: ₹{row.original.amount.toFixed(2)}
+                  Price: ₹{row.original.price.toFixed(2)}
                 </p>
-                <div className="mb-2">
-                  <Select
-                    onValueChange={(status) =>
-                      handleStatusChange(event, row.original._id, status)
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder={row.original.status} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.keys(OrderStatus).map((status) => (
-                        <SelectItem key={status} value={status}>
-                          {status}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                <p className="text-sm text-gray-600 mb-1">
+                  Discount: {row.original.discount}%
+                </p>
+                <p className="text-sm text-gray-600 mb-1">
+                  Final Price: ₹{row.original.discountedPrice.toFixed(2)}
+                </p>
+                <p className="text-sm text-gray-600 mb-2">
+                  Gender: {row.original.gender || "Unisex"}
+                </p>
                 <Button
                   className="w-full"
-                  onClick={() => navigate(`/dashboard/orders/${row.original._id}`)}
+                  onClick={() => navigate(`/dashboard/products/${row.original._id}`)}
                 >
                   View Details
                 </Button>
@@ -241,7 +204,7 @@ export function OrderPage() {
                   {filteredRows.map((row) => (
                     <TableRow
                       key={row.id}
-                      onClick={() => navigate(`/dashboard/orders/${row.original._id}`)}
+                      onClick={() => navigate(`/dashboard/products/${row.original._id}`)}
                       className="cursor-pointer hover:bg-muted/50"
                     >
                       {row.getVisibleCells().map((cell) => (
@@ -262,35 +225,35 @@ export function OrderPage() {
       )}
 
       <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 sm:space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground text-center sm:text-left">
-          Showing {table.getState().pagination.pageSize * table.getState().pagination.pageIndex + 1} to{" "}
-          {Math.min(
-            table.getState().pagination.pageSize * (table.getState().pagination.pageIndex + 1),
-            table.getFilteredRowModel().rows.length
-          )}{" "}
-          of {table.getFilteredRowModel().rows.length} orders
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+              <div className="flex-1 text-sm text-muted-foreground text-center sm:text-left">
+                Showing {table.getState().pagination.pageSize * table.getState().pagination.pageIndex + 1} to{" "}
+                {Math.min(
+                  table.getState().pagination.pageSize * (table.getState().pagination.pageIndex + 1),
+                  table.getFilteredRowModel().rows.length
+                )}{" "}
+                of {table.getFilteredRowModel().rows.length} orders
+              </div>
+              <div className="space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => table.previousPage()}
+                  disabled={!table.getCanPreviousPage()}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => table.nextPage()}
+                  disabled={!table.getCanNextPage()}
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
     </div>
   );
 }
 
-export default OrderPage;
+export default ProductPage;

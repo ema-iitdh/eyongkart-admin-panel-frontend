@@ -20,6 +20,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Loader } from "@/components/common/loader";
+import { ROUTES } from "@/constants/routes";
 
 // Custom debounce hook
 const useDebounce = (value, delay) => {
@@ -168,13 +169,21 @@ export function ProductPage() {
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <h1 className="text-xl font-semibold">All Products</h1>
         <div className="relative w-full max-w-sm">
-          <Input
-            ref={searchInputRef} // Attach ref to the input
-            placeholder="Search products..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-            className="w-full"
-          />
+          <div className="flex gap-x-2">
+            <Button 
+            className="border border-input bg-green-500 shadow-sm hover:bg-green-400 text-white"
+            onClick={() => navigate(ROUTES.PRODUCT.CREATE)}
+            >
+              Create a product
+            </Button>
+            <Input
+              ref={searchInputRef} // Attach ref to the input
+              placeholder="Search products..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="w-full"
+            />
+          </div>
           {isLoading && debouncedSearchTerm && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2">
               <Loader className="w-4 h-4" />

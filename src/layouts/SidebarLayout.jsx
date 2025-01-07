@@ -4,9 +4,11 @@ import { Outlet } from "react-router-dom"
 import { AppSidebar } from "@/components/common/app-sidebar"
 import { Button } from "@/components/ui/button"
 import { Menu } from 'lucide-react'
+import { useLogout } from "@/features/auth/hooks/useAuth"
 
 export default function SideBarLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { mutate: logout, isPending } = useLogout();
 
   useEffect(() => {
     const handleResize = () => {
@@ -43,7 +45,10 @@ export default function SideBarLayout() {
                 <SidebarTrigger className="hidden md:inline-flex" />
               </div>
               <h1 className="text-lg font-semibold">Dashboard</h1>
-              <button className="text-muted-foreground hover:text-primary">
+              <button className="text-muted-foreground hover:text-primary"
+              onClick={() => logout()}
+              disabled={isPending}
+              >
                 Logout
               </button>
             </div>

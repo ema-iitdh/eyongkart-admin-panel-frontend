@@ -78,7 +78,7 @@ export function OrderPage() {
         cell: ({ row }) => (
           <Badge
             variant={
-              row.original.payment.status === "Pending" ? "destructive" : "success"
+              row.original.payment.status === "Paid" ? "success" : "destructive"
             }
           >
             {row.original.payment.status}

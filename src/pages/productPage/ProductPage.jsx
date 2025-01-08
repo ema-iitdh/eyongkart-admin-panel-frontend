@@ -94,8 +94,7 @@ export function ProductPage() {
     setSearchTerm(e.target.value);
   };
 
-  const columns = React.useMemo(
-    () => [
+  const columns =[
       {
         accessorKey: "name",
         header: "Product Name",
@@ -143,9 +142,7 @@ export function ProductPage() {
           </Button>
         ),
       },
-    ],
-    []
-  );
+    ]
 
   const table = useReactTable({
     data: products,
@@ -172,7 +169,7 @@ export function ProductPage() {
           <div className="flex gap-x-2">
             <Button 
             className="border border-input bg-green-500 shadow-sm hover:bg-green-400 text-white"
-            onClick={() => navigate(ROUTES.PRODUCT.CREATE)}
+            onClick={() => navigate(ROUTES.PRODUCT.CREATE )}
             >
               Create a product
             </Button>

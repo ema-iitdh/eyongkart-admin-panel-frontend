@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import { ROUTES } from "../constants/routes";
 import ProtectedRoute from "./ProtectedRoutes";
 import Login from "@/pages/super_admin/auth/Login";
+import Signup from "@/pages/super_admin/auth/Signup";
 import Dashboard from "@/pages/super_admin/dashboard/Dashboard";
 import SideBarLayout from "@/layouts/SidebarLayout";
 import { OrderPage } from "@/pages/super_admin/orderPage/OrderPage";

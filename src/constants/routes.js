@@ -3,6 +3,7 @@ export const ROUTES = {
     DASHBOARD: '/',
     LOGIN: '/login',
     SIGNUP: '/signup',
+    ANALYTICS: '/dashboard/analytics',
     ORDERPAGE: '/dashboard/orders',
     SPECIFICORDER: '/dashboard/orders/:orderId',
     ALLCUSTOMERS: '/dashboard/customers',

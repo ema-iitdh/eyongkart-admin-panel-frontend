@@ -16,6 +16,7 @@ import CategoryUpdate from "@/pages/categoryUpdate/CategoryUpdate";
 import { ProductPage } from "@/pages/productPage/ProductPage";
 import ProductDetail from "@/pages/productDetail/ProductDetail";
 import ProductCreate from "@/pages/productCreate/ProductCreate";
+import { Analytics } from "@/pages/analytics";
 
 export default function AppRoutes() {
     return (
@@ -24,6 +25,7 @@ export default function AppRoutes() {
                 <Route element={<ProtectedRoute />}>
                     <Route element={<SideBarLayout />}>
                         <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+                        <Route path={ROUTES.ANALYTICS} element={<Analytics />} />
                         <Route path={ROUTES.ORDERPAGE} element={<OrderPage />} />
                         <Route path={ROUTES.SPECIFICORDER} element={<OrderDetail />} />
                         <Route path={ROUTES.ALLCUSTOMERS} element={<CustomerPage />} />

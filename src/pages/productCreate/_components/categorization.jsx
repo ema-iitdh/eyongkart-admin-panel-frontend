@@ -14,18 +14,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useGetAllCategories } from '@/features/categories/hooks/useCategory';
+import { useGetSubcategoryByCategoryId } from '@/features/subcategories/hooks/useSubcategory';
+import { useEffect, useState } from 'react';
 
 export function Categorization({ form }) {
     // todo implement api request to fetch categories, subcategories and shop
-  const categories = [
-    { id: '1', name: 'Sarees' },
-    { id: '2', name: 'Dhotis' },
-  ]
+  const { data: categories = [] } = useGetAllCategories();
 
-  const subcategories = [
-    { id: '1', name: 'Silk Sarees' },
-    { id: '2', name: 'Cotton Sarees' },
-  ]
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const { data: subcategories = [], isLoading, refetch: fetchSubcategories } = useGetSubcategoryByCategoryId(selectedCategory);
+
+  useEffect(() => {
+    if (selectedCategory) {
+      fetchSubcategories();
+    }
+  }, [selectedCategory, fetchSubcategories]);
 
   const shops = [
     { id: '1', name: 'Handloom Haven' },
@@ -40,7 +44,12 @@ export function Categorization({ form }) {
         render={({ field }) => (
           <FormItem>
             <FormLabel>Category</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <Select onValueChange={(value) => {
+              field.onChange(value); //update the form state
+              console.log(value);
+              setSelectedCategory(value);
+            }} 
+            defaultValue={field.value}>
               <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder="Select a category" />
@@ -67,7 +76,10 @@ export function Categorization({ form }) {
         render={({ field }) => (
           <FormItem>
             <FormLabel>Subcategory</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <Select onValueChange={field.onChange} 
+            defaultValue={field.value}
+            disabled={!selectedCategory || isLoading} // disable if no category is selected
+            >
               <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder="Select a subcategory" />
@@ -76,7 +88,7 @@ export function Categorization({ form }) {
               <SelectContent>
                 {subcategories.map((subcategory) => (
                   <SelectItem key={subcategory.id} value={subcategory.id}>
-                    {subcategory.name}
+                    {subcategory.subCategoryName}
                   </SelectItem>
                 ))}
               </SelectContent>

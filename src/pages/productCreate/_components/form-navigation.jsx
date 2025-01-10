@@ -9,7 +9,8 @@ const steps = [
   { id: 'audience', label: 'Target Audience' },
   { id: 'status', label: 'Status & Visibility' },
   { id: 'seo', label: 'SEO' },
-  { id: 'images', label: 'Images' },
+  { id: 'baseImage', label: 'Base Image' },
+  { id: 'variants', label: 'Variants'}
 ]
 
 export function FormNavigation({ currentStep, onStepChange }) {

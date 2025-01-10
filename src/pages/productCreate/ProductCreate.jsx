@@ -13,21 +13,17 @@ import { TargetAudience } from './_components/target-audience'
 import { StatusVisibility } from './_components/status-visibility'
 import { SEO } from './_components/seo'
 import { ImageUpload } from './_components/image-upload'
+import { Variants } from './_components/variants'
 
 const formSchema = z.object({
-  // Basic Details
-  name: z.string().min(1).max(100),
-  description: z.string().min(1),
-  shortDescription: z.string().max(200).optional(),
-
-  // Categorization
-  category: z.string(),
+  name: z.string().min(1, "Name is required").max(100, "Name cannot exceed 100 characters"),
+  description: z.string().min(1, "Description is required"),
+  shortDescription: z.string().max(200, "Short description cannot exceed 200 characters").optional(),
+  category: z.string().min(1, "Category is required"),
   subcategory: z.string().optional(),
-  shop: z.string(),
-
-  // Specifications
+  shop: z.string().min(1, "Shop is required"),
   specifications: z.object({
-    material: z.string(),
+    material: z.string().optional(),
     weaveType: z.string().optional(),
     craftTechnique: z.string().optional(),
     careInstructions: z.string().optional(),
@@ -38,25 +34,64 @@ const formSchema = z.object({
     threadCount: z.number().optional(),
     zariType: z.string().optional(),
   }),
-
-  // Target Audience
   gender: z.enum(['Male', 'Female', 'Unisex']),
   ageGroup: z.enum(['Adult', 'Kids', 'All']),
-
-  // Status and Visibility
   status: z.enum(['draft', 'published', 'archived']),
   isVisible: z.boolean(),
-
-  // SEO
-  metaTitle: z.string().max(60).optional(),
-  metaDescription: z.string().max(160).optional(),
-  keywords: z.array(z.string()),
-
-  // Images will be handled separately
+  metaTitle: z.string().max(60, "Meta title should not exceed 60 characters").optional(),
+  metaDescription: z.string().max(160, "Meta description should not exceed 160 characters").optional(),
+  keywords: z.array(z.string()).optional(),
+  variants: z.array(z.object({
+    color: z.object({
+      name: z.string().min(1, "Color name is required"),
+      code: z.string().optional(),
+      description: z.string().optional(),
+    }),
+    pattern: z.object({
+      name: z.string().optional(),
+      description: z.string().optional(),
+    }),
+    size: z.object({
+      value: z.string().min(1, "Size value is required"),
+      measurements: z.object({
+        length: z.object({
+          value: z.number(),
+          unit: z.enum(['cm', 'inches', 'meters']),
+        }),
+        width: z.object({
+          value: z.number(),
+          unit: z.enum(['cm', 'inches', 'meters']),
+        }),
+      }),
+      sizeChart: z.string().optional(),
+    }),
+    price: z.object({
+      basePrice: z.number().min(0, "Price cannot be negative"),
+      discount: z.number().min(0, "Discount cannot be negative").max(100, "Discount cannot exceed 100%"),
+    }),
+    stock: z.object({
+      quantity: z.number().min(0, "Stock quantity must be non-negative"),
+      status: z.enum(['in_stock', 'out_of_stock', 'low_stock']),
+    }),
+    isActive: z.boolean(),
+    showInCarousel: z.boolean(),
+    certifications: z.array(z.object({
+      name: z.string(),
+      certificateNumber: z.string(),
+      issuedBy: z.string(),
+      validUntil: z.date(),
+    })).optional(),
+    geographicIndication: z.object({
+      region: z.string().optional(),
+      state: z.string().optional(),
+      isGICertified: z.boolean().optional(),
+    }).optional(),
+  })).optional(),
 })
 
 export function ProductCreate() {
-  const [images, setImages] = useState([])
+  const [baseImage, setBaseImage] = useState(null)
+  const [variantImages, setVariantImages] = useState({})
   const [currentStep, setCurrentStep] = useState('basic')
 
   const form = useForm({
@@ -64,16 +99,53 @@ export function ProductCreate() {
     defaultValues: {
       gender: 'Unisex',
       ageGroup: 'Adult',
-      status: 'draft',
+      status: 'published',
       isVisible: true,
-      keywords: [],
+      variants: [],
     },
   })
 
   async function onSubmit(values) {
     try {
-        // todo implement api endpoint
-        console.log(values, images)
+      const formData = new FormData()
+      
+      // Append all form fields
+      Object.keys(values).forEach(key => {
+        if (key !== 'variants' && key !== 'specifications') {
+          formData.append(key, values[key])
+        }
+      })
+
+      // Append specifications
+      formData.append('specifications', JSON.stringify(values.specifications))
+
+      // Append base image
+      if (baseImage) {
+        formData.append('baseImage', baseImage)
+      }
+
+      // Append variants as JSON string
+      const variantsWithImages = values.variants.map((variant, index) => ({
+        ...variant,
+        images: variantImages[index] || [],
+      }))
+      formData.append('variants', JSON.stringify(variantsWithImages))
+
+      // Append variant images
+      Object.entries(variantImages).forEach(([variantIndex, images]) => {
+        images.forEach((image, imageIndex) => {
+          formData.append(`variant_${parseInt(variantIndex) + 1}`, image)
+        })
+      })
+
+      // Here you would typically send the formData to your API
+      // const response = await fetch('/api/products', {
+      //   method: 'POST',
+      //   body: formData,
+      // })
+      // const data = await response.json()
+
+      console.log("Form data to be sent:", Object.fromEntries(formData))
       toast({
         title: "Product created",
         description: "Your product has been successfully created.",
@@ -95,7 +167,22 @@ export function ProductCreate() {
     { id: 'audience', component: <TargetAudience form={form} /> },
     { id: 'status', component: <StatusVisibility form={form} /> },
     { id: 'seo', component: <SEO form={form} /> },
-    { id: 'images', component: <ImageUpload images={images} setImages={setImages} /> },
+    { id: 'baseImage', component: <ImageUpload 
+        title="Base Image" 
+        description="Upload the main image for your product" 
+        images={baseImage} 
+        setImages={setBaseImage} 
+        multiple={false}
+      /> 
+    },
+    { id: 'variants', component: <Variants form={form} variantImages={variantImages} setVariantImages={(newImages, key) => {
+      setVariantImages(prev => {
+        return {
+          ...prev,
+          [key]: newImages,
+        }
+      })
+    }}/> },
   ]
 
   const currentStepIndex = steps.findIndex(step => step.id === currentStep)
@@ -145,4 +232,3 @@ export function ProductCreate() {
 }
 
 export default ProductCreate
-

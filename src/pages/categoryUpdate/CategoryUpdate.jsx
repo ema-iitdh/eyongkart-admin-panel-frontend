@@ -8,6 +8,7 @@ import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ArrowLeft, Save } from 'lucide-react'
 import { useGetAllCategories, useUpdateCategory } from '@/features/categories/hooks/useCategory'
+import { ROUTES } from '@/constants/routes'
 
 export function CategoryUpdate() {
   const { categoryId } = useParams();
@@ -48,7 +49,7 @@ export function CategoryUpdate() {
     e.preventDefault()
     try {
       await updateCategory({ categoryId, ...formData })
-      navigate(`/categories/${categoryId}`)
+      navigate(ROUTES.SPECIFICCATEGORY)
     } catch (error) {
       console.error('Failed to update category:', error)
     }

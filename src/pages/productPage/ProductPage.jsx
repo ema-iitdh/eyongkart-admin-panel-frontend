@@ -117,7 +117,7 @@ export function ProductPage() {
       {
         accessorKey: "discountedPrice",
         header: "Final Price",
-        cell: ({ row }) => `₹${row.original.discountedPrice.toFixed(2)}`,
+        cell: ({ row }) => `₹${row.original.discountedPrice?.toFixed(2)}`,
       },
       {
         accessorKey: "gender",
@@ -205,7 +205,7 @@ export function ProductPage() {
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Price:</span>
-                    <span>₹{product.price.toFixed(2)}</span>
+                    <span>₹{product.price?.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Discount:</span>
@@ -213,7 +213,7 @@ export function ProductPage() {
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Final Price:</span>
-                    <span>₹{product.discountedPrice.toFixed(2)}</span>
+                    <span>₹{product.discountedPrice?.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Gender:</span>
@@ -273,9 +273,9 @@ export function ProductPage() {
                       <TableRow key={product._id} className="hover:bg-gray-50">
                         <TableCell>{product.name}</TableCell>
                         <TableCell>{product.productquantity || 0}</TableCell>
-                        <TableCell>₹{product.price.toFixed(2)}</TableCell>
+                        <TableCell>₹{product.price?.toFixed(2)}</TableCell>
                         <TableCell>{product.discount}%</TableCell>
-                        <TableCell>₹{product.discountedPrice.toFixed(2)}</TableCell>
+                        <TableCell>₹{product.discountedPrice?.toFixed(2)}</TableCell>
                         <TableCell>{product.gender || "Unisex"}</TableCell>
                         <TableCell>
                           <Button

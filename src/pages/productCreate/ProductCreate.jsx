@@ -14,6 +14,7 @@ import { StatusVisibility } from './_components/status-visibility'
 import { SEO } from './_components/seo'
 import { ImageUpload } from './_components/image-upload'
 import { Variants } from './_components/variants'
+import { useCreateProductPost } from '@/features/products/hooks/useProducts'
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required").max(100, "Name cannot exceed 100 characters"),
@@ -90,9 +91,12 @@ const formSchema = z.object({
 })
 
 export function ProductCreate() {
-  const [baseImage, setBaseImage] = useState(null)
-  const [variantImages, setVariantImages] = useState({})
-  const [currentStep, setCurrentStep] = useState('basic')
+  const [baseImage, setBaseImage] = useState(null);
+  const [variantImages, setVariantImages] = useState({});
+  const [currentStep, setCurrentStep] = useState('basic');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { mutate: createProduct } = useCreateProductPost();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -106,57 +110,96 @@ export function ProductCreate() {
   })
 
   async function onSubmit(values) {
+    if (isSubmitting) return; // Prevent multiple submissions
+    
+    setIsSubmitting(true);
+    
     try {
       const formData = new FormData()
       
-      // Append all form fields
-      Object.keys(values).forEach(key => {
+      // Append basic fields
+      for (const [key, value] of Object.entries(values)) {
         if (key !== 'variants' && key !== 'specifications') {
-          formData.append(key, values[key])
+          if (Array.isArray(value)) {
+            formData.append(key, JSON.stringify(value));
+          } else if (typeof value === 'object' && value !== null) {
+            formData.append(key, JSON.stringify(value));
+          } else {
+            formData.append(key, value);
+          }
         }
-      })
+      }
 
-      // Append specifications
-      formData.append('specifications', JSON.stringify(values.specifications))
+      // Append specifications if they exist
+      if (values.specifications) {
+        formData.append('specifications', JSON.stringify(values.specifications));
+      }
 
       // Append base image
       if (baseImage) {
-        formData.append('baseImage', baseImage)
+        formData.append('baseImage', baseImage);
       }
 
-      // Append variants as JSON string
-      const variantsWithImages = values.variants.map((variant, index) => ({
-        ...variant,
-        images: variantImages[index] || [],
-      }))
-      formData.append('variants', JSON.stringify(variantsWithImages))
+      // Process variants and their images
+      if (values.variants?.length) {
+        const processedVariants = values.variants.map((variant, index) => {
+          const variantCopy = { ...variant, id: index+1 };
+          if (variantImages[index]) {
+            variantCopy.imageRefs = variantImages[index].map((_, imgIndex) => 
+              `variant_${index+1}`
+            );
+          }
+          return variantCopy;
+        });
 
-      // Append variant images
-      Object.entries(variantImages).forEach(([variantIndex, images]) => {
-        images.forEach((image, imageIndex) => {
-          formData.append(`variant_${parseInt(variantIndex) + 1}`, image)
-        })
-      })
+        formData.append('variants', JSON.stringify(processedVariants));
 
-      // Here you would typically send the formData to your API
-      // const response = await fetch('/api/products', {
-      //   method: 'POST',
-      //   body: formData,
-      // })
-      // const data = await response.json()
+        // Append variant images
+        Object.entries(variantImages).forEach(([variantIndex, images]) => {
+          images.forEach((image, imageIndex) => {
+            if (image instanceof File) {
+              formData.append(
+                `variant_${Number.parseInt(variantIndex)+1}`,
+                image
+              );
+            }
+          });
+        });
+      }
 
-      console.log("Form data to be sent:", Object.fromEntries(formData))
-      toast({
-        title: "Product created",
-        description: "Your product has been successfully created.",
-      })
+      // Log formData contents for debugging
+      for (let pair of formData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+      console.log("createProduct reached");
+      createProduct(formData, {
+        onSuccess: () => {
+          toast({
+            title: "Success",
+            description: "Product created successfully",
+          });
+          // Optional: Reset form or redirect
+          // form.reset();
+          // navigate('/products');
+        },
+        onError: (error) => {
+          console.error('Product creation error:', error);
+          toast({
+            title: "Error",
+            description: error.response?.data?.message || "Failed to create product",
+            variant: "destructive",
+          });
+        },
+      });
     } catch (error) {
-      console.error('Failed to create product:', error)
+      console.error('Form submission error:', error);
       toast({
         title: "Error",
-        description: "Failed to create product. Please try again.",
+        description: "Failed to process form data",
         variant: "destructive",
-      })
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -175,14 +218,17 @@ export function ProductCreate() {
         multiple={false}
       /> 
     },
-    { id: 'variants', component: <Variants form={form} variantImages={variantImages} setVariantImages={(newImages, key) => {
-      setVariantImages(prev => {
-        return {
-          ...prev,
-          [key]: newImages,
-        }
-      })
-    }}/> },
+    { id: 'variants', component: <Variants form={form} variantImages={variantImages} setVariantImages={
+      setVariantImages
+    //   (newImages, key) => {
+    //   setVariantImages(prev => {
+    //     return {
+    //       ...prev,
+    //       [key]: newImages,
+    //     }
+    //   })
+    // }
+    }/> },
   ]
 
   const currentStepIndex = steps.findIndex(step => step.id === currentStep)

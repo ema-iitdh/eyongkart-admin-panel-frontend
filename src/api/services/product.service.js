@@ -8,6 +8,7 @@ export const productService = {
         "Content-Type": "multipart/form-data",
       },
     });
+    console.log(response);
     return response.data;
   },
   getProducts: async ({ filter = "" }) => {

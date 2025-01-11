@@ -17,6 +17,7 @@ import {
 import { useGetAllCategories } from '@/features/categories/hooks/useCategory';
 import { useGetSubcategoryByCategoryId } from '@/features/subcategories/hooks/useSubcategory';
 import { useEffect, useState } from 'react';
+import { useGetAllShops } from '@/features/shop/hooks/useShop';
 
 export function Categorization({ form }) {
     // todo implement api request to fetch categories, subcategories and shop
@@ -31,10 +32,7 @@ export function Categorization({ form }) {
     }
   }, [selectedCategory, fetchSubcategories]);
 
-  const shops = [
-    { id: '1', name: 'Handloom Haven' },
-    { id: '2', name: 'Weaver\'s Delight' },
-  ]
+  const { data: shops = [] } = useGetAllShops();
 
   return (
     <div className="space-y-4">
@@ -88,7 +86,7 @@ export function Categorization({ form }) {
               <SelectContent>
                 {subcategories.map((subcategory) => (
                   <SelectItem key={subcategory.id} value={subcategory.id}>
-                    {subcategory.subCategoryName}
+                    {subcategory.name}
                   </SelectItem>
                 ))}
               </SelectContent>

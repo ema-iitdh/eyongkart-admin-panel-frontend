@@ -1,5 +1,5 @@
 import { productService } from "@/api/services/product.service";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useProducts = ({ filter = "" } = {}, options) => {
   return useQuery({
@@ -33,3 +33,13 @@ export const useProductByShopId = (shopId) => {
     enabled: !!shopId,
   });
 };
+
+export const useCreateProductPost = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (formData) => productService.createProductPost(formData),
+          onSuccess: (data) => {
+            queryClient.invalidateQueries('products');
+          },
+  })
+}

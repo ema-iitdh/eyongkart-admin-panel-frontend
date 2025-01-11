@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types'
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,

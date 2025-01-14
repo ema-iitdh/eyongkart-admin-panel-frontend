@@ -15,14 +15,14 @@ import { ChevronDown, ChevronUp, Eye } from "lucide-react";
 import {
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { Loader } from "@/components/common/loader";
 import { ROUTES } from "@/constants/routes";
+import { Badge } from "@/components/ui/badge"
 
-// Custom debounce hook
+// Custom debounce hook with cleanup
 const useDebounce = (value, delay) => {
   const [debouncedValue, setDebouncedValue] = React.useState(value);
 
@@ -31,9 +31,7 @@ const useDebounce = (value, delay) => {
       setDebouncedValue(value);
     }, delay);
 
-    return () => {
-      clearTimeout(timer);
-    };
+    return () => clearTimeout(timer);
   }, [value, delay]);
 
   return debouncedValue;
@@ -47,8 +45,8 @@ export function ProductPage() {
   });
   const [sorting, setSorting] = React.useState([]);
   const [searchTerm, setSearchTerm] = React.useState("");
-  const debouncedSearchTerm = useDebounce(searchTerm, 500); // 500ms delay
-  const searchInputRef = React.useRef(null); // Ref for the search input
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const searchInputRef = React.useRef(null);
   const limit = 10;
 
   // Save current page to session storage
@@ -56,35 +54,25 @@ export function ProductPage() {
     sessionStorage.setItem("currentPage", page.toString());
   }, [page]);
 
-  // Fetch products with debounced search
-  const { 
-    data = { products: [], pagination: {} }, 
-    isLoading, 
+  const {
+    data = { products: [], pagination: {} },
+    isLoading,
     error,
-  } = useProducts({ 
-    filter: `page=${page}&limit=${limit}${debouncedSearchTerm ? `&search=${debouncedSearchTerm}` : ''}` 
+  } = useProducts({
+    filter: `page=${page}&limit=${limit}${
+      debouncedSearchTerm ? `&search=${encodeURIComponent(debouncedSearchTerm)}` : ""
+    }`,
   });
 
   // Reset to first page when search term changes
   React.useEffect(() => {
-    setPage(1);
-  }, [debouncedSearchTerm]);
-
-  // Refocus the search input when debouncedSearchTerm updates
-  React.useEffect(() => {
-    if (searchInputRef.current) {
-      searchInputRef.current.focus();
+    if (debouncedSearchTerm !== searchTerm) {
+      setPage(1);
     }
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, searchTerm]);
 
-  const products = data.products;
-  const {
-    currentPage,
-    totalPages,
-    hasNextPage,
-    hasPrevPage,
-    totalProducts,
-  } = data.pagination;
+  const { products = [], pagination = {} } = data;
+  const { currentPage, totalPages, hasNextPage, hasPrevPage, totalProducts } = pagination;
 
   const handleViewProduct = (productId) => {
     navigate(`/dashboard/products/${productId}`);
@@ -94,55 +82,66 @@ export function ProductPage() {
     setSearchTerm(e.target.value);
   };
 
-  const columns =[
-      {
-        accessorKey: "name",
-        header: "Product Name",
-      },
-      {
-        accessorKey: "productquantity",
-        header: "Quantity",
-        cell: ({ row }) => row.original.productquantity || 0,
-      },
-      {
-        accessorKey: "price",
-        header: "Price",
-        cell: ({ row }) => `₹${row.original.price.toFixed(2)}`,
-      },
-      {
-        accessorKey: "discount",
-        header: "Discount",
-        cell: ({ row }) => `${row.original.discount}%`,
-      },
-      {
-        accessorKey: "discountedPrice",
-        header: "Final Price",
-        cell: ({ row }) => `₹${row.original.discountedPrice?.toFixed(2)}`,
-      },
-      {
-        accessorKey: "gender",
-        header: "Gender",
-        cell: ({ row }) => row.original.gender || "Unisex",
-      },
-      {
-        id: "actions",
-        header: "Actions",
-        cell: ({ row }) => (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex items-center gap-2"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleViewProduct(row.original._id);
-            }}
-          >
-            <Eye className="w-4 h-4" />
-            View
-          </Button>
-        ),
-      },
-    ]
+  const columns = [
+    {
+      accessorKey: "name",
+      header: "Product Name",
+    },
+    {
+      accessorKey: "variants",
+      header: "Variants",
+      cell: ({ row }) => row.original.variants?.length || 0,
+    },
+    {
+      accessorKey: "category",
+      header: "Category",
+      cell: ({ row }) => row.original.category?.name || 'N/A',
+    },
+    {
+      accessorKey: "subcategory",
+      header: "Subcategory",
+      cell: ({ row }) => row.original.subcategory?.name || 'N/A',
+    },
+    {
+      accessorKey: "gender",
+      header: "Gender",
+    },
+    {
+      accessorKey: "ageGroup",
+      header: "Age Group",
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => (
+        <Badge
+          variant={
+            row.original.status === "published" ? "success" : "destructive"
+          }
+        >
+          {row.original.status}
+        </Badge>
+      ),
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="flex items-center gap-2"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleViewProduct(row.original._id);
+          }}
+        >
+          <Eye className="w-4 h-4" />
+          View
+        </Button>
+      ),
+    },
+  ];
 
   const table = useReactTable({
     data: products,
@@ -153,13 +152,17 @@ export function ProductPage() {
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    manualPagination: true, // Tell the table we're handling pagination server-side
+    manualPagination: true,
     pageCount: totalPages,
   });
 
   if (isLoading) return <Loader />;
-  if (error) return <div className="text-center text-red-500">Error loading products: {error.message}</div>;
+  if (error)
+    return (
+      <div className="text-center text-red-500">
+        Error loading products: {error.message}
+      </div>
+    );
 
   return (
     <div className="space-y-4">
@@ -167,14 +170,14 @@ export function ProductPage() {
         <h1 className="text-xl font-semibold">All Products</h1>
         <div className="relative w-full max-w-sm">
           <div className="flex gap-x-2">
-            <Button 
-            className="border border-input bg-green-500 shadow-sm hover:bg-green-400 text-white"
-            onClick={() => navigate(ROUTES.PRODUCT.CREATE )}
+            <Button
+              className="border border-input bg-green-500 shadow-sm hover:bg-green-400 text-white"
+              onClick={() => navigate(ROUTES.PRODUCT.CREATE)}
             >
               Create a product
             </Button>
             <Input
-              ref={searchInputRef} // Attach ref to the input
+              ref={searchInputRef}
               placeholder="Search products..."
               value={searchTerm}
               onChange={handleSearchChange}
@@ -196,28 +199,41 @@ export function ProductPage() {
           {/* Mobile view */}
           <div className="md:hidden space-y-4">
             {products.map((product) => (
-              <div key={product._id} className="bg-white rounded-lg shadow-md p-4">
+              <div
+                key={product._id}
+                className="bg-white rounded-lg shadow-md p-4"
+              >
                 <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Quantity:</span>
-                    <span>{product.productquantity || 0}</span>
+                    <span className="text-gray-600">Variants:</span>
+                    <span>{product.variants?.length || 0}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Price:</span>
-                    <span>₹{product.price?.toFixed(2)}</span>
+                    <span className="text-gray-600">Category:</span>
+                    <span>{product.category?.name || 'N/A'}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Discount:</span>
-                    <span>{product.discount}%</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Final Price:</span>
-                    <span>₹{product.discountedPrice?.toFixed(2)}</span>
+                    <span className="text-gray-600">Subcategory:</span>
+                    <span>{product.subcategory?.name || 'N/A'}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Gender:</span>
-                    <span>{product.gender || "Unisex"}</span>
+                    <span>{product.gender}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Age Group:</span>
+                    <span>{product.ageGroup}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Status:</span>
+                    <Badge
+                      variant={
+                        product.status === "published" ? "success" : "destructive"
+                      }
+                    >
+                      {product.status}
+                    </Badge>
                   </div>
                 </div>
                 <Button
@@ -232,7 +248,7 @@ export function ProductPage() {
           </div>
 
           {/* Desktop view */}
-          <div className="rounded-md border shadow-md hidden md:block">
+          <div className="rounded-md border shadow-md overflow-hidden hidden md:block">
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
@@ -253,12 +269,11 @@ export function ProductPage() {
                                 header.column.columnDef.header,
                                 header.getContext()
                               )}
-                              {header.column.getIsSorted() && (
-                                header.column.getIsSorted() === "asc" ? (
-                                  <ChevronUp className="w-4 h-4" />
-                                ) : (
-                                  <ChevronDown className="w-4 h-4" />
-                                )
+                              {header.column.getIsSorted() === "asc" && (
+                                <ChevronUp className="w-4 h-4" />
+                              )}
+                              {header.column.getIsSorted() === "desc" && (
+                                <ChevronDown className="w-4 h-4" />
                               )}
                             </div>
                           )}
@@ -268,35 +283,18 @@ export function ProductPage() {
                   ))}
                 </TableHeader>
                 <TableBody>
-                  {products.length > 0 ? (
-                    products.map((product) => (
-                      <TableRow key={product._id} className="hover:bg-gray-50">
-                        <TableCell>{product.name}</TableCell>
-                        <TableCell>{product.productquantity || 0}</TableCell>
-                        <TableCell>₹{product.price?.toFixed(2)}</TableCell>
-                        <TableCell>{product.discount}%</TableCell>
-                        <TableCell>₹{product.discountedPrice?.toFixed(2)}</TableCell>
-                        <TableCell>{product.gender || "Unisex"}</TableCell>
-                        <TableCell>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="flex items-center gap-2"
-                            onClick={() => handleViewProduct(product._id)}
-                          >
-                            <Eye className="w-4 h-4" />
-                            View
-                          </Button>
+                  {table.getRowModel().rows.map((row) => (
+                    <TableRow key={row.id} className="hover:bg-gray-50">
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id} className="whitespace-nowrap">
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
                         </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={columns.length} className="text-center">
-                        No products found.
-                      </TableCell>
+                      ))}
                     </TableRow>
-                  )}
+                  ))}
                 </TableBody>
               </Table>
             </div>
@@ -307,8 +305,8 @@ export function ProductPage() {
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4">
         <div className="text-sm text-muted-foreground">
           Showing {products.length} items
-          {totalProducts && ` of ${totalProducts} total products`}
-          {` • Page ${currentPage} of ${totalPages}`}
+          {totalProducts ? ` of ${totalProducts} total products` : ''}
+          {totalPages ? ` • Page ${currentPage} of ${totalPages}` : ''}
         </div>
         <div className="flex items-center space-x-2">
           <Button

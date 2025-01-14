@@ -38,8 +38,28 @@ export const useCreateProductPost = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (formData) => productService.createProductPost(formData),
-          onSuccess: (data) => {
-            queryClient.invalidateQueries('products');
-          },
+    onSuccess: () => {
+      queryClient.invalidateQueries('products');
+    },
+  })
+}
+
+export const useUpdateProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (formData) => productService.updateProduct(formData),
+    onSuccess: () => {
+      queryClient.invalidateQueries('products')
+    }
+  })
+}
+
+export const useDeleteProduct = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id) => productService.deleteProduct(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries('products')
+    }
   })
 }

@@ -8,8 +8,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     https: {
-      key: "./certificates/eyongkart-privateKey.key",
-      cert: "./certificates/eyongkart.crt",
+      key: fs.readFileSync("./certificates/eyongkart-privateKey.key"),
+      cert: fs.readFileSync("./certificates/eyongkart.crt"),
     },
   },
   resolve: {

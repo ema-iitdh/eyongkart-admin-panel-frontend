@@ -24,9 +24,9 @@ export const useCreateCategory = () => {
   });
 };
 
-export const useCreateSubCategory = () => {
+export const useDeleteCategory = () => {
   return useMutation({
-    mutationKey: ["createSubCategory"],
-    mutationFn: (formData) => categoryServices.createSubCategory(formData),
+    mutationKey: ["deleteCategory"],
+    mutationFn: (categoryId) => categoryServices.deleteCategory(categoryId),
   });
 };

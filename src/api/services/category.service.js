@@ -17,8 +17,10 @@ export const categoryServices = {
     const response = await Axios.post(API_ENDPOINTS.categories.add, formData);
     return response.data;
   },
-  createSubCategory: async (formData) => {
-    const response = await Axios.post(API_ENDPOINTS.subcategory.add, formData);
+  deleteCategory: async (categoryId) => {
+    const response = await Axios.delete(
+      API_ENDPOINTS.categories.delete(categoryId)
+    );
     return response.data;
   },
 };

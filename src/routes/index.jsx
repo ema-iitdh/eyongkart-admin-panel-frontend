@@ -51,7 +51,6 @@ export default function AppRoutes() {
               path={ROUTES.ADD_SUBCATEGORY}
               element={<AddSubCategory />}
             />{" "}
-            {/* Add route for AddSubCategory */}
           </Route>
         </Route>
 

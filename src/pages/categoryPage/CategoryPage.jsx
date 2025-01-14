@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/constants/routes";
 
 import {
   Table,
@@ -34,57 +35,59 @@ export function CategoryPage() {
     navigate(`/dashboard/categories/${categoryId}`);
   };
 
-  const columns = React.useMemo(() => [
-    {
-      accessorKey: "name",
-      header: "Category Name",
-    },
-    {
-      accessorKey: "gender",
-      header: "Gender",
-    },
-    {
-      accessorKey: "productsCount",
-      header: "Products Count",
-    },
-    {
-      accessorKey: "isActive",
-      header: "Status",
-      cell: ({ row }) => (
-        <Badge variant={row.original.isActive ? "success" : "secondary"}>
-          {row.original.isActive ? "Active" : "Inactive"}
-        </Badge>
-      ),
-    },
-    {
-      accessorKey: "subCategories",
-      header: "Subcategories",
-      cell: ({ row }) => {
-        const subCategories = row.original.subCategories?.map(
-          (sub) => sub.subCategoryName
-        ) || [];
-        return subCategories.length ? subCategories.join(", ") : "-";
+  const columns = React.useMemo(
+    () => [
+      {
+        accessorKey: "name",
+        header: "Category Name",
       },
-    },
-    {
-      id: "actions",
-      header: "Actions",
-      cell: ({ row }) => (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="flex items-center gap-2"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleViewCategory(row.original._id);
-          }}
-        >
-          <Eye className="w-4 h-4" />
-          View
-        </Button>
-      ),
-    },
-  ], []);
+      {
+        accessorKey: "gender",
+        header: "Gender",
+      },
+      {
+        accessorKey: "productsCount",
+        header: "Products Count",
+      },
+      {
+        accessorKey: "isActive",
+        header: "Status",
+        cell: ({ row }) => (
+          <Badge variant={row.original.isActive ? "success" : "secondary"}>
+            {row.original.isActive ? "Active" : "Inactive"}
+          </Badge>
+        ),
+      },
+      {
+        accessorKey: "subCategories",
+        header: "Subcategories",
+        cell: ({ row }) => {
+          const subCategories =
+            row.original.subCategories?.map((sub) => sub.subCategoryName) || [];
+          return subCategories.length ? subCategories.join(", ") : "-";
+        },
+      },
+      {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="flex items-center gap-2"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleViewCategory(row.original._id);
+            }}
+          >
+            <Eye className="w-4 h-4" />
+            View
+          </Button>
+        ),
+      },
+    ],
+    []
+  );
 
   const table = useReactTable({
     data: categories,
@@ -102,7 +105,12 @@ export function CategoryPage() {
   });
 
   if (isLoading) return <Loader />;
-  if (error) return <p className="text-center text-red-500">Error loading categories: {error.message}</p>;
+  if (error)
+    return (
+      <p className="text-center text-red-500">
+        Error loading categories: {error.message}
+      </p>
+    );
 
   const filteredRows = table.getRowModel().rows;
 
@@ -110,12 +118,20 @@ export function CategoryPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">All Categories</h1>
-        <Input
-          placeholder="Search categories..."
-          value={globalFilter ?? ""}
-          onChange={(e) => setGlobalFilter(e.target.value)}
-          className="max-w-sm"
-        />
+        <div className="flex gap-x-2">
+          <Button
+            className="border border-input bg-green-500 shadow-sm hover:bg-green-400 text-white"
+            onClick={() => navigate(ROUTES.CATEGORY_CREATE)}
+          >
+            Create a category
+          </Button>
+          <Input
+            placeholder="Search categories..."
+            value={globalFilter ?? ""}
+            onChange={(e) => setGlobalFilter(e.target.value)}
+            className="max-w-sm"
+          />
+        </div>
       </div>
 
       {filteredRows.length === 0 ? (
@@ -125,10 +141,7 @@ export function CategoryPage() {
           {/* Mobile view */}
           <div className="md:hidden space-y-4">
             {filteredRows.map((row) => (
-              <div 
-                key={row.id} 
-                className="bg-white rounded-lg shadow-md p-4"
-              >
+              <div key={row.id} className="bg-white rounded-lg shadow-md p-4">
                 <h3 className="font-semibold text-lg mb-2">
                   {row.original.name}
                 </h3>
@@ -148,9 +161,11 @@ export function CategoryPage() {
                 </p>
                 <p className="text-sm text-gray-600 mb-3">
                   Subcategories:{" "}
-                  {row.original.subCategories?.map(sub => sub.subCategoryName).join(", ") || "-"}
+                  {row.original.subCategories
+                    ?.map((sub) => sub.subCategoryName)
+                    .join(", ") || "-"}
                 </p>
-                <Button 
+                <Button
                   className="w-full flex items-center justify-center gap-2"
                   onClick={() => handleViewCategory(row.original._id)}
                 >
@@ -182,13 +197,12 @@ export function CategoryPage() {
                               header.column.columnDef.header,
                               header.getContext()
                             )}
-                            {header.column.getIsSorted() && (
-                              header.column.getIsSorted() === "asc" ? (
+                            {header.column.getIsSorted() &&
+                              (header.column.getIsSorted() === "asc" ? (
                                 <ChevronUp className="w-4 h-4" />
                               ) : (
                                 <ChevronDown className="w-4 h-4" />
-                              )
-                            )}
+                              ))}
                           </div>
                         )}
                       </TableHead>
@@ -199,10 +213,7 @@ export function CategoryPage() {
               <TableBody>
                 {filteredRows.length > 0 ? (
                   filteredRows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      className="hover:bg-gray-50"
-                    >
+                    <TableRow key={row.id} className="hover:bg-gray-50">
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>
                           {flexRender(

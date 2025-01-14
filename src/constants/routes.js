@@ -24,11 +24,6 @@ export const ROUTES = {
     LIST: "/dashboard/products",
     DETAIL: "/dashboard/products/:productId",
     CREATE: "/dashboard/products/create",
-  },
-  PRODUCT: {
-    LIST: "/dashboard/products",
-    DETAIL: "/dashboard/products/:productId",
-    CREATE: "/dashboard/products/create",
     UPDATE: "/products/update/:productId",
   },
 

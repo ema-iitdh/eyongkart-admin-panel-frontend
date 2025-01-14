@@ -19,7 +19,7 @@ import ProductCreate from "@/pages/productCreate/ProductCreate";
 import { Analytics } from "@/pages/analytics";
 import ProductUpdate from "@/pages/productUpdate/ProductUpdate";
 import CategoryCreate from "@/pages/categoryCreate/CategoryCreate";
-import AddSubCategory from "@/pages/categoryCreate/AddSubCategory"; // Import AddSubCategory
+import AddSubCategory from "@/pages/categoryCreate/AddSubCategory";
 
 export default function AppRoutes() {
   return (
@@ -51,10 +51,8 @@ export default function AppRoutes() {
               path={ROUTES.ADD_SUBCATEGORY}
               element={<AddSubCategory />}
             />{" "}
-            {/* Add route for AddSubCategory */}
           </Route>
         </Route>
-
         <Route path={ROUTES.LOGIN} element={<Login />} />
         <Route path={ROUTES.SIGNUP} element={<Signup />} />
       </Routes>

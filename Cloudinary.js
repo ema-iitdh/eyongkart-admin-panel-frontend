@@ -1,4 +1,4 @@
 export const CloudinaryConfig = {
-    CLOUDINARY_URL: "https://res.cloudinary.com/dxxg7rjrd",
+    CLOUDINARY_URL: "https://res.cloudinary.com/dvw38wvt2",
   };
   

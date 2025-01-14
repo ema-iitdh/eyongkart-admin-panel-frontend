@@ -17,6 +17,7 @@ import { ProductPage } from "@/pages/productPage/ProductPage";
 import ProductDetail from "@/pages/productDetail/ProductDetail";
 import ProductCreate from "@/pages/productCreate/ProductCreate";
 import { Analytics } from "@/pages/analytics";
+import ProductUpdate from "@/pages/productUpdate/ProductUpdate";
 
 export default function AppRoutes() {
     return (
@@ -36,6 +37,7 @@ export default function AppRoutes() {
                         <Route path={ROUTES.PRODUCT.LIST} element={<ProductPage />} />
                         <Route path={ROUTES.PRODUCT.DETAIL} element={<ProductDetail />} />
                         <Route path={ROUTES.PRODUCT.CREATE} element={<ProductCreate />} />
+                        <Route path={ROUTES.PRODUCT.UPDATE} element={<ProductUpdate  />} />
                     </Route>
                 </Route>
 

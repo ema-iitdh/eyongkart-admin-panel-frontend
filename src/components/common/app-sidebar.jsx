@@ -9,12 +9,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { BarChart3, ShoppingCart, Users, Package, FolderTree, CreditCard, Truck, Settings, X } from 'lucide-react'
+import { BarChart3, ShoppingCart, Users, Package, FolderTree, CreditCard, Truck, Settings, X, LayoutDashboard } from 'lucide-react'
 import { Link, useLocation } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
 const items = [
+  { title: "Dashboard", url: "/", icon: LayoutDashboard},
   { title: "Analytics", url: "/dashboard/analytics", icon: BarChart3 },
   { title: "Orders Management", url: "/dashboard/orders", icon: ShoppingCart },
   { title: "Customer Management", url: "/dashboard/customers", icon: Users },

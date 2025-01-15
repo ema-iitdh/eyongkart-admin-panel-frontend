@@ -141,16 +141,18 @@ export function CustomerDetail() {
                   </div>
                   <div className="text-right">
                     <p className="font-medium">₹{item.product.discountedPrice.toFixed(2)}</p>
-                    <p className="text-sm text-muted-foreground line-through">
-                      ₹{item.product.price.toFixed(2)}
-                    </p>
-                    <p className="text-sm text-green-600">
-                      {item.product.discount}% off
-                    </p>
+                    {item.product.discountedPrice !== item.product.price && <div>
+                      <p className="text-sm text-muted-foreground line-through">
+                        ₹{item.product.price.toFixed(2)}
+                      </p>
+                      <p className="text-sm text-green-600">
+                        {item.product.discount}% off
+                      </p>
+                    </div>
+                    }
                   </div>
                 </div>
               ))}
-              <Separator />
               <div className="flex justify-between text-lg font-semibold">
                 <span>Total Items</span>
                 <span>{customer.cart.reduce((sum, item) => sum + item.quantity, 0)}</span>

@@ -100,7 +100,7 @@ export function OrderDetail() {
             <Separator />
             <div className="flex items-center gap-3">
               <Calendar className="w-5 h-5 text-muted-foreground" />
-              <span>Estimated Delivery: {new Date(order.shipping_details.estimated_delivery_date).toLocaleDateString()}</span>
+              <span>Estimated Delivery: {new Date(order.shipping_details?.estimated_delivery_date).toLocaleDateString()}</span>
             </div>
           </CardContent>
         </Card>
@@ -143,11 +143,11 @@ export function OrderDetail() {
               <Separator />
               <div className="flex justify-between pt-4">
                 <span className="font-medium">Subtotal</span>
-                <span>₹{(order.amount - order.shipping_details.shipping_charge).toFixed(2)}</span>
+                <span>₹{(order.amount - order.shipping_details?.shipping_charge).toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="font-medium">Shipping</span>
-                <span>₹{order.shipping_details.shipping_charge.toFixed(2)}</span>
+                <span>₹{order.shipping_details?.shipping_charge?.toFixed(2)}</span>
               </div>
               <Separator />
               <div className="flex justify-between text-lg font-semibold">

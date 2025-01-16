@@ -26,6 +26,11 @@ export const ROUTES = {
     CREATE: "/dashboard/products/create",
     UPDATE: "/products/update/:productId",
   },
+    SHOP:{
+      LIST: '/dashboard/shops',
+      DETAIL: '/dashboard/shops/:shopId',
+      CREATE: '/dashboard/shops/create'
+    },
   SORTED: "/sorted/:categoryId/:subcategoryId?",
   CATEGORY: "/category",
   CATEGORY_CREATE: "/dashboard/category/create",

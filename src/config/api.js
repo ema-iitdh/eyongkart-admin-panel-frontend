@@ -5,8 +5,8 @@
 
 export const API_CONFIG = {
   // BASE_URL: import.meta.env.VITE_API_BASE_URL || 'https://localhost:5000',
-  BASE_URL: "https://eyongkart.com/api",
-  // BASE_URL: "https://localhost:3000",
+  // BASE_URL: "https://eyongkart.com/api",
+  BASE_URL: "https://localhost:3000",
   TIMEOUT: 10000,
   CREDENTIALS: "include",
   WITH_CREDENTIALS: true,

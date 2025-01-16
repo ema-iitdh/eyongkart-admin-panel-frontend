@@ -9,7 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { BarChart3, ShoppingCart, Users, Package, FolderTree, CreditCard, Truck, Settings, X, LayoutDashboard } from 'lucide-react'
+import { BarChart3, ShoppingCart, Users, Package, FolderTree, CreditCard, Truck, Settings, X, LayoutDashboard, ShoppingBag, ShoppingBagIcon, ShoppingBasket } from 'lucide-react'
 import { Link, useLocation } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -19,6 +19,7 @@ const items = [
   { title: "Analytics", url: "/dashboard/analytics", icon: BarChart3 },
   { title: "Orders Management", url: "/dashboard/orders", icon: ShoppingCart },
   { title: "Customer Management", url: "/dashboard/customers", icon: Users },
+  { title: "Shop Management", url: "/dashboard/shops", icon: ShoppingBasket},
   { title: "Product Management", url: "/dashboard/products", icon: Package },
   { title: "Categories Management", url: "/dashboard/categories", icon: FolderTree },
   { title: "Payments & Transactions", url: "/dashboard/payments", icon: CreditCard },

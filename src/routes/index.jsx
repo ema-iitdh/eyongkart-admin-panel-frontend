@@ -10,8 +10,6 @@ import { OrderPage } from "@/pages/orderPage/OrderPage";
 import { OrderDetail } from "@/pages/orderDetail/OrderDetail";
 import CustomerPage from "@/pages/customerPage/CustomerPage";
 import CustomerDetail from "@/pages/customerDetail/CustomerDetail";
-import CategoryPage from "@/pages/categoryPage/CategoryPage";
-import CategoryDetail from "@/pages/categoryDetail/CategoryDetail";
 import CategoryUpdate from "@/pages/categoryUpdate/CategoryUpdate";
 import { ProductPage } from "@/pages/productPage/ProductPage";
 import ProductDetail from "@/pages/productDetail/ProductDetail";
@@ -20,6 +18,11 @@ import { Analytics } from "@/pages/analytics";
 import ProductUpdate from "@/pages/productUpdate/ProductUpdate";
 import CategoryCreate from "@/pages/categoryCreate/CategoryCreate";
 import AddSubCategory from "@/pages/categoryCreate/AddSubCategory"; // Import AddSubCategory
+import { ShopPage } from "@/pages/shopPage/ShopPage";
+import ShopDetail from "@/pages/shopDetail/ShopDetail";
+import ShopCreate from "@/pages/shopCreate/ShopCreate";
+import CategoryPage from "@/pages/categoryPage/CategoryPage";
+import CategoryDetail from "@/pages/categoryDetail/CategoryDetail";
 
 export default function AppRoutes() {
   return (
@@ -51,7 +54,11 @@ export default function AppRoutes() {
               path={ROUTES.ADD_SUBCATEGORY}
               element={<AddSubCategory />}
             />{" "}
+            <Route path={ROUTES.SHOP.LIST} element={<ShopPage/>}/>
+            <Route path={ROUTES.SHOP.DETAIL} element = {<ShopDetail/>}/>
+            <Route path={ROUTES.SHOP.CREATE} element = {<ShopCreate/>}/>
           </Route>
+          
         </Route>
 
         <Route path={ROUTES.LOGIN} element={<Login />} />

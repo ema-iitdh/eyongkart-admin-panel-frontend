@@ -1,5 +1,5 @@
 import { shopService } from "@/api/services/shop.service"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
 export const useGetAllShops = () => {
     return useQuery({
@@ -8,3 +8,21 @@ export const useGetAllShops = () => {
         select: (data) => data.shops
     })
 }
+export const useShopById = (id) => {
+  return useQuery({
+    queryKey: ["shop", id],
+    queryFn: () => shopService.getShopById(id),
+    cacheTime: 0,
+    staleTime: 0,
+    select: (data) => data.shop,
+  });
+};
+export const useCreateShopPost = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationFn:async (formData) => shopService.createShopPost(formData),
+            onSuccess: () => {
+              queryClient.invalidateQueries('shops');
+            },
+    })
+  }

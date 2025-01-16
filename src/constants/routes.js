@@ -26,7 +26,6 @@ export const ROUTES = {
     CREATE: "/dashboard/products/create",
     UPDATE: "/products/update/:productId",
   },
-
   SORTED: "/sorted/:categoryId/:subcategoryId?",
   CATEGORY: "/category",
   CATEGORY_CREATE: "/dashboard/category/create",

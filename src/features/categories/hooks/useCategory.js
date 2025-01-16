@@ -12,7 +12,7 @@ export const useGetAllCategories = () => {
 export const useUpdateCategory = () => {
   return useMutation({
     mutationKey: ["category"],
-    mutationFn: ({ categoryId, formData }) =>
+    mutationFn: ({ categoryId, ...formData }) =>
       categoryServices.updateCategory(categoryId, formData),
   });
 };

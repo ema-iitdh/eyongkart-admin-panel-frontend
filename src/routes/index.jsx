@@ -23,7 +23,6 @@ import ShopDetail from "@/pages/shopDetail/ShopDetail";
 import ShopCreate from "@/pages/shopCreate/ShopCreate";
 import CategoryPage from "@/pages/categoryPage/CategoryPage";
 import CategoryDetail from "@/pages/categoryDetail/CategoryDetail";
-
 export default function AppRoutes() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -60,7 +59,6 @@ export default function AppRoutes() {
           </Route>
           
         </Route>
-
         <Route path={ROUTES.LOGIN} element={<Login />} />
         <Route path={ROUTES.SIGNUP} element={<Signup />} />
       </Routes>

@@ -126,7 +126,10 @@ export function ProductUpdate() {
       variantImages.forEach((variantImageSet, variantIndex) => {
         variantImageSet.forEach((image, imageIndex) => {
           if (image instanceof File) {
-            formData.append(`variant_${variantIndex + 1}_image_${imageIndex + 1}`, image)
+            formData.append(
+              `variant_${Number.parseInt(variantIndex)+1}`,
+              image
+            );
           }
         })
       })

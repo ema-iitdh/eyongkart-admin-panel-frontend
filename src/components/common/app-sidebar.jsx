@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 import {
   Sidebar,
   SidebarContent,
@@ -9,7 +8,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { BarChart3, ShoppingCart, Users, Package, FolderTree, CreditCard, Truck, Settings, X, LayoutDashboard, ShoppingBag, ShoppingBagIcon, ShoppingBasket } from 'lucide-react'
+import { BarChart3, ShoppingCart, Users, Package, FolderTree, CreditCard, Truck, Settings, X, LayoutDashboard, ShoppingBasket } from 'lucide-react'
 import { Link, useLocation } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"

@@ -54,7 +54,6 @@ export function CategoryDetail() {
     );
 
   const category = categories.find((category) => category._id === categoryId);
-  const category = categories.find((category) => category._id === categoryId);
 
   if (!category)
     return (
@@ -80,16 +79,7 @@ export function CategoryDetail() {
         >
           <ArrowLeft className="w-8 h-8" />{" "}
           <span className="text-lg">Back to Categories</span>
-          <ArrowLeft className="w-8 h-8" />{" "}
-          <span className="text-lg">Back to Categories</span>
         </Button>
-        <Link
-          to={`/dashboard/categories/${categoryId}/edit`}
-          className={
-            buttonVariants({ variant: "default" }) + " flex items-center gap-2"
-          }
-        >
-          <Edit className="w-4 h-4" /> Edit Category
         <Link
           to={`/dashboard/categories/${categoryId}/edit`}
           className={
@@ -138,9 +128,6 @@ export function CategoryDetail() {
               <Badge
                 variant={category.isProductForKids ? "default" : "secondary"}
               >
-              <Badge
-                variant={category.isProductForKids ? "default" : "secondary"}
-              >
                 {category.isProductForKids ? "Yes" : "No"}
               </Badge>
             </div>
@@ -153,18 +140,6 @@ export function CategoryDetail() {
             </div>
             <Separator />
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Calendar className="w-5 h-5 text-muted-foreground" />
-                <span>
-                  Created: {new Date(category.createdAt).toLocaleDateString()}
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Calendar className="w-5 h-5 text-muted-foreground" />
-                <span>
-                  Updated: {new Date(category.updatedAt).toLocaleDateString()}
-                </span>
-              </div>
               <div className="flex items-center gap-3">
                 <Calendar className="w-5 h-5 text-muted-foreground" />
                 <span>
@@ -211,28 +186,14 @@ export function CategoryDetail() {
                         <Edit className="w-2 h-2" />
                         Edit
                       </Link>
-                      <Link
-                        to={`/categories/${category._id}/subcategories/${subCategory._id}/edit`}
-                        className={
-                          buttonVariants({ variant: "link" }) +
-                          "flex items-center gap-2"
-                        }
-                      >
-                        <Edit className="w-2 h-2" />
-                        Edit
-                      </Link>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Hash className="w-4 h-4" />
                     {subCategory.keywords.join(", ")}
-                    {subCategory.keywords.join(", ")}
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span>ID: {subCategory._id}</span>
-                    <Badge
-                      variant={subCategory.isActive ? "success" : "destructive"}
-                    >
                     <Badge
                       variant={subCategory.isActive ? "success" : "destructive"}
                     >
@@ -243,15 +204,10 @@ export function CategoryDetail() {
                     <Calendar className="w-3 h-3" />
                     Created:{" "}
                     {new Date(subCategory.createdAt).toLocaleDateString()}
-                    Created:{" "}
-                    {new Date(subCategory.createdAt).toLocaleDateString()}
                   </div>
                   <Separator />
                 </div>
               ))}
-              <Button onClick={navigateToAddSubCategory}>
-                Add Subcategory
-              </Button>
               <Button onClick={navigateToAddSubCategory}>
                 Add Subcategory
               </Button>
@@ -261,8 +217,7 @@ export function CategoryDetail() {
       </div>
     </div>
   );
-  );
 }
 
 export default CategoryDetail;
-export default CategoryDetail;
+

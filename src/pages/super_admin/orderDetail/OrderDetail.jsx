@@ -1,25 +1,35 @@
-import { useParams, useNavigate } from "react-router-dom"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
-import { ArrowLeft, MapPin, Phone, Calendar } from 'lucide-react'
-import { OrderStatus } from "@/constants"
-import { useOrders } from "@/features/orders/hooks/useOrders"
-import { CloudinaryConfig } from "../../../Cloudinary";
-import { Loader } from "@/components/common/loader"
+import { useParams, useNavigate } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { ArrowLeft, MapPin, Phone, Calendar } from "lucide-react";
+import { OrderStatus } from "@/constants";
+import { useOrders } from "@/features/orders/hooks/useOrders";
+import { CloudinaryConfig } from "../../../../Cloudinary";
+import { Loader } from "@/components/common/loader";
 
 export function OrderDetail() {
-  const { orderId } = useParams()
-  const navigate = useNavigate()
-  const { data: orders = [], isLoading, error } = useOrders()
+  const { orderId } = useParams();
+  const navigate = useNavigate();
+  const { data: orders = [], isLoading, error } = useOrders();
 
-  if (isLoading) return <Loader />
-  if (error) return <div className="flex justify-center items-center h-screen text-destructive">Error loading order: {error.message}</div>
+  if (isLoading) return <Loader />;
+  if (error)
+    return (
+      <div className="flex justify-center items-center h-screen text-destructive">
+        Error loading order: {error.message}
+      </div>
+    );
 
-  const order = orders.find((order) => order._id === orderId)
+  const order = orders.find((order) => order._id === orderId);
 
-  if (!order) return <div className="flex justify-center items-center h-screen">Order not found</div>
+  if (!order)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Order not found
+      </div>
+    );
 
   return (
     <div className="container mx-auto px-4 py-2 space-y-8">
@@ -29,7 +39,8 @@ export function OrderDetail() {
         onClick={() => navigate(-1)}
         className="flex items-center gap-2 mb-6"
       >
-        <ArrowLeft className="w-8 h-8" /> <span className="text-lg">Back to Orders</span>
+        <ArrowLeft className="w-8 h-8" />{" "}
+        <span className="text-lg">Back to Orders</span>
       </Button>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -53,16 +64,18 @@ export function OrderDetail() {
             <Separator />
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Payment Status</span>
-              <Badge variant={order.payment.status === "Pending" ? "warning" : "success"}>
+              <Badge
+                variant={
+                  order.payment.status === "Pending" ? "warning" : "success"
+                }
+              >
                 {order.payment.status}
               </Badge>
             </div>
             <Separator />
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Order Status</span>
-              <Badge variant={OrderStatus[order.status]}>
-                {order.status}
-              </Badge>
+              <Badge variant={OrderStatus[order.status]}>{order.status}</Badge>
             </div>
             <Separator />
             <div className="flex justify-between items-center">
@@ -81,14 +94,19 @@ export function OrderDetail() {
             <div className="flex items-start gap-3">
               <MapPin className="w-5 h-5 mt-1 text-muted-foreground" />
               <div className="flex-1">
-                <p className="font-medium">{order.shipping_address.full_name}</p>
-                <p className="text-sm text-muted-foreground">
-                  {order.shipping_address.address_line1}
-                  {order.shipping_address.address_line2 && `, ${order.shipping_address.address_line2}`}
-                  {order.shipping_address.landmark && `, ${order.shipping_address.landmark}`}
+                <p className="font-medium">
+                  {order.shipping_address.full_name}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {order.shipping_address.city}, {order.shipping_address.state} - {order.shipping_address.pincode}
+                  {order.shipping_address.address_line1}
+                  {order.shipping_address.address_line2 &&
+                    `, ${order.shipping_address.address_line2}`}
+                  {order.shipping_address.landmark &&
+                    `, ${order.shipping_address.landmark}`}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {order.shipping_address.city}, {order.shipping_address.state}{" "}
+                  - {order.shipping_address.pincode}
                 </p>
               </div>
             </div>
@@ -100,7 +118,12 @@ export function OrderDetail() {
             <Separator />
             <div className="flex items-center gap-3">
               <Calendar className="w-5 h-5 text-muted-foreground" />
-              <span>Estimated Delivery: {new Date(order.shipping_details?.estimated_delivery_date).toLocaleDateString()}</span>
+              <span>
+                Estimated Delivery:{" "}
+                {new Date(
+                  order.shipping_details?.estimated_delivery_date
+                ).toLocaleDateString()}
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -120,7 +143,10 @@ export function OrderDetail() {
                   <div className="flex items-center gap-4 mb-2 sm:mb-0">
                     {item.product.image_id && item.product.image_id[0] && (
                       <img
-                        src={`${CloudinaryConfig.CLOUDINARY_URL}/image/upload/${item?.product?.images?.[0]?.url || item?.product?.image_id?.[0]}`}
+                        src={`${CloudinaryConfig.CLOUDINARY_URL}/image/upload/${
+                          item?.product?.images?.[0]?.url ||
+                          item?.product?.image_id?.[0]
+                        }`}
                         alt={item.name}
                         className="w-16 h-16 object-cover rounded"
                       />
@@ -143,11 +169,18 @@ export function OrderDetail() {
               <Separator />
               <div className="flex justify-between pt-4">
                 <span className="font-medium">Subtotal</span>
-                <span>₹{(order.amount - order.shipping_details?.shipping_charge).toFixed(2)}</span>
+                <span>
+                  ₹
+                  {(
+                    order.amount - order.shipping_details?.shipping_charge
+                  ).toFixed(2)}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="font-medium">Shipping</span>
-                <span>₹{order.shipping_details?.shipping_charge?.toFixed(2)}</span>
+                <span>
+                  ₹{order.shipping_details?.shipping_charge?.toFixed(2)}
+                </span>
               </div>
               <Separator />
               <div className="flex justify-between text-lg font-semibold">
@@ -159,8 +192,7 @@ export function OrderDetail() {
         </Card>
       </div>
     </div>
-  )
+  );
 }
 
-export default OrderDetail
-
+export default OrderDetail;

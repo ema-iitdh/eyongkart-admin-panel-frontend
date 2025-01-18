@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { CloudinaryConfig } from "../../../Cloudinary";
+import { CloudinaryConfig } from "../../../../Cloudinary";
 import {
   Card,
   CardContent,
@@ -23,7 +23,10 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/hooks/use-toast";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
-import { useDeleteProduct, useProductById } from "@/features/products/hooks/useProducts";
+import {
+  useDeleteProduct,
+  useProductById,
+} from "@/features/products/hooks/useProducts";
 import { ROUTES } from "@/constants/routes";
 
 export function ProductDetail() {
@@ -54,7 +57,8 @@ export function ProductDetail() {
     } catch (err) {
       toast({
         title: "Error",
-        description: "Failed to delete the product. Please try again.", err,
+        description: "Failed to delete the product. Please try again.",
+        err,
         variant: "destructive",
       });
     }
@@ -100,7 +104,7 @@ export function ProductDetail() {
         className="flex items-center gap-2 mb-6"
       >
         <ArrowLeft className="w-8 h-8" />{" "}
-        <span className="text-lg">Back to Orders</span>
+        <span className="text-lg">Back to Products</span>
       </Button>
 
       <Card>

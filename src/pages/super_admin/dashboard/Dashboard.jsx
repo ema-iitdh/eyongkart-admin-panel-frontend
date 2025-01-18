@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { BarChart, Users, ShoppingBag, Package, ClipboardList } from 'lucide-react'
+import { BarChart, Users, ShoppingBag, Package, ClipboardList, ShoppingBasket } from 'lucide-react'
 import { ROUTES } from '@/constants/routes'
 
 const MotionCard = motion(Card)
@@ -46,6 +46,13 @@ export function Dashboard() {
       description: 'Process and track customer orders', 
       color: 'from-red-500 to-rose-500',
     },
+    {
+      title: 'Shops',
+      icon: ShoppingBasket,
+      route: ROUTES.SHOP.LIST,
+      description: 'View and manage all shops',
+      color: 'from-indigo-500 to-blue-500'
+    }
   ]
 
   return (

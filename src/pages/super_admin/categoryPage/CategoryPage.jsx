@@ -86,7 +86,7 @@ export function CategoryPage() {
         ),
       },
     ],
-    []
+    [handleViewCategory]
   );
 
   const table = useReactTable({

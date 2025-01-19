@@ -46,4 +46,9 @@ export const productService = {
     );
     return response.data;
   },
+
+  getProductBySellerId: async (sellerId) => {
+    const response = await Axios.get(API_ENDPOINTS.products.getProductBySellerId(sellerId));
+    return response.data;
+  }
 };

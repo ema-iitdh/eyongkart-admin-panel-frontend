@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { Button } from "@/components/ui/button"
-import { Form } from "@/components/ui/form"
-import { useToast } from "@/hooks/use-toast"
-import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+import { useToast } from "@/hooks/use-toast";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 import {
   FormControl,
@@ -15,19 +15,22 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+} from "@/components/ui/form";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { useGetAllAdmins } from '@/features/admin/hooks/useAdmin'
-import { ImageUpload } from './_components/image-uploads'
-import { useCreateShopPost } from '@/features/shop/hooks/useShop'
-import { useNavigate } from 'react-router-dom'
+} from "@/components/ui/select";
+import { useGetAllAdmins } from "@/features/admin/hooks/useAdmin";
+import { ImageUpload } from "./_components/image-uploads";
+import { useCreateShopPost } from "@/features/shop/hooks/useShop";
+import { useNavigate } from "react-router-dom";
+import useAuthenticationStore from "@/store/useAuthenticationStore";
+import { useGetSellerById } from "@/features/seller/hooks/useSeller";
+import { ROUTES } from "@/constants/routes";
 
 const formSchema = z.object({
   name: z.string().min(1, "Shop name is required").max(100),
@@ -47,94 +50,109 @@ const formSchema = z.object({
   website: z.string().optional(),
   logoAltText: z.string().optional(),
   bannerImageAltText: z.string().optional(),
-})
+});
 
 export function ShopCreate() {
-  const [logoFile, setLogoFile] = useState(null)
-  const [bannerFile, setBannerFile] = useState(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [currentTab, setCurrentTab] = useState('basic');
-  const { toast,dismiss } = useToast()
-  const createShopMutation = useCreateShopPost()
-  const navigate = useNavigate()
+  const [logoFile, setLogoFile] = useState(null);
+  const [bannerFile, setBannerFile] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [currentTab, setCurrentTab] = useState("basic");
+  const { toast } = useToast();
+  const createShopMutation = useCreateShopPost();
+  const navigate = useNavigate();
 
-  const { data: admins = [], isLoading: isLoadingAdmins } = useGetAllAdmins()
+  const { user } = useAuthenticationStore();
+  const isSuperAdmin = user.role === "Super_Admin";
+  const sellerId = user?.id;
+  const { data: seller } = useGetSellerById(sellerId);
+
+  const { data: admins = [], isLoading: isLoadingAdmins } = useGetAllAdmins();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       status: "active",
       country: "India",
+    },
+  });
+
+  useEffect(() => {
+    if(!isSuperAdmin && seller?.sellerAdmin) {
+      form.setValue('owner', sellerId);
     }
-  })
+  }, [seller, isSuperAdmin, sellerId, form])
 
   const goToNextTab = () => {
     switch (currentTab) {
-      case 'basic':
-        setCurrentTab('address');
+      case "basic":
+        setCurrentTab("address");
         break;
-      case 'address':
-        setCurrentTab('social');
+      case "address":
+        setCurrentTab("social");
         break;
-      case 'social':
-        setCurrentTab('images');
+      case "social":
+        setCurrentTab("images");
         break;
       default:
         break;
     }
   };
 
-
   async function onSubmit(values) {
-    if (isSubmitting) return
-    setIsSubmitting(true)
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
     try {
-      const formData = new FormData()
+      const formData = new FormData();
 
       Object.entries(values).forEach(([key, value]) => {
-        if (value) formData.append(key, value)
-      })
+        if (value) formData.append(key, value);
+      });
 
       if (logoFile) {
-        formData.append('logo', logoFile)
+        formData.append("logo", logoFile);
       }
       if (bannerFile) {
-        formData.append('bannerImage', bannerFile)
+        formData.append("bannerImage", bannerFile);
       }
 
-      const response = await createShopMutation.mutateAsync(formData)
-      console.log(response)
+      const response = await createShopMutation.mutateAsync(formData);
+      console.log(response);
       if (!response.success) {
-        throw new Error('Failed to create shop')
+        throw new Error("Failed to create shop");
       }
 
       toast({
         title: "Success",
         description: "Shop created successfully",
-      })
+      });
 
-      form.reset()
-      navigate('/dashboard/shops')
+      form.reset();
+      isSuperAdmin ? navigate("/dashboard/shops") : navigate(ROUTES.SELLER_SHOP);
     } catch (error) {
-      console.error('Shop creation error:', error)
+      console.error("Shop creation error:", error);
       toast({
         title: "Error",
         description: error.message || "Failed to create shop",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
   }
-// (()=>toast({title:"Test", description:"This is a test toast"}))()
+  // (()=>toast({title:"Test", description:"This is a test toast"}))()
   return (
     <div className="container mx-auto py-6 px-4 space-y-6">
       <h1 className="text-3xl font-bold">Create New Shop</h1>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <Tabs defaultValue="basic" value={currentTab} onValueChange={setCurrentTab} className="space-y-4">
+          <Tabs
+            defaultValue="basic"
+            value={currentTab}
+            onValueChange={setCurrentTab}
+            className="space-y-4"
+          >
             <TabsList>
               <TabsTrigger value="basic">Basic Details</TabsTrigger>
               <TabsTrigger value="address">Address</TabsTrigger>
@@ -155,18 +173,22 @@ export function ShopCreate() {
                           <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value}
-                            disabled={isLoadingAdmins}
-                          >
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select shop owner" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {admins.map((admin) => (
-                                <SelectItem key={admin._id} value={admin._id}>
-                                  {admin.name} ({admin.email})
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
+                            disabled={isLoadingAdmins || !isSuperAdmin}
+                          ><SelectTrigger className="w-full">
+                                  <SelectValue placeholder={isSuperAdmin ? "Select shop owner" : `${seller.sellerAdmin.name} (${seller.sellerAdmin.email})`} />
+                                </SelectTrigger>
+                            {isSuperAdmin ? (
+                                <SelectContent>
+                                  {admins.map((admin) => (
+                                    <SelectItem
+                                      key={admin._id}
+                                      value={admin._id}
+                                    >
+                                      {admin.name} ({admin.email})
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                            ): null}
                           </Select>
                         </FormControl>
                         <FormMessage />
@@ -195,7 +217,10 @@ export function ShopCreate() {
                       <FormItem>
                         <FormLabel>Description</FormLabel>
                         <FormControl>
-                          <Textarea {...field} placeholder="Enter shop description" />
+                          <Textarea
+                            {...field}
+                            placeholder="Enter shop description"
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -209,7 +234,11 @@ export function ShopCreate() {
                       <FormItem>
                         <FormLabel>Contact Email</FormLabel>
                         <FormControl>
-                          <Input {...field} type="email" placeholder="Enter contact email" />
+                          <Input
+                            {...field}
+                            type="email"
+                            placeholder="Enter contact email"
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -259,9 +288,16 @@ export function ShopCreate() {
                 <Button
                   type="button"
                   onClick={async () => {
-                    const result = await form.trigger(["owner", "name", "description", "contactEmail", "contactPhone", "status"])
+                    const result = await form.trigger([
+                      "owner",
+                      "name",
+                      "description",
+                      "contactEmail",
+                      "contactPhone",
+                      "status",
+                    ]);
                     if (result) {
-                      goToNextTab()
+                      goToNextTab();
                     }
                   }}
                 >
@@ -280,7 +316,10 @@ export function ShopCreate() {
                       <FormItem>
                         <FormLabel>Street Address</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Enter street address" />
+                          <Input
+                            {...field}
+                            placeholder="Enter street address"
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -336,7 +375,11 @@ export function ShopCreate() {
                       <FormItem>
                         <FormLabel>Country</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Enter country" disabled />
+                          <Input
+                            {...field}
+                            placeholder="Enter country"
+                            disabled
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -348,9 +391,15 @@ export function ShopCreate() {
                 <Button
                   type="button"
                   onClick={async () => {
-                    const result = await form.trigger(["street", "city", "state", "pincode", "country"])
+                    const result = await form.trigger([
+                      "street",
+                      "city",
+                      "state",
+                      "pincode",
+                      "country",
+                    ]);
                     if (result) {
-                      goToNextTab()
+                      goToNextTab();
                     }
                   }}
                 >
@@ -423,9 +472,14 @@ export function ShopCreate() {
                 <Button
                   type="button"
                   onClick={async () => {
-                    const result = await form.trigger(["facebook", "instagram", "twitter", "website"])
+                    const result = await form.trigger([
+                      "facebook",
+                      "instagram",
+                      "twitter",
+                      "website",
+                    ]);
                     if (result) {
-                      goToNextTab()
+                      goToNextTab();
                     }
                   }}
                 >
@@ -454,7 +508,10 @@ export function ShopCreate() {
                         <FormItem>
                           <FormLabel>Logo Alt Text</FormLabel>
                           <FormControl>
-                            <Input {...field} placeholder="Describe the logo for accessibility" />
+                            <Input
+                              {...field}
+                              placeholder="Describe the logo for accessibility"
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -479,7 +536,10 @@ export function ShopCreate() {
                         <FormItem>
                           <FormLabel>Banner Alt Text</FormLabel>
                           <FormControl>
-                            <Input {...field} placeholder="Describe the banner for accessibility" />
+                            <Input
+                              {...field}
+                              placeholder="Describe the banner for accessibility"
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -489,8 +549,11 @@ export function ShopCreate() {
                 </CardContent>
               </Card>
               <div className="mt-4 flex justify-end">
-                <Button type="submit" disabled={isSubmitting || isLoadingAdmins}>
-                  {isSubmitting ? 'Creating...' : 'Create Shop'}
+                <Button
+                  type="submit"
+                  disabled={isSubmitting || isLoadingAdmins}
+                >
+                  {isSubmitting ? "Creating..." : "Create Shop"}
                 </Button>
               </div>
             </TabsContent>
@@ -498,8 +561,7 @@ export function ShopCreate() {
         </form>
       </Form>
     </div>
-  )
+  );
 }
 
-export default ShopCreate
-
+export default ShopCreate;

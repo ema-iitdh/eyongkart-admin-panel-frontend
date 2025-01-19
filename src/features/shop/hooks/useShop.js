@@ -17,6 +17,16 @@ export const useShopById = (id) => {
     select: (data) => data.shop,
   });
 };
+
+export const useShopBySellerId = (sellerId) => {
+  return useQuery({
+    queryKey: ["shop", sellerId],
+    queryFn: () => shopService.getShopBySellerId(sellerId),
+    cacheTime: 0,
+    staleTime: 0,
+    select: (data) => data.shop,
+  })
+}
 export const useCreateShopPost = () => {
     const queryClient = useQueryClient();
     return useMutation({

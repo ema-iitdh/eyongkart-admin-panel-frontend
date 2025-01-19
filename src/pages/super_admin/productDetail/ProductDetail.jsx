@@ -28,6 +28,7 @@ import {
   useProductById,
 } from "@/features/products/hooks/useProducts";
 import { ROUTES } from "@/constants/routes";
+import useAuthenticationStore from "@/store/useAuthenticationStore";
 
 export function ProductDetail() {
   const { productId } = useParams();
@@ -41,6 +42,9 @@ export function ProductDetail() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [currentVariantImageIndex, setCurrentVariantImageIndex] = useState({});
   const { mutate: deleteProduct } = useDeleteProduct();
+  const { user } = useAuthenticationStore();
+  const userId = user?.id;
+  const isOwner = product.shop?.owner === userId;
 
   const handleUpdate = () => {
     navigate(`/products/update/${productId}`);
@@ -248,7 +252,7 @@ export function ProductDetail() {
             </Card>
           ))}
         </CardContent>
-        <CardFooter className="flex justify-between">
+        {isOwner && (<CardFooter className="flex justify-between">
           <Button onClick={handleUpdate}>Update Product</Button>
           <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
             <DialogTrigger asChild>
@@ -277,7 +281,7 @@ export function ProductDetail() {
               </DialogFooter>
             </DialogContent>
           </Dialog>
-        </CardFooter>
+        </CardFooter>)}
       </Card>
     </div>
   );

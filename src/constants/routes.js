@@ -12,6 +12,22 @@ export const ROUTES = {
   SPECIFICCATEGORY: "/dashboard/categories/:categoryId",
   EDITCATEGORY: "/dashboard/categories/:categoryId/edit",
   ADD_SUBCATEGORY: "/dashboard/categories/:categoryId/subcategories/add",
+  PRODUCT: {
+    LIST: "/dashboard/products",
+    DETAIL: "/dashboard/products/:productId",
+    CREATE: "/dashboard/products/create",
+    UPDATE: "/products/update/:productId",
+  },
+  SHOP:{
+    LIST: '/dashboard/shops',
+    DETAIL: '/dashboard/shops/:shopId',
+    CREATE: '/dashboard/shops/create'
+  },
+  SELLER_DASHBOARD: "/",
+  SELLER_PRODUCT: "/seller/products",
+  SELLER_ORDER: "/seller/orders",
+  SELLER_SHOP: "seller/shops",
+  SELLER_SHOP_EDIT: "seller/shop/edit/:shopId",
 
   COLLECTIONS: "/collections",
   COLLECTIONS_PRODUCTS: "/collections/:title",
@@ -20,17 +36,6 @@ export const ROUTES = {
   ABOUT: "/about",
   CART: "/cart",
 
-  PRODUCT: {
-    LIST: "/dashboard/products",
-    DETAIL: "/dashboard/products/:productId",
-    CREATE: "/dashboard/products/create",
-    UPDATE: "/products/update/:productId",
-  },
-    SHOP:{
-      LIST: '/dashboard/shops',
-      DETAIL: '/dashboard/shops/:shopId',
-      CREATE: '/dashboard/shops/create'
-    },
   SORTED: "/sorted/:categoryId/:subcategoryId?",
   CATEGORY: "/category",
   CATEGORY_CREATE: "/dashboard/category/create",
@@ -43,9 +48,6 @@ export const ROUTES = {
   CHAT: "/chat",
   SELLER_FORM: "/sellerform",
   SELL_ON: "/sellOn",
-  SELLER_DASHBOARD: "/sellerdashboard",
-  SELLER_PRODUCT: "/sellerproduct",
-  SELLER_ORDER: "/sellerorder",
   PRIVACY_POLICY: "/privacypolicy",
   TERMS_AND_CONDITIONS: "/tac",
   CANCELLATION_AND_REFUND: "/cancel",

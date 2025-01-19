@@ -14,6 +14,10 @@ export const shopService = {
         const response = await Axios.get(API_ENDPOINTS.shop.getShopById(id));
         return response.data;
     },
+    getShopBySellerId: async (sellerId) => {
+        const response = await Axios.get(API_ENDPOINTS.shop.getShopBySellerId(sellerId));
+        return response.data;
+    },
     createShopPost: async (formData) => {
         const response = await Axios.post(API_ENDPOINTS.shop.add, formData, {
             headers: {

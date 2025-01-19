@@ -34,6 +34,15 @@ export const useProductByShopId = (shopId) => {
   });
 };
 
+export const useProductBySellerId = (sellerId) => {
+  return useQuery({
+    queryKey: ["product", sellerId],
+    queryFn: () => productService.getProductBySellerId(sellerId),
+    select: (data) => data.products,
+    enabled: !!sellerId,
+  })
+}
+
 export const useCreateProductPost = () => {
   const queryClient = useQueryClient();
   return useMutation({

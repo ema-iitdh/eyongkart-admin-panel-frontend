@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 import {
   FormControl,
   FormDescription,
@@ -6,25 +6,35 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { useGetAllCategories } from '@/features/categories/hooks/useCategory';
-import { useGetSubcategoryByCategoryId } from '@/features/subcategories/hooks/useSubcategory';
-import { useEffect, useState } from 'react';
-import { useGetAllShops } from '@/features/shop/hooks/useShop';
+} from "@/components/ui/select";
+import { useGetAllCategories } from "@/features/categories/hooks/useCategory";
+import { useGetSubcategoryByCategoryId } from "@/features/subcategories/hooks/useSubcategory";
+import { useEffect, useState } from "react";
+import {
+  useGetAllShops,
+  useShopBySellerId,
+} from "@/features/shop/hooks/useShop";
+import useAuthenticationStore from "@/store/useAuthenticationStore";
 
 export function Categorization({ form }) {
-    // todo implement api request to fetch categories, subcategories and shop
+  const { user } = useAuthenticationStore();
+  const sellerId = user?.id;
+  const isSuperAdmin = user?.role === "Super_Admin";
   const { data: categories = [] } = useGetAllCategories();
 
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const { data: subcategories = [], isLoading, refetch: fetchSubcategories } = useGetSubcategoryByCategoryId(selectedCategory);
+  const {
+    data: subcategories = [],
+    isLoading,
+    refetch: fetchSubcategories,
+  } = useGetSubcategoryByCategoryId(selectedCategory);
 
   useEffect(() => {
     if (selectedCategory) {
@@ -33,6 +43,7 @@ export function Categorization({ form }) {
   }, [selectedCategory, fetchSubcategories]);
 
   const { data: shops = [] } = useGetAllShops();
+  const { data: shopOfSeller = [] } = useShopBySellerId(sellerId);
 
   return (
     <div className="space-y-4">
@@ -42,12 +53,13 @@ export function Categorization({ form }) {
         render={({ field }) => (
           <FormItem>
             <FormLabel>Category</FormLabel>
-            <Select onValueChange={(value) => {
-              field.onChange(value); //update the form state
-              console.log(value);
-              setSelectedCategory(value);
-            }} 
-            defaultValue={field.value}>
+            <Select
+              onValueChange={(value) => {
+                field.onChange(value);
+                setSelectedCategory(value);
+              }}
+              defaultValue={field.value}
+            >
               <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder="Select a category" />
@@ -74,9 +86,10 @@ export function Categorization({ form }) {
         render={({ field }) => (
           <FormItem>
             <FormLabel>Subcategory</FormLabel>
-            <Select onValueChange={field.onChange} 
-            defaultValue={field.value}
-            disabled={!selectedCategory || isLoading} // disable if no category is selected
+            <Select
+              onValueChange={field.onChange}
+              defaultValue={field.value}
+              disabled={!selectedCategory || isLoading}
             >
               <FormControl>
                 <SelectTrigger>
@@ -104,34 +117,53 @@ export function Categorization({ form }) {
         render={({ field }) => (
           <FormItem>
             <FormLabel>Shop</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a shop" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {shops.map((shop) => (
-                  <SelectItem key={shop.id} value={shop.id}>
-                    {shop.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {isSuperAdmin ? (
+              // Shop Selection for Super Admin
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a shop" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {shops.map((shop) => (
+                    <SelectItem key={shop.id} value={shop.id}>
+                      {shop.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : (
+              // Pre-filled and unmodifiable Shop for Seller Admin
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a shop" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {shopOfSeller.map((shop) => (
+                    <SelectItem key={shop.id} value={shop.id}>
+                      {shop.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
             <FormDescription>
-              Choose the shop for this product.
+              {"Choose the shop for this product."}
             </FormDescription>
             <FormMessage />
           </FormItem>
         )}
       />
     </div>
-  )
+  );
 }
 
 Categorization.propTypes = {
   form: PropTypes.shape({
     control: PropTypes.object.isRequired,
+    setValue: PropTypes.func.isRequired,
   }).isRequired,
-}
-
+};

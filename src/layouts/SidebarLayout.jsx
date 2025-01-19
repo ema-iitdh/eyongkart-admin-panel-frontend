@@ -30,9 +30,9 @@ export default function SideBarLayout() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  const getPageTitle = () => {
+  const getPageTitle = () => {  
     const path = location.pathname.split('/')[2];
-    return path.charAt(0).toUpperCase() + path.slice(1) || 'Home';
+    return path?.charAt(0)?.toUpperCase() + path?.slice(1) || 'Home';
   }
 
   return (

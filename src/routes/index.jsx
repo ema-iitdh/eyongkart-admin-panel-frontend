@@ -25,54 +25,51 @@ import CategoryPage from "@/pages/super_admin/categoryPage/CategoryPage";
 import CategoryDetail from "@/pages/super_admin/categoryDetail/CategoryDetail";
 import useAuthenticationStore from "@/store/useAuthenticationStore";
 import { SellerDashboard } from "@/pages/seller_admin/dashboard/Dashboard";
+import { RedirectAuthenticatedUser } from "./RedirectAuthenticatedUser";
+import SellerProductList from "@/pages/seller_admin/sellerProductList/SellerProductList";
+import SellerShop from "@/pages/seller_admin/sellerShop/SellerShop";
 export default function AppRoutes() {
   const { user } = useAuthenticationStore();
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Routes>
-        {user?.role == "Super_Admin" && (
           <Route element={<ProtectedRoute />}>
             <Route element={<SideBarLayout />}>
+              <Route path={ROUTES.PRODUCT.CREATE} element={<ProductCreate />} />
+              <Route path={ROUTES.SHOP.CREATE} element={<ShopCreate />} />
+              <Route path={ROUTES.PRODUCT.DETAIL} element={<ProductDetail />} />
+          {user?.role == "Super_Admin" && (
+            <Route>
               <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
               <Route path={ROUTES.ANALYTICS} element={<Analytics />} />
               <Route path={ROUTES.ORDERPAGE} element={<OrderPage />} />
               <Route path={ROUTES.SPECIFICORDER} element={<OrderDetail />} />
               <Route path={ROUTES.ALLCUSTOMERS} element={<CustomerPage />} />
-              <Route
-                path={ROUTES.SPECIFICCUSTOMER}
-                element={<CustomerDetail />}
-              />
+              <Route path={ROUTES.SPECIFICCUSTOMER} element={<CustomerDetail />} />
               <Route path={ROUTES.ALLCATEGORIES} element={<CategoryPage />} />
-              <Route
-                path={ROUTES.SPECIFICCATEGORY}
-                element={<CategoryDetail />}
-              />
+              <Route path={ROUTES.SPECIFICCATEGORY} element={<CategoryDetail />} />
               <Route path={ROUTES.EDITCATEGORY} element={<CategoryUpdate />} />
               <Route path={ROUTES.PRODUCT.LIST} element={<ProductPage />} />
-              <Route path={ROUTES.PRODUCT.DETAIL} element={<ProductDetail />} />
-              <Route path={ROUTES.PRODUCT.CREATE} element={<ProductCreate />} />
               <Route path={ROUTES.PRODUCT.UPDATE} element={<ProductUpdate />} />
-              <Route
-                path={ROUTES.CATEGORY_CREATE}
-                element={<CategoryCreate />}
-              />
-              <Route
-                path={ROUTES.ADD_SUBCATEGORY}
-                element={<AddSubCategory />}
-              />{" "}
+              <Route path={ROUTES.CATEGORY_CREATE} element={<CategoryCreate />} />
+              <Route path={ROUTES.ADD_SUBCATEGORY} element={<AddSubCategory />} />
               <Route path={ROUTES.SHOP.LIST} element={<ShopPage />} />
               <Route path={ROUTES.SHOP.DETAIL} element={<ShopDetail />} />
-              <Route path={ROUTES.SHOP.CREATE} element={<ShopCreate />} />
-            </Route>
-          </Route>
+              </Route>
         )}
         {user?.role === "Shop_Seller_Site_Admin" && (
           <Route>
-            <Route path={`/`} element={<SellerDashboard />} />
+            <Route path={ROUTES.SELLER_DASHBOARD} element={<SellerDashboard />} />
+            <Route path={ROUTES.SELLER_PRODUCT} element={<SellerProductList />}/>
+            <Route path={ROUTES.SELLER_SHOP} element={<SellerShop />} />
           </Route>
         )}
-        <Route path={ROUTES.LOGIN} element={<Login />} />
-        <Route path={ROUTES.SIGNUP} element={<Signup />} />
+            </Route>
+          </Route>
+        <Route element={<RedirectAuthenticatedUser />}>
+          <Route path={ROUTES.LOGIN} element={<Login />} />
+          <Route path={ROUTES.SIGNUP} element={<Signup />} />
+        </Route>
       </Routes>
     </Suspense>
   );

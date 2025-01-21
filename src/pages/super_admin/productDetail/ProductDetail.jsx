@@ -44,7 +44,8 @@ export function ProductDetail() {
   const { mutate: deleteProduct } = useDeleteProduct();
   const { user } = useAuthenticationStore();
   const userId = user?.id;
-  const isOwner = product.shop?.owner === userId;
+  const isOwner = product?.shop?.owner === userId;
+  const isSuperAdmin = user?.role === "Super_Admin";
 
   const handleUpdate = () => {
     navigate(`/products/update/${productId}`);
@@ -163,13 +164,13 @@ export function ProductDetail() {
 
               <h3 className="text-lg font-semibold mb-2">Shop Information</h3>
               <p>
-                <strong>Shop Name:</strong> {product.shop.name}
+                <strong>Shop Name:</strong> {product.shop?.name}
               </p>
               <p>
-                <strong>Contact Email:</strong> {product.shop.contactEmail}
+                <strong>Contact Email:</strong> {product.shop?.contactEmail}
               </p>
               <p>
-                <strong>Contact Phone:</strong> {product.shop.contactPhone}
+                <strong>Contact Phone:</strong> {product.shop?.contactPhone}
               </p>
             </div>
           </div>
@@ -252,8 +253,8 @@ export function ProductDetail() {
             </Card>
           ))}
         </CardContent>
-        {isOwner && (<CardFooter className="flex justify-between">
-          <Button onClick={handleUpdate}>Update Product</Button>
+        {(isOwner || isSuperAdmin) && (<CardFooter className="flex justify-between">
+          {/* <Button onClick={handleUpdate}>Update Product</Button> */}
           <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
             <DialogTrigger asChild>
               <Button variant="destructive">Delete Product</Button>

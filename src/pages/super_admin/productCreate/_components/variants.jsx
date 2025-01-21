@@ -361,29 +361,17 @@ Variants.propTypes = {
 };
 
 function setMultipleImages(index, setVariantImages) {
-	return (imageFile) => {
-		setVariantImages((prev) => {
-			// if this is the first image
-			if (!Array.isArray(prev[index])) {
-				return {
-					...prev,
-					[index]: [imageFile[0]],
-				};
-			}
-
-			// if there is an existing image(s)
-			const prevImagesForThisIndex = prev[index];
-			// TODO: Allow only 5 images
-			// if(prevImagesForThisIndex.length >= 5) {
-			//   return prev
-			// }
-
-			prevImagesForThisIndex.push(imageFile[0]);
-
-			return {
-				...prev,
-				[index]: prevImagesForThisIndex,
-			};
-		});
-	};
-}
+	return (newImages) => {
+	  setVariantImages((prev) => {
+		// Handle the case where newImages is a single file or an array
+		const imagesToAdd = Array.isArray(newImages) ? newImages : [newImages]
+		
+		return {
+		  ...prev,
+		  [index]: Array.isArray(prev[index]) 
+			? [...prev[index], ...imagesToAdd].slice(0, 5)  // Limit to 5 images
+			: imagesToAdd.slice(0, 5)
+		}
+	  })
+	}
+  }

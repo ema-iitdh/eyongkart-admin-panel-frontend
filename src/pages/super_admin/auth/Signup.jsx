@@ -1,5 +1,5 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ROUTES } from "../../../constants/routes";
@@ -29,6 +29,7 @@ const Signup = () => {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
   const { mutate: signup, isLoading, isError, error } = useSignup();
+  const [showPassword, setShowPassword] = useState(false);
 
   const validateForm = () => {
     try {
@@ -56,6 +57,37 @@ const Signup = () => {
     }
   };
 
+  const shouldShowPasswordRequirements = () => {
+    if (!password) return false;
+    return !(
+      password.length >= 8 &&
+      /[A-Z]/.test(password) &&
+      /[a-z]/.test(password) &&
+      /[0-9]/.test(password) &&
+      /[!@#$%^&*]/.test(password)
+    );
+  };
+  const handleInputChange = (field, value, setter) => {
+    setter(value);
+    try {
+      // Only validate the changing field
+      const partialData = { [field]: value };
+      signupSchema.pick({ [field]: true }).parse(partialData);
+      // Clear error for this field if validation passes
+      setValidationErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        setValidationErrors((prev) => ({
+          ...prev,
+          [field]: err.errors[0].message,
+        }));
+      }
+    }
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -65,7 +97,7 @@ const Signup = () => {
   const errorMessage = error?.response?.data?.message || error?.message;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center p-2">
+    <div className="min-h-screen bg-gradient-to-br from-white to-gray-400 flex items-center justify-center p-2">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -103,9 +135,11 @@ const Signup = () => {
               whileFocus={{ scale: 1.01 }}
               type="text"
               value={userName}
-              onChange={(e) => setUserName(e.target.value)}
+              onChange={(e) =>
+                handleInputChange("userName", e.target.value, setUserName)
+              }
               required
-              className="w-full px-3 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200 ease-in-out text-sm"
+              className="w-full px-3 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200 ease-in-out text-sm"
               placeholder="Enter your username"
             />
             {validationErrors.userName && (
@@ -127,9 +161,11 @@ const Signup = () => {
               whileFocus={{ scale: 1.01 }}
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) =>
+                handleInputChange("email", e.target.value, setEmail)
+              }
               required
-              className="w-full px-3 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200 ease-in-out text-sm"
+              className="w-full px-3 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200 ease-in-out text-sm"
               placeholder="Enter your email"
             />
             {validationErrors.email && (
@@ -151,9 +187,11 @@ const Signup = () => {
               whileFocus={{ scale: 1.01 }}
               type="tel"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) =>
+                handleInputChange("phone", e.target.value, setPhone)
+              }
               required
-              className="w-full px-3 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200 ease-in-out text-sm"
+              className="w-full px-3 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200 ease-in-out text-sm"
               placeholder="Enter your phone number"
             />
             {validationErrors.phone && (
@@ -170,16 +208,146 @@ const Signup = () => {
             >
               Password
             </label>
-            <motion.input
-              id="password"
-              whileFocus={{ scale: 1.01 }}
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full px-3 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200 ease-in-out text-sm"
-              placeholder="Create a password"
-            />
+            <div className="relative">
+              <motion.input
+                id="password"
+                whileFocus={{ scale: 1.01 }}
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) =>
+                  handleInputChange("password", e.target.value, setPassword)
+                }
+                required
+                className="w-full px-3 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200 ease-in-out text-sm"
+                placeholder="Create a password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+              >
+                {showPassword ? (
+                  // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-4 h-4"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"
+                    />
+                  </svg>
+                ) : (
+                  // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-4 h-4"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                )}
+              </button>
+            </div>
+            <AnimatePresence>
+              {shouldShowPasswordRequirements() && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="mt-2 space-y-1 overflow-hidden"
+                >
+                  <p className="text-xs text-gray-600">
+                    Password must contain:
+                  </p>
+                  <ul className="text-xs text-gray-500 space-y-1 pl-4">
+                    <motion.li
+                      className="flex items-center gap-1"
+                      animate={{ opacity: password.length >= 8 ? 0.5 : 1 }}
+                    >
+                      <div
+                        className={`w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
+                          password.length >= 8 ? "bg-green-500" : "bg-gray-300"
+                        }`}
+                      />
+                      At least 8 characters
+                    </motion.li>
+                    <motion.li
+                      className="flex items-center gap-1"
+                      animate={{ opacity: /[A-Z]/.test(password) ? 0.5 : 1 }}
+                    >
+                      <div
+                        className={`w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
+                          /[A-Z]/.test(password)
+                            ? "bg-green-500"
+                            : "bg-gray-300"
+                        }`}
+                      />
+                      One uppercase letter
+                    </motion.li>
+                    <motion.li
+                      className="flex items-center gap-1"
+                      animate={{ opacity: /[a-z]/.test(password) ? 0.5 : 1 }}
+                    >
+                      <div
+                        className={`w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
+                          /[a-z]/.test(password)
+                            ? "bg-green-500"
+                            : "bg-gray-300"
+                        }`}
+                      />
+                      One lowercase letter
+                    </motion.li>
+                    <motion.li
+                      className="flex items-center gap-1"
+                      animate={{ opacity: /[0-9]/.test(password) ? 0.5 : 1 }}
+                    >
+                      <div
+                        className={`w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
+                          /[0-9]/.test(password)
+                            ? "bg-green-500"
+                            : "bg-gray-300"
+                        }`}
+                      />
+                      One number
+                    </motion.li>
+                    <motion.li
+                      className="flex items-center gap-1"
+                      animate={{
+                        opacity: /[!@#$%^&*]/.test(password) ? 0.5 : 1,
+                      }}
+                    >
+                      <div
+                        className={`w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
+                          /[!@#$%^&*]/.test(password)
+                            ? "bg-green-500"
+                            : "bg-gray-300"
+                        }`}
+                      />
+                      One special character (!@#$%^&*)
+                    </motion.li>
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
             {validationErrors.password && (
               <p className="mt-1 text-xs text-red-600">
                 {validationErrors.password}
@@ -211,7 +379,7 @@ const Signup = () => {
             whileTap={{ scale: 0.98 }}
             type="submit"
             disabled={isLoading || !agreeToTerms || !isFormValid()}
-            className="w-full bg-gradient-to-r from-purple-600 to-blue-500 text-white py-2 rounded-md text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200 ease-in-out disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full bg-black hover:bg-black/90 text-white py-2 rounded-md text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200 ease-in-out disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <div className="flex items-center justify-center">

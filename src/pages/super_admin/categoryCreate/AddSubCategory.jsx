@@ -18,8 +18,8 @@ import { Switch } from "@/components/ui/switch";
 import { ROUTES } from "@/constants/routes";
 import { ArrowLeft, X } from "lucide-react";
 import { useState } from "react";
-import { useCreateSubCategory } from "@/features/categories/hooks/useCategory";
 import { toast } from "@/hooks/use-toast";
+import { useCreateSubCategory } from "@/features/subcategories/hooks/useSubcategory";
 
 const subCategorySchema = z.object({
   subCategories: z

@@ -64,9 +64,11 @@ export function ShopCreate() {
   const { user } = useAuthenticationStore();
   const isSuperAdmin = user.role === "Super_Admin";
   const sellerId = user?.id;
+  console.log(sellerId);
   const { data: seller } = useGetSellerById(sellerId);
 
   const { data: admins = [], isLoading: isLoadingAdmins } = useGetAllAdmins();
+  console.log(seller, "seller");
 
   const form = useForm({
     resolver: zodResolver(formSchema),

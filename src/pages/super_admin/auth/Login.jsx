@@ -240,7 +240,7 @@ const Login = () => {
           </motion.button>
         </form>
 
-        <div className="mt-6 text-center">
+        {/* <div className="mt-6 text-center">
           <p className="text-gray-600">
             Don't have an account?{" "}
             <Link
@@ -250,7 +250,7 @@ const Login = () => {
               Sign up
             </Link>
           </p>
-        </div>
+        </div> */}
       </motion.div>
     </div>
   );

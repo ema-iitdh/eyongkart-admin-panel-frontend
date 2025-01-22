@@ -31,6 +31,8 @@ export const ROUTES = {
   SELLER_SHOP: "seller/shops",
   SELLER_SHOP_EDIT: "seller/shop/edit/:shopId",
 
+  NEW_ADMIN: "/newadmin/create",
+
   COLLECTIONS: "/collections",
   COLLECTIONS_PRODUCTS: "/collections/:title",
   SEARCH: "/search",

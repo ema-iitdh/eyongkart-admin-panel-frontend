@@ -13,7 +13,7 @@ export const productService = {
   },
   getProducts: async ({ filter = "" }) => {
     const response = await Axios.get(API_ENDPOINTS.products.list(filter));
-    console.log(response.data)
+    console.log(response.data);
     return response.data;
   },
   updateProduct: async (id, formData) => {
@@ -48,7 +48,22 @@ export const productService = {
   },
 
   getProductBySellerId: async (sellerId) => {
-    const response = await Axios.get(API_ENDPOINTS.products.getProductBySellerId(sellerId));
-    return response.data;
-  }
+    try {
+      const response = await Axios.get(
+        API_ENDPOINTS.products.getProductBySellerId(sellerId)
+      );
+      console.log("Response:", response); // Will log only for successful responses
+      return response.data;
+    } catch (error) {
+      // Check if it's an HTTP error and handle gracefully
+      if (error.response) {
+        console.log("Error response:", error.response); // Logs backend error response
+        return error.response.data; // Return the backend response (e.g., { success: false, message: '...' })
+      } else {
+        // For network errors or other unexpected issues
+        console.error("Unexpected error:", error);
+        throw new Error("An unexpected error occurred");
+      }
+    }
+  },
 };

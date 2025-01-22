@@ -6,4 +6,8 @@ export const adminServices = {
         const response = await Axios.get(API_ENDPOINTS.admin.getAll);
         return response.data;
     },
+    createNewAdmin: async (formData) => {
+        const response = await Axios.post(API_ENDPOINTS.adminAuth.createNew, formData);
+        return response.data;
+    }
 }

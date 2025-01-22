@@ -135,7 +135,6 @@ function SellerProductList() {
   }
 
   const filteredRows = table.getRowModel().rows;
-
   return (
   <div className="space-y-4">
     <div className="flex items-center justify-between">

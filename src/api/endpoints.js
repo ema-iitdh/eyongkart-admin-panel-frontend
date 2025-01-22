@@ -3,6 +3,7 @@ export const API_ENDPOINTS = {
       login: '/admin/login',
       register: '/admin/create',
       logout: '/admin/logout',
+      createNew: '/admin/create',
       // ! TODO: IMPLEMENT THIS ASAP
       refresh: '/admin/refresh',
     },

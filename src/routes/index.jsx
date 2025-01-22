@@ -25,7 +25,6 @@ import ShopCreate from "@/pages/super_admin/shopCreate/ShopCreate";
 import CategoryPage from "@/pages/super_admin/categoryPage/CategoryPage";
 import CategoryDetail from "@/pages/super_admin/categoryDetail/CategoryDetail";
 import useAuthenticationStore from "@/store/useAuthenticationStore";
-import { SellerDashboard } from "@/pages/seller_admin/dashboard/Dashboard";
 import { RedirectAuthenticatedUser } from "./RedirectAuthenticatedUser";
 import SellerProductList from "@/pages/seller_admin/sellerProductList/SellerProductList";
 import SellerShop from "@/pages/seller_admin/sellerShop/SellerShop";

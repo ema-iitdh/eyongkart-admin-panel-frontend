@@ -14,11 +14,18 @@ import {
   Calendar,
   Package,
   Edit,
+  Trash,
+  Trash2,
 } from "lucide-react";
-import { useGetAllCategories } from "@/features/categories/hooks/useCategory";
+import {
+  useGetAllCategories,
+  useDeleteCategory,
+} from "@/features/categories/hooks/useCategory";
 import { Loader } from "@/components/common/loader";
 import { ROUTES } from "@/constants/routes";
 import { useEffect } from "react";
+import { toast } from "@/hooks/use-toast";
+import { useDeleteSubCategory } from "@/features/subcategories/hooks/useSubcategory";
 
 export function CategoryDetail() {
   const { categoryId } = useParams();
@@ -29,6 +36,8 @@ export function CategoryDetail() {
     error,
     refetch,
   } = useGetAllCategories();
+  const { mutateAsync: deleteCategory } = useDeleteCategory();
+  const { mutateAsync: deleteSubCategory } = useDeleteSubCategory();
 
   useEffect(() => {
     refetch();
@@ -38,13 +47,62 @@ export function CategoryDetail() {
     navigate(ROUTES.ADD_SUBCATEGORY.replace(":categoryId", categoryId));
   };
 
-  if (isLoading) return <Loader />;
-  if (error)
-    return (
-      <div className="flex justify-center items-center h-screen text-destructive">
-        Error loading category: {error.message}
-      </div>
-    );
+  const handleDeleteCategory = async () => {
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      try {
+        const response = await deleteCategory(categoryId);
+        if (response.success) {
+          toast({
+            title: "Success",
+            description: "Category deleted successfully",
+          });
+          navigate(ROUTES.ALLCATEGORIES);
+        } else {
+          toast({
+            title: "Error",
+            description: response?.message || "Failed to delete category",
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error("Failed to delete category:", error);
+        toast({
+          title: "Error",
+          description: "An error occurred while deleting the category",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
+  const handleDeleteSubCategory = async (subCategoryId) => {
+    if (window.confirm("Are you sure you want to delete this subcategory?")) {
+      try {
+        const response = await deleteSubCategory(subCategoryId);
+        if (response.success) {
+          toast({
+            title: "Success",
+            description: "Subcategory deleted successfully",
+          });
+          refetch();
+        } else {
+          toast({
+            title: "Error",
+            description: response?.message || "Failed to delete subcategory",
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error("Failed to delete subcategory:", error);
+        toast({
+          title: "Error",
+          description: "An error occurred while deleting the subcategory",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
   if (isLoading) return <Loader />;
   if (error)
     return (
@@ -55,12 +113,6 @@ export function CategoryDetail() {
 
   const category = categories.find((category) => category._id === categoryId);
 
-  if (!category)
-    return (
-      <div className="flex justify-center items-center h-screen">
-        Category not found
-      </div>
-    );
   if (!category)
     return (
       <div className="flex justify-center items-center h-screen">
@@ -80,18 +132,27 @@ export function CategoryDetail() {
           <ArrowLeft className="w-8 h-8" />{" "}
           <span className="text-lg">Back to Categories</span>
         </Button>
-        <Link
-          to={`/dashboard/categories/${categoryId}/edit`}
-          className={
-            buttonVariants({ variant: "default" }) + " flex items-center gap-2"
-          }
-        >
-          <Edit className="w-4 h-4" /> Edit Category
-        </Link>
+        <div className="flex gap-2 items-center">
+          <Link
+            to={`/dashboard/categories/${categoryId}/edit`}
+            className={
+              buttonVariants({ variant: "default" }) +
+              " flex items-center gap-2"
+            }
+          >
+            <Edit className="w-4 h-4" /> Edit Category
+          </Link>
+          <Button
+            variant="destructive"
+            onClick={handleDeleteCategory}
+            className="flex items-center gap-2"
+          >
+            <Trash className="w-4 h-4" /> Delete Category
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Category Summary Card */}
         <Card className="drop-shadow-2xl shadow-2xl">
           <CardHeader>
             <CardTitle className="text-2xl flex items-center gap-4">
@@ -172,12 +233,12 @@ export function CategoryDetail() {
                     <span className="font-medium">
                       {subCategory.subCategoryName}
                     </span>
-                    <span className="font-medium">
-                      {subCategory.subCategoryName}
-                    </span>
                     <div className="flex items-center gap-2">
                       <Link
-                        to={`/categories/${category._id}/subcategories/${subCategory._id}/edit`}
+                        to={ROUTES.EDIT_SUBCATEGORY.replace(
+                          ":categoryId",
+                          category._id
+                        ).replace(":subCategoryId", subCategory._id)}
                         className={
                           buttonVariants({ variant: "link" }) +
                           "flex items-center gap-2"
@@ -186,6 +247,10 @@ export function CategoryDetail() {
                         <Edit className="w-2 h-2" />
                         Edit
                       </Link>
+                      <Trash2
+                        className="w-4 h-4 cursor-pointer text-destructive"
+                        onClick={() => handleDeleteSubCategory(subCategory._id)}
+                      />
                     </div>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -220,4 +285,3 @@ export function CategoryDetail() {
 }
 
 export default CategoryDetail;
-

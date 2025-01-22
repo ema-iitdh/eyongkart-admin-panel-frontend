@@ -12,16 +12,18 @@ export const ROUTES = {
   SPECIFICCATEGORY: "/dashboard/categories/:categoryId",
   EDITCATEGORY: "/dashboard/categories/:categoryId/edit",
   ADD_SUBCATEGORY: "/dashboard/categories/:categoryId/subcategories/add",
+  EDIT_SUBCATEGORY:
+    "/dashboard/categories/:categoryId/subcategories/:subCategoryId/edit",
   PRODUCT: {
     LIST: "/dashboard/products",
     DETAIL: "/dashboard/products/:productId",
     CREATE: "/dashboard/products/create",
     UPDATE: "/products/update/:productId",
   },
-  SHOP:{
-    LIST: '/dashboard/shops',
-    DETAIL: '/dashboard/shops/:shopId',
-    CREATE: '/dashboard/shops/create'
+  SHOP: {
+    LIST: "/dashboard/shops",
+    DETAIL: "/dashboard/shops/:shopId",
+    CREATE: "/dashboard/shops/create",
   },
   SELLER_DASHBOARD: "/",
   SELLER_PRODUCT: "/seller/products",

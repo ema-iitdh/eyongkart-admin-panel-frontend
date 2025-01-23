@@ -104,7 +104,6 @@ export default function AppRoutes() {
         {/* Authentication Routes */}
         <Route element={<RedirectAuthenticatedUser />}>
           <Route path={ROUTES.LOGIN} element={<Login />} />
-          {/* <Route path={ROUTES.SIGNUP} element={<Signup />} /> */}
         </Route>
       </Routes>
     </Suspense>

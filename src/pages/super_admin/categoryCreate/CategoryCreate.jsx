@@ -78,6 +78,17 @@ export function CategoryCreate() {
   const isFirstStep = currentStepIndex === 0;
 
   const handleNext = async () => {
+    if (currentStep === "basic") {
+      const isValid = await form.trigger(["name", "gender"]);
+      if (!isValid) {
+        toast({
+          title: "Validation Error",
+          description: "Please fill all mandatory fields before proceeding.",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
     setCurrentStep(steps[currentStepIndex + 1].id);
   };
 
@@ -87,10 +98,30 @@ export function CategoryCreate() {
     }
   };
 
+  const handleStepChange = async (step) => {
+    let isValid = true;
+    if (currentStep === "basic") {
+      isValid = await form.trigger(["name", "gender"]);
+    }
+    if (isValid) {
+      setCurrentStep(step);
+    } else {
+      toast({
+        title: "Validation Error",
+        description: "Please fill all mandatory fields before proceeding.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="container mx-auto py-6 px-4 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold mb-8">Create New Category</h1>
-      <FormNavigation currentStep={currentStep} onStepChange={setCurrentStep} />
+      <FormNavigation
+        currentStep={currentStep}
+        onStepChange={handleStepChange}
+        isBasicDetailsValid={form.getValues("name") && form.getValues("gender")}
+      />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           {steps.find((step) => step.id === currentStep)?.component}

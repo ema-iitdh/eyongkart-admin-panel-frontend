@@ -1,13 +1,13 @@
-import { shopService } from "@/api/services/shop.service"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { shopService } from "@/api/services/shop.service";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useGetAllShops = () => {
-    return useQuery({
-        queryKey: ['shops'],
-        queryFn: () => shopService.getAllShops(),
-        select: (data) => data.shops
-    })
-}
+  return useQuery({
+    queryKey: ["shops"],
+    queryFn: () => shopService.getAllShops(),
+    select: (data) => data.shops,
+  });
+};
 export const useShopById = (id) => {
   return useQuery({
     queryKey: ["shop", id],
@@ -25,14 +25,35 @@ export const useShopBySellerId = (sellerId) => {
     cacheTime: 0,
     staleTime: 0,
     select: (data) => data.shop,
-  })
-}
+  });
+};
 export const useCreateShopPost = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-      mutationFn:async (formData) => shopService.createShopPost(formData),
-            onSuccess: () => {
-              queryClient.invalidateQueries('shops');
-            },
-    })
-  }
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (formData) => shopService.createShopPost(formData),
+    onSuccess: () => {
+      queryClient.invalidateQueries("shops");
+    },
+  });
+};
+
+export const useDeleteShop = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (shopId) => shopService.deleteShop(shopId),
+    onSuccess: () => {
+      queryClient.invalidateQueries("shops");
+    },
+  });
+};
+
+export const useUpdateShopPost = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ shopId, formData }) =>
+      shopService.updateShop(shopId, formData),
+    onSuccess: () => {
+      queryClient.invalidateQueries("shops");
+    },
+  });
+};

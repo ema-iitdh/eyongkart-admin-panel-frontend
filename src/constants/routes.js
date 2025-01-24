@@ -23,6 +23,7 @@ export const ROUTES = {
   SHOP: {
     LIST: "/dashboard/shops",
     DETAIL: "/dashboard/shops/:shopId",
+    EDIT: "/dashboard/shops/:shopId/edit",
     CREATE: "/dashboard/shops/create",
   },
   SELLER_DASHBOARD: "/",

@@ -7,7 +7,11 @@ const steps = [
   { id: "status", label: "Status & Display" },
 ];
 
-export function FormNavigation({ currentStep, onStepChange }) {
+export function FormNavigation({
+  currentStep,
+  onStepChange,
+  isBasicDetailsValid,
+}) {
   return (
     <nav className="mb-8">
       <ol className="grid grid-cols-2 lg:grid-cols-4 gap-2">
@@ -17,6 +21,7 @@ export function FormNavigation({ currentStep, onStepChange }) {
               variant={currentStep === step.id ? "default" : "outline"}
               className="w-full justify-start shadow-2xl"
               onClick={() => onStepChange(step.id)}
+              disabled={step.id === "status" && !isBasicDetailsValid}
             >
               <span className="mr-2 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-primary">
                 {index < steps.findIndex((s) => s.id === currentStep) ? (
@@ -37,4 +42,5 @@ export function FormNavigation({ currentStep, onStepChange }) {
 FormNavigation.propTypes = {
   currentStep: PropTypes.string.isRequired,
   onStepChange: PropTypes.func.isRequired,
+  isBasicDetailsValid: PropTypes.bool.isRequired,
 };

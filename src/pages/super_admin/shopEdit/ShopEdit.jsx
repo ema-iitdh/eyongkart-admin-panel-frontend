@@ -8,7 +8,6 @@ import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-
 import {
   FormControl,
   FormField,
@@ -25,11 +24,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useGetAllAdmins } from "@/features/admin/hooks/useAdmin";
-import { ImageUpload } from "./_components/image-uploads";
-import { useCreateShopPost } from "@/features/shop/hooks/useShop";
-import { useNavigate } from "react-router-dom";
-import useAuthenticationStore from "@/store/useAuthenticationStore";
-import { useGetSellerById } from "@/features/seller/hooks/useSeller";
+import { ImageUpload } from "../shopCreate/_components/image-uploads";
+import { useUpdateShopPost, useShopById } from "@/features/shop/hooks/useShop";
+import { useNavigate, useParams } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
 
 const formSchema = z.object({
@@ -52,37 +49,65 @@ const formSchema = z.object({
   bannerImageAltText: z.string().optional(),
 });
 
-export function ShopCreate() {
+export function ShopEdit() {
   const [logoFile, setLogoFile] = useState(null);
   const [bannerFile, setBannerFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentTab, setCurrentTab] = useState("basic");
   const { toast } = useToast();
-  const createShopMutation = useCreateShopPost();
+  const updateShopMutation = useUpdateShopPost();
   const navigate = useNavigate();
-
-  const { user } = useAuthenticationStore();
+  const { shopId } = useParams();
   const isSuperAdmin = "Super_Admin";
-  const sellerId = user?.id;
-  console.log(sellerId);
-  const { data: seller } = useGetSellerById(sellerId);
-
+  const { data: shop } = useShopById(shopId);
   const { data: admins = [], isLoading: isLoadingAdmins } = useGetAllAdmins();
-  console.log(seller, "seller");
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      status: "active",
-      country: "India",
+      name: shop?.name || "",
+      description: shop?.description || "",
+      owner: shop?.owner || "",
+      contactEmail: shop?.contactEmail || "",
+      contactPhone: shop?.contactPhone || "",
+      street: shop?.address?.street || "",
+      city: shop?.address?.city || "",
+      state: shop?.address?.state || "",
+      pincode: shop?.address?.pincode || "",
+      country: shop?.address?.country || "India",
+      status: shop?.status || "active",
+      facebook: shop?.socialMedia?.facebook || "",
+      instagram: shop?.socialMedia?.instagram || "",
+      twitter: shop?.socialMedia?.twitter || "",
+      website: shop?.socialMedia?.website || "",
+      logoAltText: shop?.logo?.altText || "",
+      bannerImageAltText: shop?.bannerImage?.altText || "",
     },
   });
 
   useEffect(() => {
-    if (!isSuperAdmin && seller?.sellerAdmin) {
-      form.setValue("owner", sellerId);
+    if (shop) {
+      form.reset({
+        name: shop.name,
+        description: shop.description,
+        owner: shop.owner,
+        contactEmail: shop.contactEmail,
+        contactPhone: shop.contactPhone,
+        street: shop.address.street,
+        city: shop.address.city,
+        state: shop.address.state,
+        pincode: shop.address.pincode,
+        country: shop.address.country,
+        status: shop.status,
+        facebook: shop.socialMedia.facebook,
+        instagram: shop.socialMedia.instagram,
+        twitter: shop.socialMedia.twitter,
+        website: shop.socialMedia.website,
+        logoAltText: shop.logo.altText,
+        bannerImageAltText: shop.bannerImage.altText,
+      });
     }
-  }, [seller, isSuperAdmin, sellerId, form]);
+  }, [shop, form]);
 
   const goToNextTab = () => {
     switch (currentTab) {
@@ -97,66 +122,6 @@ export function ShopCreate() {
         break;
       default:
         break;
-    }
-  };
-
-  const goToPreviousTab = () => {
-    switch (currentTab) {
-      case "address":
-        setCurrentTab("basic");
-        break;
-      case "social":
-        setCurrentTab("address");
-        break;
-      case "images":
-        setCurrentTab("social");
-        break;
-      default:
-        break;
-    }
-  };
-
-  const handleTabChange = async (tab) => {
-    let isValid = true;
-    switch (currentTab) {
-      case "basic":
-        isValid = await form.trigger([
-          "owner",
-          "name",
-          "description",
-          "contactEmail",
-          "contactPhone",
-          "status",
-        ]);
-        break;
-      case "address":
-        isValid = await form.trigger([
-          "street",
-          "city",
-          "state",
-          "pincode",
-          "country",
-        ]);
-        break;
-      case "social":
-        isValid = await form.trigger([
-          "facebook",
-          "instagram",
-          "twitter",
-          "website",
-        ]);
-        break;
-      default:
-        break;
-    }
-    if (isValid) {
-      setCurrentTab(tab);
-    } else {
-      toast({
-        title: "Validation Error",
-        description: "Please fill all mandatory fields before proceeding.",
-        variant: "destructive",
-      });
     }
   };
 
@@ -178,15 +143,17 @@ export function ShopCreate() {
         formData.append("bannerImage", bannerFile);
       }
 
-      const response = await createShopMutation.mutateAsync(formData);
-      console.log(response);
+      const response = await updateShopMutation.mutateAsync({
+        shopId,
+        formData,
+      });
       if (!response.success) {
-        throw new Error("Failed to create shop");
+        throw new Error("Failed to update shop");
       }
 
       toast({
         title: "Success",
-        description: "Shop created successfully",
+        description: "Shop updated successfully",
       });
 
       form.reset();
@@ -194,27 +161,27 @@ export function ShopCreate() {
         ? navigate("/dashboard/shops")
         : navigate(ROUTES.SELLER_SHOP);
     } catch (error) {
-      console.error("Shop creation error:", error);
+      console.error("Shop update error:", error);
       toast({
         title: "Error",
-        description: error.message || "Failed to create shop",
+        description: error.message || "Failed to update shop",
         variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);
     }
   }
-  // (()=>toast({title:"Test", description:"This is a test toast"}))()
+
   return (
     <div className="container mx-auto py-6 px-4 space-y-6">
-      <h1 className="text-3xl font-bold">Create New Shop</h1>
+      <h1 className="text-3xl font-bold">Edit Shop</h1>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <Tabs
             defaultValue="basic"
             value={currentTab}
-            onValueChange={handleTabChange}
+            onValueChange={setCurrentTab}
             className="space-y-4"
           >
             <TabsList>
@@ -244,7 +211,7 @@ export function ShopCreate() {
                                 placeholder={
                                   isSuperAdmin
                                     ? "Select shop owner"
-                                    : `${seller.sellerAdmin.name} (${seller.sellerAdmin.email})`
+                                    : `${shop.owner.name} (${shop.owner.email})`
                                 }
                               />
                             </SelectTrigger>
@@ -352,8 +319,7 @@ export function ShopCreate() {
                   />
                 </CardContent>
               </Card>
-              <div className="mt-4 flex justify-between">
-                <div></div>
+              <div className="mt-4 flex justify-end">
                 <Button
                   type="button"
                   onClick={async () => {
@@ -456,10 +422,7 @@ export function ShopCreate() {
                   />
                 </CardContent>
               </Card>
-              <div className="mt-4 flex justify-between">
-                <Button type="button" onClick={goToPreviousTab}>
-                  Previous
-                </Button>
+              <div className="mt-4 flex justify-end">
                 <Button
                   type="button"
                   onClick={async () => {
@@ -540,10 +503,7 @@ export function ShopCreate() {
                   />
                 </CardContent>
               </Card>
-              <div className="mt-4 flex justify-between">
-                <Button type="button" onClick={goToPreviousTab}>
-                  Previous
-                </Button>
+              <div className="mt-4 flex justify-end">
                 <Button
                   type="button"
                   onClick={async () => {
@@ -623,15 +583,12 @@ export function ShopCreate() {
                   </div>
                 </CardContent>
               </Card>
-              <div className="mt-4 flex justify-between">
-                <Button type="button" onClick={goToPreviousTab}>
-                  Previous
-                </Button>
+              <div className="mt-4 flex justify-end">
                 <Button
                   type="submit"
                   disabled={isSubmitting || isLoadingAdmins}
                 >
-                  {isSubmitting ? "Creating..." : "Create Shop"}
+                  {isSubmitting ? "Updating..." : "Update Shop"}
                 </Button>
               </div>
             </TabsContent>
@@ -642,4 +599,4 @@ export function ShopCreate() {
   );
 }
 
-export default ShopCreate;
+export default ShopEdit;

@@ -189,8 +189,14 @@ export function ProductCreate() {
   const isLastStep = currentStepIndex === steps.length - 1;
   const isFirstStep = currentStepIndex === 0;
 
-  const handleNext = () => {
-    if (!isLastStep) {
+  const handleNext = async () => {
+    let isValid = true;
+    if (currentStep === "basic") {
+      isValid = await form.trigger(["name", "description"]);
+    } else if (currentStep === "categorization") {
+      isValid = await form.trigger(["category", "shop"]);
+    }
+    if (isValid && !isLastStep) {
       setCurrentStep(steps[currentStepIndex + 1].id);
     }
   };
@@ -198,6 +204,30 @@ export function ProductCreate() {
   const handlePrevious = () => {
     if (!isFirstStep) {
       setCurrentStep(steps[currentStepIndex - 1].id);
+    }
+  };
+
+  const handleStepChange = async (step) => {
+    let isValid = true;
+    switch (currentStep) {
+      case "basic":
+        isValid = await form.trigger(["name", "description"]);
+        break;
+      case "categorization":
+        isValid = await form.trigger(["category", "shop"]);
+        break;
+      // Add more cases if needed for other steps
+      default:
+        break;
+    }
+    if (isValid) {
+      setCurrentStep(step);
+    } else {
+      toast({
+        title: "Validation Error",
+        description: "Please fill all mandatory fields before proceeding.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -213,7 +243,11 @@ export function ProductCreate() {
         <span className="text-lg">Back to Products</span>
       </Button>
       <h1 className="text-3xl font-bold mb-8">Create New Product</h1>
-      <FormNavigation currentStep={currentStep} onStepChange={setCurrentStep} />
+      <FormNavigation
+        currentStep={currentStep}
+        onStepChange={handleStepChange}
+        form={form}
+      />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           {steps.find((step) => step.id === currentStep)?.component}

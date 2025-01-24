@@ -22,6 +22,7 @@ import EditSubCategory from "@/pages/super_admin/categoryUpdate/EditSubCategory"
 import { ShopPage } from "@/pages/super_admin/shopPage/ShopPage";
 import ShopDetail from "@/pages/super_admin/shopDetail/ShopDetail";
 import ShopCreate from "@/pages/super_admin/shopCreate/ShopCreate";
+import ShopEdit from "@/pages/super_admin/shopEdit/ShopEdit"; // Import ShopEdit
 import CategoryPage from "@/pages/super_admin/categoryPage/CategoryPage";
 import CategoryDetail from "@/pages/super_admin/categoryDetail/CategoryDetail";
 import useAuthenticationStore from "@/store/useAuthenticationStore";
@@ -79,6 +80,7 @@ export default function AppRoutes() {
                 />
                 <Route path={ROUTES.SHOP.LIST} element={<ShopPage />} />
                 <Route path={ROUTES.SHOP.DETAIL} element={<ShopDetail />} />
+                <Route path={ROUTES.SHOP.EDIT} element={<ShopEdit />} />
               </Route>
             )}
             {user?.role === "Shop_Seller_Site_Admin" && (

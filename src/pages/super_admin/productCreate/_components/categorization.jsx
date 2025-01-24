@@ -52,7 +52,9 @@ export function Categorization({ form }) {
         name="category"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Category</FormLabel>
+            <FormLabel>
+              Category<span className="text-red-500">*</span>
+            </FormLabel>
             <Select
               onValueChange={(value) => {
                 field.onChange(value);
@@ -116,7 +118,9 @@ export function Categorization({ form }) {
         name="shop"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Shop</FormLabel>
+            <FormLabel>
+              Shop<span className="text-red-500">*</span>
+            </FormLabel>
             {isSuperAdmin ? (
               // Shop Selection for Super Admin
               <Select onValueChange={field.onChange} defaultValue={field.value}>

@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 import {
   FormControl,
   FormDescription,
@@ -6,9 +6,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 export function BasicDetails({ form }) {
   return (
@@ -18,7 +18,9 @@ export function BasicDetails({ form }) {
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Product Name</FormLabel>
+            <FormLabel>
+              Product Name<span className="text-red-500">*</span>
+            </FormLabel>
             <FormControl>
               <Input placeholder="Enter product name" {...field} />
             </FormControl>
@@ -32,7 +34,9 @@ export function BasicDetails({ form }) {
         name="description"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Description</FormLabel>
+            <FormLabel>
+              Description<span className="text-red-500">*</span>
+            </FormLabel>
             <FormControl>
               <Textarea
                 placeholder="Enter product description"
@@ -63,13 +67,11 @@ export function BasicDetails({ form }) {
         )}
       />
     </div>
-  )
+  );
 }
 
 BasicDetails.propTypes = {
   form: PropTypes.shape({
     control: PropTypes.object.isRequired,
   }).isRequired,
-}
-
-  
+};

@@ -67,13 +67,14 @@ export const useSignup = () => {
 export const useLogout = () => {
     const queryClient = useQueryClient();
     const { logout } = useAuthenticationStore();
-
+    const navigate = useNavigate();
     return useMutation({
         mutationFn: authService.logout,
         onSuccess: () => {
             logout();
             queryClient.clear();
-            console.log("successfully logged out");        
+            console.log("successfully logged out"); 
+            navigate(ROUTES.LOGIN)       
         },
         onError() {
             console.log("error while logging out");

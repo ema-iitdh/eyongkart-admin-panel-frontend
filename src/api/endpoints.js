@@ -3,6 +3,7 @@ export const API_ENDPOINTS = {
       login: '/admin/login',
       register: '/admin/create',
       logout: '/admin/logout',
+      createNew: '/admin/create',
       // ! TODO: IMPLEMENT THIS ASAP
       refresh: '/admin/refresh',
     },
@@ -74,12 +75,16 @@ export const API_ENDPOINTS = {
       getAll: '/admin/getAllAdmins',
       delete: (adminId) => `/admin/delete/${adminId}`,
     },
+    seller: {
+      getSellerById: (sellerId) => `/admin/seller/${sellerId}`
+    },
     // !!! SUPER ADMIN ONLY
     shop: {
       add: '/shop/create',
-      getShopById: (shopId) => `/shop/shop/${shopId}`,
+      getShopById: (shopId) => `/shop/${shopId}`,
       update: (shopId) => `/shop/update/${shopId}`,
       delete: (shopId) => `/shop/delete/${shopId}`,
+      getShopBySellerId: (sellerId) => `/shop/getShopBySellerId/${sellerId}`,
       // !! Implement this ASAP
       list: '/shop/getAllShops',
     },

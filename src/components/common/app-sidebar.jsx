@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 import {
   Sidebar,
   SidebarContent,
@@ -9,15 +8,19 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { BarChart3, ShoppingCart, Users, Package, FolderTree, CreditCard, Truck, Settings, X } from 'lucide-react'
+import { BarChart3, ShoppingCart, Users, Package, FolderTree, CreditCard, Truck, Settings, X, LayoutDashboard, ShoppingBasket } from 'lucide-react'
 import { Link, useLocation } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import useAuthenticationStore from "@/store/useAuthenticationStore"
+import { ROUTES } from "@/constants/routes"
 
-const items = [
+const superAdminItems = [
+  { title: "Dashboard", url: "/", icon: LayoutDashboard},
   { title: "Analytics", url: "/dashboard/analytics", icon: BarChart3 },
   { title: "Orders Management", url: "/dashboard/orders", icon: ShoppingCart },
   { title: "Customer Management", url: "/dashboard/customers", icon: Users },
+  { title: "Shop Management", url: "/dashboard/shops", icon: ShoppingBasket},
   { title: "Product Management", url: "/dashboard/products", icon: Package },
   { title: "Categories Management", url: "/dashboard/categories", icon: FolderTree },
   { title: "Payments & Transactions", url: "/dashboard/payments", icon: CreditCard },
@@ -25,10 +28,23 @@ const items = [
   { title: "Settings", url: "/dashboard/settings", icon: Settings },
 ]
 
-export function AppSidebar({ open, setOpen }) {
-  const location = useLocation()
+const sellerAdminItems = [
+  { title: "Dashboard", url: ROUTES.SELLER_DASHBOARD, icon: LayoutDashboard },
+  { title: "Product Management", url: ROUTES.SELLER_PRODUCT, icon: Package },
+  { title: "Shop Settings", url: ROUTES.SELLER_SHOP, icon: ShoppingBasket}
+]
 
-  const isActiveRoute = (url) => location.pathname.startsWith(url)
+export function AppSidebar({ open, setOpen }) {
+  const location = useLocation();
+  const { user } = useAuthenticationStore();
+  let items;
+  if (user?.role === "Super_Admin") {
+    items = superAdminItems;
+  } else {
+    items = sellerAdminItems;
+  }
+
+  const isActiveRoute = (url) => location.pathname.startsWith(url);
 
   return (
     <>
@@ -70,10 +86,10 @@ export function AppSidebar({ open, setOpen }) {
                       <Link
                         to={item.url}
                         className={cn(
-                          "flex items-center my-1 gap-3 py-2 px-4 rounded-md transition-colors duration-200",
+                          "flex items-center my-1 gap-3 py-2 px-4 rounded-md transition-colors duration-200 text-white hover:text-white",
                           isActiveRoute(item.url)
-                            ? "bg-black/50 text-white font-medium hover:text-white"
-                            : "text-muted-foreground text-white hover:bg-black/30 hover:text-white"
+                            ? "bg-black/50 font-medium hover:bg-black/50"
+                            : "hover:bg-black/40"
                         )}
                       >
                         <item.icon

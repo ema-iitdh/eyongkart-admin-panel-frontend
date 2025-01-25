@@ -38,7 +38,7 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      <BrowserRouter basename="/admin">
         <AppRoutes />
         <Toaster />
       </BrowserRouter>

@@ -1,19 +1,22 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import path from "node:path";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'node:path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  build: {
+    outDir: 'admin',
+  },
   server: {
     https: {
-      key: "./certificates/localhost-key.pem",
-      cert: "./certificates/localhost.pem",
+      key: './certificates/localhost-key.pem',
+      cert: './certificates/localhost.pem',
     },
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      '@': path.resolve(__dirname, './src'),
     },
   },
 });

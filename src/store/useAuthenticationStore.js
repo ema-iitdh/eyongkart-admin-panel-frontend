@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 // Helper to check if storage is available
 const isStorageAvailable = () => {
@@ -47,7 +47,7 @@ const useAuthenticationStore = create(
       logout: () => set({ isAuthenticated: false, user: null }),
     }),
     {
-      name: "user-storage",
+      name: 'admin-storage',
       storage: getStorage(),
       partialize: (state) => ({
         isAuthenticated: state.isAuthenticated,
@@ -56,7 +56,7 @@ const useAuthenticationStore = create(
       onError: (error) => {
         console.warn('Storage error:', error);
         // You could add additional error handling here if needed
-      }
+      },
     }
   )
 );

@@ -1,35 +1,35 @@
-import { Suspense } from "react";
-import { Route, Routes } from "react-router-dom";
-import { ROUTES } from "../constants/routes";
-import ProtectedRoute from "./ProtectedRoutes";
-import Login from "@/pages/super_admin/auth/Login";
-import Signup from "@/pages/super_admin/auth/Signup";
-import Dashboard from "@/pages/super_admin/dashboard/Dashboard";
-import SideBarLayout from "@/layouts/SidebarLayout";
-import { OrderPage } from "@/pages/super_admin/orderPage/OrderPage";
-import { OrderDetail } from "@/pages/super_admin/orderDetail/OrderDetail";
-import CustomerPage from "@/pages/super_admin/customerPage/CustomerPage";
-import CustomerDetail from "@/pages/super_admin/customerDetail/CustomerDetail";
-import CategoryUpdate from "@/pages/super_admin/categoryUpdate/CategoryUpdate";
-import { ProductPage } from "@/pages/super_admin/productPage/ProductPage";
-import ProductDetail from "@/pages/super_admin/productDetail/ProductDetail";
-import ProductCreate from "@/pages/super_admin/productCreate/ProductCreate";
-import { Analytics } from "@/pages/super_admin/analytics";
-import ProductUpdate from "@/pages/super_admin/productUpdate/ProductUpdate";
-import CategoryCreate from "@/pages/super_admin/categoryCreate/CategoryCreate";
-import AddSubCategory from "@/pages/super_admin/categoryCreate/AddSubCategory";
-import EditSubCategory from "@/pages/super_admin/categoryUpdate/EditSubCategory";
-import { ShopPage } from "@/pages/super_admin/shopPage/ShopPage";
-import ShopDetail from "@/pages/super_admin/shopDetail/ShopDetail";
-import ShopCreate from "@/pages/super_admin/shopCreate/ShopCreate";
-import ShopEdit from "@/pages/super_admin/shopEdit/ShopEdit";
-import CategoryPage from "@/pages/super_admin/categoryPage/CategoryPage";
-import CategoryDetail from "@/pages/super_admin/categoryDetail/CategoryDetail";
-import useAuthenticationStore from "@/store/useAuthenticationStore";
-import { RedirectAuthenticatedUser } from "./RedirectAuthenticatedUser";
-import SellerProductList from "@/pages/seller_admin/sellerProductList/SellerProductList";
-import SellerShop from "@/pages/seller_admin/sellerShop/SellerShop";
-import NewAdmin from "@/pages/super_admin/newAdmin";
+import { Suspense } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import { ROUTES } from '../constants/routes';
+import ProtectedRoute from './ProtectedRoutes';
+import Login from '@/pages/super_admin/auth/Login';
+import Signup from '@/pages/super_admin/auth/Signup';
+import Dashboard from '@/pages/super_admin/dashboard/Dashboard';
+import SideBarLayout from '@/layouts/SidebarLayout';
+import { OrderPage } from '@/pages/super_admin/orderPage/OrderPage';
+import { OrderDetail } from '@/pages/super_admin/orderDetail/OrderDetail';
+import CustomerPage from '@/pages/super_admin/customerPage/CustomerPage';
+import CustomerDetail from '@/pages/super_admin/customerDetail/CustomerDetail';
+import CategoryUpdate from '@/pages/super_admin/categoryUpdate/CategoryUpdate';
+import { ProductPage } from '@/pages/super_admin/productPage/ProductPage';
+import ProductDetail from '@/pages/super_admin/productDetail/ProductDetail';
+import ProductCreate from '@/pages/super_admin/productCreate/ProductCreate';
+import { Analytics } from '@/pages/super_admin/analytics';
+import ProductUpdate from '@/pages/super_admin/productUpdate/ProductUpdate';
+import CategoryCreate from '@/pages/super_admin/categoryCreate/CategoryCreate';
+import AddSubCategory from '@/pages/super_admin/categoryCreate/AddSubCategory';
+import EditSubCategory from '@/pages/super_admin/categoryUpdate/EditSubCategory';
+import { ShopPage } from '@/pages/super_admin/shopPage/ShopPage';
+import ShopDetail from '@/pages/super_admin/shopDetail/ShopDetail';
+import ShopCreate from '@/pages/super_admin/shopCreate/ShopCreate';
+import ShopEdit from '@/pages/super_admin/shopEdit/ShopEdit';
+import CategoryPage from '@/pages/super_admin/categoryPage/CategoryPage';
+import CategoryDetail from '@/pages/super_admin/categoryDetail/CategoryDetail';
+import useAuthenticationStore from '@/store/useAuthenticationStore';
+import { RedirectAuthenticatedUser } from './RedirectAuthenticatedUser';
+import SellerProductList from '@/pages/seller_admin/sellerProductList/SellerProductList';
+import SellerShop from '@/pages/seller_admin/sellerShop/SellerShop';
+import NewAdmin from '@/pages/super_admin/newAdmin';
 
 export default function AppRoutes() {
   const { user } = useAuthenticationStore();
@@ -52,7 +52,7 @@ export default function AppRoutes() {
             <Route path={ROUTES.SHOP.DETAIL} element={<ShopDetail />} />
             <Route path={ROUTES.SHOP.EDIT} element={<ShopEdit />} />
             {/* Super Admin Routes */}
-            {user?.role === "Super_Admin" && (
+            {user?.role === 'Super_Admin' && (
               <>
                 <Route path={ROUTES.NEW_ADMIN} element={<NewAdmin />} />
                 <Route path={ROUTES.ANALYTICS} element={<Analytics />} />
@@ -90,7 +90,7 @@ export default function AppRoutes() {
             )}
 
             {/* Shop Seller Admin Routes */}
-            {user?.role === "Shop_Seller_Site_Admin" && (
+            {user?.role === 'Shop_Seller_Site_Admin' && (
               <>
                 <Route
                   path={ROUTES.SELLER_PRODUCT}

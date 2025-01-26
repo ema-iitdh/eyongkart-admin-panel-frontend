@@ -1,83 +1,84 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import useAuthenticationStore from "../../../store/useAuthenticationStore"
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ROUTES } from "../../../constants/routes";
-import { authService } from "../../../api/services/auth.service";
-import { useEffect } from "react";
+import { useLocation, useNavigate } from 'react-router-dom';
+import useAuthenticationStore from '../../../store/useAuthenticationStore';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { ROUTES } from '../../../constants/routes';
+import { authService } from '../../../api/services/auth.service';
+import { useEffect } from 'react';
 
 export const useAuth = () => {
-    const { isAuthenticated, user, setIsAuthenticated, setUser } = useAuthenticationStore();
+  const { isAuthenticated, user, setIsAuthenticated, setUser } =
+    useAuthenticationStore();
 
-    useEffect(() => {
-        try {
-            const storedData = localStorage.getItem("user-storage");
-            if (!storedData) {
-                setIsAuthenticated(false);
-                setUser(null);
-                return;
-            }
+  useEffect(() => {
+    try {
+      const storedData = localStorage.getItem('admin-storage');
+      if (!storedData) {
+        setIsAuthenticated(false);
+        setUser(null);
+        return;
+      }
 
-            const parsedData = JSON.parse(storedData);
-            const userData = parsedData?.state?.user;
-            const isAuthData = parsedData?.state?.isAuthenticated;
+      const parsedData = JSON.parse(storedData);
+      const userData = parsedData?.state?.user;
+      const isAuthData = parsedData?.state?.isAuthenticated;
 
-            setIsAuthenticated(!!isAuthData);
-            setUser(userData || null);
-        } catch (error) {
-            console.log("Error while parsing auth data: ", error);
-            setIsAuthenticated(false);
-            setUser(null);
-        }
-    }, [setIsAuthenticated, setUser]);
+      setIsAuthenticated(!!isAuthData);
+      setUser(userData || null);
+    } catch (error) {
+      console.log('Error while parsing auth data: ', error);
+      setIsAuthenticated(false);
+      setUser(null);
+    }
+  }, [setIsAuthenticated, setUser]);
 
-    return { isAuthenticated, user };
+  return { isAuthenticated, user };
 };
 
 export const useLogin = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const queryClient = useQueryClient();
-    const { setIsAuthenticated, setUser } = useAuthenticationStore();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const queryClient = useQueryClient();
+  const { setIsAuthenticated, setUser } = useAuthenticationStore();
 
-    return useMutation({
-        mutationFn: authService.login,
-        onSuccess: (data) => {
-            setIsAuthenticated(true);
-            setUser(data.user);
-            queryClient.invalidateQueries("user");
-            const from = location.state?.from?.pathname || ROUTES.DASHBOARD;
-            navigate(from, { replace: true});
-        }
-    })
-}
+  return useMutation({
+    mutationFn: authService.login,
+    onSuccess: (data) => {
+      setIsAuthenticated(true);
+      setUser(data.user);
+      queryClient.invalidateQueries('user');
+      const from = location.state?.from?.pathname || ROUTES.DASHBOARD;
+      navigate(from, { replace: true });
+    },
+  });
+};
 
 export const useSignup = () => {
-    const navigate = useNavigate();
-    const queryClient = useQueryClient();
-  
-    return useMutation({
-      mutationFn: authService.register,
-      onSuccess: (data) => {
-        queryClient.invalidateQueries('user');
-        navigate(ROUTES.LOGIN);
-      },
-    });
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: authService.register,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries('user');
+      navigate(ROUTES.LOGIN);
+    },
+  });
 };
 
 export const useLogout = () => {
-    const queryClient = useQueryClient();
-    const { logout } = useAuthenticationStore();
-    const navigate = useNavigate();
-    return useMutation({
-        mutationFn: authService.logout,
-        onSuccess: () => {
-            logout();
-            queryClient.clear();
-            console.log("successfully logged out"); 
-            navigate(ROUTES.LOGIN)       
-        },
-        onError() {
-            console.log("error while logging out");
-        },
-    });
+  const queryClient = useQueryClient();
+  const { logout } = useAuthenticationStore();
+  const navigate = useNavigate();
+  return useMutation({
+    mutationFn: authService.logout,
+    onSuccess: () => {
+      logout();
+      queryClient.clear();
+      console.log('successfully logged out');
+      navigate(ROUTES.LOGIN);
+    },
+    onError() {
+      console.log('error while logging out');
+    },
+  });
 };

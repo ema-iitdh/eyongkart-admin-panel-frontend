@@ -1,13 +1,14 @@
-import { ROUTES } from "@/constants/routes";
-import useAuthenticationStore from "@/store/useAuthenticationStore"
-import { Navigate, Outlet } from "react-router-dom";
+import { ROUTES } from '@/constants/routes';
+import { useAuth } from '@/features/auth/hooks/useAuth';
+import useAuthenticationStore from '@/store/useAuthenticationStore';
+import { Navigate, Outlet } from 'react-router-dom';
 
 export const RedirectAuthenticatedUser = () => {
-    const { isAuthenticated } = useAuthenticationStore();
+  const { isAuthenticated } = useAuth();
 
-    if (isAuthenticated) {
-        <Navigate path={ROUTES.DASHBOARD} />
-    }
+  if (isAuthenticated) {
+    return <Navigate to={ROUTES.DASHBOARD} replace />;
+  }
 
-    return <Outlet />
-}
+  return <Outlet />;
+};

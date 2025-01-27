@@ -47,7 +47,7 @@ export const useLogin = () => {
       setUser(data.user);
       queryClient.invalidateQueries('user');
       const from = location.state?.from?.pathname || ROUTES.DASHBOARD;
-      navigate(from, { replace: true });
+      navigate(`${from}`, { replace: true });
     },
   });
 };
@@ -60,7 +60,7 @@ export const useSignup = () => {
     mutationFn: authService.register,
     onSuccess: (data) => {
       queryClient.invalidateQueries('user');
-      navigate(ROUTES.LOGIN);
+      navigate(`${ROUTES.LOGIN}`);
     },
   });
 };
@@ -74,8 +74,7 @@ export const useLogout = () => {
     onSuccess: () => {
       logout();
       queryClient.clear();
-      console.log('successfully logged out');
-      navigate(ROUTES.LOGIN);
+      navigate(`${ROUTES.LOGIN}`);
     },
     onError() {
       console.log('error while logging out');

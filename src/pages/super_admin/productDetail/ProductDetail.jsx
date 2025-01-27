@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { CloudinaryConfig } from "../../../../Cloudinary";
+import { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { CloudinaryConfig } from '../../../../Cloudinary';
 import {
   Card,
   CardContent,
@@ -8,8 +8,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -18,17 +18,17 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { toast } from "@/hooks/use-toast";
-import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+} from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { toast } from '@/hooks/use-toast';
+import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import {
   useDeleteProduct,
   useProductById,
-} from "@/features/products/hooks/useProducts";
-import { ROUTES } from "@/constants/routes";
-import useAuthenticationStore from "@/store/useAuthenticationStore";
+} from '@/features/products/hooks/useProducts';
+import { ROUTES } from '@/constants/routes';
+import useAuthenticationStore from '@/store/useAuthenticationStore';
 
 export function ProductDetail() {
   const { productId } = useParams();
@@ -45,7 +45,7 @@ export function ProductDetail() {
   const { user } = useAuthenticationStore();
   const userId = user?.id;
   const isOwner = product?.shop?.owner === userId;
-  const isSuperAdmin = user?.role === "Super_Admin";
+  const isSuperAdmin = user?.role === 'Super_Admin';
 
   const handleUpdate = () => {
     navigate(`/products/update/${productId}`);
@@ -55,16 +55,16 @@ export function ProductDetail() {
     try {
       deleteProduct(productId);
       toast({
-        title: "Product deleted",
-        description: "The product has been successfully deleted.",
+        title: 'Product deleted',
+        description: 'The product has been successfully deleted.',
       });
-      navigate(ROUTES.PRODUCT.LIST);
+      navigate(`${ROUTES.PRODUCT.LIST}`);
     } catch (err) {
       toast({
-        title: "Error",
-        description: "Failed to delete the product. Please try again.",
+        title: 'Error',
+        description: 'Failed to delete the product. Please try again.',
         err,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
     setShowDeleteDialog(false);
@@ -100,148 +100,150 @@ export function ProductDetail() {
   if (isError) return <div>Error: {error.message}</div>;
   if (!product) return <div>Product not found</div>;
 
+  console.log(product);
+
   return (
-    <div className="container mx-auto py-8 px-4 max-w-6xl">
+    <div className='container mx-auto py-8 px-4 max-w-6xl'>
       <Button
-        variant="ghost"
-        size="sm"
+        variant='ghost'
+        size='sm'
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 mb-6"
+        className='flex items-center gap-2 mb-6'
       >
-        <ArrowLeft className="w-8 h-8" />{" "}
-        <span className="text-lg">Back to Products</span>
+        <ArrowLeft className='w-8 h-8' />{' '}
+        <span className='text-lg'>Back to Products</span>
       </Button>
 
       <Card>
         <CardHeader>
-          <CardTitle>{product.name}</CardTitle>
-          <CardDescription>{product.shortDescription}</CardDescription>
+          <CardTitle>{product?.name}</CardTitle>
+          <CardDescription>{product?.shortDescription}</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex justify-center items-center">
-              <div className="w-80 h-80 relative overflow-hidden rounded-lg shadow-md">
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+            <div className='flex justify-center items-center'>
+              <div className='w-80 h-80 relative overflow-hidden rounded-lg shadow-md'>
                 <img
-                  src={`${CloudinaryConfig.CLOUDINARY_URL}/image/upload/c_fill,w_400,h_400,q_auto,f_auto/${product.baseImage.url}`}
-                  alt={product.baseImage.altText}
-                  className="absolute inset-0 w-full h-full object-cover"
+                  src={`${CloudinaryConfig.CLOUDINARY_URL}/image/upload/c_fill,w_400,h_400,q_auto,f_auto/${product?.baseImage?.url}`}
+                  alt={product?.baseImage?.altText}
+                  className='absolute inset-0 w-full h-full object-cover'
                 />
               </div>
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-2">Product Details</h3>
+              <h3 className='text-lg font-semibold mb-2'>Product Details</h3>
               <p>
-                <strong>Description:</strong> {product.description}
+                <strong>Description:</strong> {product?.description}
               </p>
               <p>
-                <strong>Category:</strong> {product.category.name}
+                <strong>Category:</strong> {product?.category?.name}
               </p>
               <p>
-                <strong>Subcategory:</strong> {product.subcategory.name}
+                <strong>Subcategory:</strong> {product?.subcategory?.name}
               </p>
               <p>
-                <strong>Gender:</strong> {product.gender}
+                <strong>Gender:</strong> {product?.gender}
               </p>
               <p>
-                <strong>Age Group:</strong> {product.ageGroup}
+                <strong>Age Group:</strong> {product?.ageGroup}
               </p>
               <p>
-                <strong>Status:</strong> <Badge>{product.status}</Badge>
+                <strong>Status:</strong> <Badge>{product?.status}</Badge>
               </p>
               <p>
-                <strong>Visibility:</strong>{" "}
-                {product.isVisible ? "Visible" : "Hidden"}
-              </p>
-
-              <Separator className="my-4" />
-
-              <h3 className="text-lg font-semibold mb-2">Specifications</h3>
-              <p>
-                <strong>Material:</strong> {product.specifications.material}
+                <strong>Visibility:</strong>{' '}
+                {product?.isVisible ? 'Visible' : 'Hidden'}
               </p>
 
-              <Separator className="my-4" />
+              <Separator className='my-4' />
 
-              <h3 className="text-lg font-semibold mb-2">Shop Information</h3>
+              <h3 className='text-lg font-semibold mb-2'>Specifications</h3>
               <p>
-                <strong>Shop Name:</strong> {product.shop?.name}
+                <strong>Material:</strong> {product?.specifications?.material}
+              </p>
+
+              <Separator className='my-4' />
+
+              <h3 className='text-lg font-semibold mb-2'>Shop Information</h3>
+              <p>
+                <strong>Shop Name:</strong> {product?.shop?.name}
               </p>
               <p>
-                <strong>Contact Email:</strong> {product.shop?.contactEmail}
+                <strong>Contact Email:</strong> {product?.shop?.contactEmail}
               </p>
               <p>
-                <strong>Contact Phone:</strong> {product.shop?.contactPhone}
+                <strong>Contact Phone:</strong> {product?.shop?.contactPhone}
               </p>
             </div>
           </div>
 
-          <Separator className="my-6" />
+          <Separator className='my-6' />
 
-          <h3 className="text-xl font-semibold mb-4">Variants</h3>
-          {product.variants.map((variant, index) => (
-            <Card key={variant._id} className="mb-4">
+          <h3 className='text-xl font-semibold mb-4'>Variants</h3>
+          {product?.variants?.map((variant, index) => (
+            <Card key={variant._id} className='mb-4'>
               <CardHeader>
                 <CardTitle>Variant {index + 1}</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                   <div>
                     <p>
-                      <strong>Color:</strong> {variant.color.name} (
-                      {variant.color.code})
+                      <strong>Color:</strong> {variant?.color?.name} (
+                      {variant?.color?.code})
                     </p>
                     <p>
-                      <strong>Pattern:</strong> {variant.pattern.name}
+                      <strong>Pattern:</strong> {variant?.pattern?.name}
                     </p>
                     <p>
-                      <strong>Size:</strong> {variant.size.value}
+                      <strong>Size:</strong> {variant?.size?.value}
                     </p>
                     <p>
-                      <strong>Price:</strong> ${variant.price.basePrice}
+                      <strong>Price:</strong> ${variant?.price?.basePrice}
                     </p>
                     <p>
-                      <strong>Discount:</strong> {variant.price.discount}%
+                      <strong>Discount:</strong> {variant?.price?.discount}%
                     </p>
                     <p>
-                      <strong>Stock:</strong> {variant.stock.quantity} (
-                      {variant.stock.status})
+                      <strong>Stock:</strong> {variant?.stock?.quantity} (
+                      {variant?.stock?.status})
                     </p>
                   </div>
-                  <div className="flex justify-center items-center">
-                    {variant.images && variant.images.length > 0 && (
-                      <div className="w-64 h-64 relative overflow-hidden rounded-lg shadow-md">
+                  <div className='flex justify-center items-center'>
+                    {variant?.images && variant?.images?.length > 0 && (
+                      <div className='w-64 h-64 relative overflow-hidden rounded-lg shadow-md'>
                         <img
                           src={`${
                             CloudinaryConfig.CLOUDINARY_URL
                           }/image/upload/c_fill,w_300,h_300,q_auto,f_auto/${
-                            variant.images[
-                              currentVariantImageIndex[variant._id] ?? 0
-                            ].url
+                            variant?.images[
+                              currentVariantImageIndex[variant?._id] ?? 0
+                            ]?.url
                           }`}
                           alt={
-                            variant.images[
-                              currentVariantImageIndex[variant._id] ?? 0
-                            ].altText
+                            variant?.images[
+                              currentVariantImageIndex[variant?._id] ?? 0
+                            ]?.altText
                           }
-                          className="absolute inset-0 w-full h-full object-cover"
+                          className='absolute inset-0 w-full h-full object-cover'
                         />
-                        {variant.images.length > 1 && (
+                        {variant?.images?.length > 1 && (
                           <>
                             <Button
-                              variant="outline"
-                              size="icon"
-                              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white"
-                              onClick={() => prevImage(variant._id)}
+                              variant='outline'
+                              size='icon'
+                              className='absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white'
+                              onClick={() => prevImage(variant?._id)}
                             >
-                              <ChevronLeft className="h-4 w-4" />
+                              <ChevronLeft className='h-4 w-4' />
                             </Button>
                             <Button
-                              variant="outline"
-                              size="icon"
-                              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white"
-                              onClick={() => nextImage(variant._id)}
+                              variant='outline'
+                              size='icon'
+                              className='absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white'
+                              onClick={() => nextImage(variant?._id)}
                             >
-                              <ChevronRight className="h-4 w-4" />
+                              <ChevronRight className='h-4 w-4' />
                             </Button>
                           </>
                         )}
@@ -253,36 +255,38 @@ export function ProductDetail() {
             </Card>
           ))}
         </CardContent>
-        {(isOwner || isSuperAdmin) && (<CardFooter className="flex justify-between">
-          {/* <Button onClick={handleUpdate}>Update Product</Button> */}
-          <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-            <DialogTrigger asChild>
-              <Button variant="destructive">Delete Product</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>
-                  Are you sure you want to delete this product?
-                </DialogTitle>
-                <DialogDescription>
-                  This action cannot be undone. This will permanently delete the
-                  product and all associated data.
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <Button
-                  variant="outline"
-                  onClick={() => setShowDeleteDialog(false)}
-                >
-                  Cancel
-                </Button>
-                <Button variant="destructive" onClick={handleDelete}>
-                  Delete
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </CardFooter>)}
+        {(isOwner || isSuperAdmin) && (
+          <CardFooter className='flex justify-between'>
+            {/* <Button onClick={handleUpdate}>Update Product</Button> */}
+            <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+              <DialogTrigger asChild>
+                <Button variant='destructive'>Delete Product</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>
+                    Are you sure you want to delete this product?
+                  </DialogTitle>
+                  <DialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    the product and all associated data.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <Button
+                    variant='outline'
+                    onClick={() => setShowDeleteDialog(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button variant='destructive' onClick={handleDelete}>
+                    Delete
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </CardFooter>
+        )}
       </Card>
     </div>
   );

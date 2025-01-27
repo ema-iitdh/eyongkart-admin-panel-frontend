@@ -1,6 +1,6 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { ROUTES } from "@/constants/routes";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/constants/routes';
 
 import {
   Table,
@@ -9,11 +9,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ChevronDown, ChevronUp, Eye } from "lucide-react";
+} from '@/components/ui/table';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { ChevronDown, ChevronUp, Eye } from 'lucide-react';
 import {
   flexRender,
   getCoreRowModel,
@@ -21,15 +21,15 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table";
-import { useGetAllCategories } from "@/features/categories/hooks/useCategory";
-import { Loader } from "@/components/common/loader";
+} from '@tanstack/react-table';
+import { useGetAllCategories } from '@/features/categories/hooks/useCategory';
+import { Loader } from '@/components/common/loader';
 
 export function CategoryPage() {
   const navigate = useNavigate();
   const { data: categories = [], isLoading, error } = useGetAllCategories();
   const [sorting, setSorting] = React.useState([]);
-  const [globalFilter, setGlobalFilter] = React.useState("");
+  const [globalFilter, setGlobalFilter] = React.useState('');
 
   const handleViewCategory = (categoryId) => {
     navigate(`/dashboard/categories/${categoryId}`);
@@ -38,49 +38,49 @@ export function CategoryPage() {
   const columns = React.useMemo(
     () => [
       {
-        accessorKey: "name",
-        header: "Category Name",
+        accessorKey: 'name',
+        header: 'Category Name',
       },
       {
-        accessorKey: "gender",
-        header: "Gender",
+        accessorKey: 'gender',
+        header: 'Gender',
       },
       {
-        accessorKey: "productsCount",
-        header: "Products Count",
+        accessorKey: 'productsCount',
+        header: 'Products Count',
       },
       {
-        accessorKey: "isActive",
-        header: "Status",
+        accessorKey: 'isActive',
+        header: 'Status',
         cell: ({ row }) => (
-          <Badge variant={row.original.isActive ? "success" : "secondary"}>
-            {row.original.isActive ? "Active" : "Inactive"}
+          <Badge variant={row.original.isActive ? 'success' : 'secondary'}>
+            {row.original.isActive ? 'Active' : 'Inactive'}
           </Badge>
         ),
       },
       {
-        accessorKey: "subCategories",
-        header: "Subcategories",
+        accessorKey: 'subCategories',
+        header: 'Subcategories',
         cell: ({ row }) => {
           const subCategories =
             row.original.subCategories?.map((sub) => sub.subCategoryName) || [];
-          return subCategories.length ? subCategories.join(", ") : "-";
+          return subCategories.length ? subCategories.join(', ') : '-';
         },
       },
       {
-        id: "actions",
-        header: "Actions",
+        id: 'actions',
+        header: 'Actions',
         cell: ({ row }) => (
           <Button
-            variant="ghost"
-            size="sm"
-            className="flex items-center gap-2"
+            variant='ghost'
+            size='sm'
+            className='flex items-center gap-2'
             onClick={(e) => {
               e.stopPropagation();
               handleViewCategory(row.original._id);
             }}
           >
-            <Eye className="w-4 h-4" />
+            <Eye className='w-4 h-4' />
             View
           </Button>
         ),
@@ -107,7 +107,7 @@ export function CategoryPage() {
   if (isLoading) return <Loader />;
   if (error)
     return (
-      <p className="text-center text-red-500">
+      <p className='text-center text-red-500'>
         Error loading categories: {error.message}
       </p>
     );
@@ -115,61 +115,61 @@ export function CategoryPage() {
   const filteredRows = table.getRowModel().rows;
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">All Categories</h1>
-        <div className="flex gap-x-2">
+    <div className='space-y-4'>
+      <div className='flex items-center justify-between'>
+        <h1 className='text-xl font-semibold'>All Categories</h1>
+        <div className='flex gap-x-2'>
           <Button
-            className="border border-input bg-green-500 shadow-sm hover:bg-green-400 text-white"
-            onClick={() => navigate(ROUTES.CATEGORY_CREATE)}
+            className='border border-input bg-green-500 shadow-sm hover:bg-green-400 text-white'
+            onClick={() => navigate(`${ROUTES.CATEGORY_CREATE}`)}
           >
             Create a category
           </Button>
           <Input
-            placeholder="Search categories..."
-            value={globalFilter ?? ""}
+            placeholder='Search categories...'
+            value={globalFilter ?? ''}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="max-w-sm"
+            className='max-w-sm'
           />
         </div>
       </div>
 
       {filteredRows.length === 0 ? (
-        <div className="text-center py-4">No categories found</div>
+        <div className='text-center py-4'>No categories found</div>
       ) : (
         <>
           {/* Mobile view */}
-          <div className="md:hidden space-y-4">
+          <div className='md:hidden space-y-4'>
             {filteredRows.map((row) => (
-              <div key={row.id} className="bg-white rounded-lg shadow-md p-4">
-                <h3 className="font-semibold text-lg mb-2">
+              <div key={row.id} className='bg-white rounded-lg shadow-md p-4'>
+                <h3 className='font-semibold text-lg mb-2'>
                   {row.original.name}
                 </h3>
-                <p className="text-sm text-gray-600 mb-1">
-                  Gender: {row.original.gender || "-"}
+                <p className='text-sm text-gray-600 mb-1'>
+                  Gender: {row.original.gender || '-'}
                 </p>
-                <div className="text-sm text-gray-600 mb-1">
-                  Status:{" "}
+                <div className='text-sm text-gray-600 mb-1'>
+                  Status:{' '}
                   <Badge
-                    variant={row.original.isActive ? "success" : "secondary"}
+                    variant={row.original.isActive ? 'success' : 'secondary'}
                   >
-                    {row.original.isActive ? "Active" : "Inactive"}
+                    {row.original.isActive ? 'Active' : 'Inactive'}
                   </Badge>
                 </div>
-                <p className="text-sm text-gray-600 mb-1">
+                <p className='text-sm text-gray-600 mb-1'>
                   Products: {row.original.productsCount || 0}
                 </p>
-                <p className="text-sm text-gray-600 mb-3">
-                  Subcategories:{" "}
+                <p className='text-sm text-gray-600 mb-3'>
+                  Subcategories:{' '}
                   {row.original.subCategories
                     ?.map((sub) => sub.subCategoryName)
-                    .join(", ") || "-"}
+                    .join(', ') || '-'}
                 </p>
                 <Button
-                  className="w-full flex items-center justify-center gap-2"
+                  className='w-full flex items-center justify-center gap-2'
                   onClick={() => handleViewCategory(row.original._id)}
                 >
-                  <Eye className="w-4 h-4" />
+                  <Eye className='w-4 h-4' />
                   View Details
                 </Button>
               </div>
@@ -177,7 +177,7 @@ export function CategoryPage() {
           </div>
 
           {/* Desktop view */}
-          <div className="rounded-md border hidden md:block">
+          <div className='rounded-md border hidden md:block'>
             <Table>
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (
@@ -188,8 +188,8 @@ export function CategoryPage() {
                           <div
                             className={
                               header.column.getCanSort()
-                                ? "cursor-pointer select-none flex items-center gap-2"
-                                : ""
+                                ? 'cursor-pointer select-none flex items-center gap-2'
+                                : ''
                             }
                             onClick={header.column.getToggleSortingHandler()}
                           >
@@ -198,10 +198,10 @@ export function CategoryPage() {
                               header.getContext()
                             )}
                             {header.column.getIsSorted() &&
-                              (header.column.getIsSorted() === "asc" ? (
-                                <ChevronUp className="w-4 h-4" />
+                              (header.column.getIsSorted() === 'asc' ? (
+                                <ChevronUp className='w-4 h-4' />
                               ) : (
-                                <ChevronDown className="w-4 h-4" />
+                                <ChevronDown className='w-4 h-4' />
                               ))}
                           </div>
                         )}
@@ -213,7 +213,7 @@ export function CategoryPage() {
               <TableBody>
                 {filteredRows.length > 0 ? (
                   filteredRows.map((row) => (
-                    <TableRow key={row.id} className="hover:bg-gray-50">
+                    <TableRow key={row.id} className='hover:bg-gray-50'>
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>
                           {flexRender(
@@ -226,7 +226,7 @@ export function CategoryPage() {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={columns.length} className="text-center">
+                    <TableCell colSpan={columns.length} className='text-center'>
                       No categories found.
                     </TableCell>
                   </TableRow>
@@ -236,22 +236,22 @@ export function CategoryPage() {
           </div>
         </>
       )}
-      <div className="flex items-center justify-between space-x-2 py-4">
-        <div className="text-sm text-muted-foreground">
+      <div className='flex items-center justify-between space-x-2 py-4'>
+        <div className='text-sm text-muted-foreground'>
           Showing {filteredRows.length} of {categories.length} categories
         </div>
-        <div className="space-x-2">
+        <div className='space-x-2'>
           <Button
-            variant="outline"
-            size="sm"
+            variant='outline'
+            size='sm'
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
             Previous
           </Button>
           <Button
-            variant="outline"
-            size="sm"
+            variant='outline'
+            size='sm'
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >

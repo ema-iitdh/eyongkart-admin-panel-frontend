@@ -77,7 +77,7 @@ export default function SideBarLayout() {
                     onClick={logout}
                     disabled={isPending}
                   >
-                    Hera Logout
+                    Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

@@ -8,7 +8,7 @@ export const API_CONFIG = {
   BASE_URL: `${window.location.origin}/api`,
   // BASE_URL: 'https://eyongkart.com/api',
   // BASE_URL: 'https://localhost:5000',
-  TIMEOUT: 10000,
+  TIMEOUT: 1000 * 60 * 2, // 2 minutes
   CREDENTIALS: 'include',
   WITH_CREDENTIALS: true,
   HEADERS: {

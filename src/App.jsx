@@ -25,7 +25,7 @@ const queryClient = new QueryClient({
       },
     },
     mutations: {
-      retry: 1,
+      retry: 0,
       onError: (error) => {
         console.log('Mutation error: ', error);
         if (error.response?.status === 401) {

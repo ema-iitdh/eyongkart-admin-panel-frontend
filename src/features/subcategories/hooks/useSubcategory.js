@@ -31,3 +31,11 @@ export const useUpdateSubCategory = () => {
     mutationFn: (formData) => subcategoryServices.updateSubCategory(formData),
   });
 };
+
+export const useGetSubcategoryById = (subcategoryId) => {
+  return useQuery({
+    queryKey: ["subcategory", subcategoryId],
+    queryFn: () => subcategoryServices.getSubcategoryById(subcategoryId),
+    enabled: !!subcategoryId,
+  })
+}

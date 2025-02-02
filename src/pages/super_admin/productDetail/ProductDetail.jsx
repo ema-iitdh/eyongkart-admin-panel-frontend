@@ -257,7 +257,7 @@ export function ProductDetail() {
         </CardContent>
         {(isOwner || isSuperAdmin) && (
           <CardFooter className='flex justify-between'>
-            {/* <Button onClick={handleUpdate}>Update Product</Button> */}
+            <Button onClick={handleUpdate}>Update Product</Button>
             <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
               <DialogTrigger asChild>
                 <Button variant='destructive'>Delete Product</Button>

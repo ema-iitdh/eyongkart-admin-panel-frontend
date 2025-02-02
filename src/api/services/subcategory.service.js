@@ -25,4 +25,10 @@ export const subcategoryServices = {
     );
     return response.data;
   },
+  getSubcategoryById: async (subcategoryId) => {
+    const response = await Axios.get(
+      API_ENDPOINTS.subcategory.getSubcategoryById(subcategoryId)
+    );
+    return response.data;
+  }
 };

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { CloudinaryConfig } from '../../../../Cloudinary';
 import {
   Card,
@@ -113,7 +113,10 @@ export function ProductDetail() {
         <ArrowLeft className='w-8 h-8' />{' '}
         <span className='text-lg'>Back to Products</span>
       </Button>
-
+      {/* Edit Product Link */}
+      <Link to={ROUTES.PRODUCTS.getUpdateLink(productId)}>
+        <Button className='my-6'>Edit Product Information</Button>
+      </Link>
       <Card>
         <CardHeader>
           <CardTitle>{product?.name}</CardTitle>

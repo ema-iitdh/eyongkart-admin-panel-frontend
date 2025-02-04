@@ -8,6 +8,12 @@ export const OrderStatus = {
   Cancelled: 'destructive',
 };
 
+export const ROLES = {
+  Super_Admin: 'Super_Admin',
+  Shop_Seller_Site_Admin: 'Shop_Seller_Site_Admin',
+};
+
+// TODO: move this to schema folder
 export const formSchema = z.object({
   name: z
     .string()

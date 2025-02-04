@@ -2,7 +2,8 @@
 export const basename = '/admin';
 
 export const ROUTES = {
-  DASHBOARD: '/',
+  ROOT: '/',
+  DASHBOARD: '/dashboard',
   LOGIN: '/login',
   SIGNUP: '/signup',
   ANALYTICS: '/dashboard/analytics',
@@ -16,11 +17,24 @@ export const ROUTES = {
   ADD_SUBCATEGORY: '/dashboard/categories/:categoryId/subcategories/add',
   EDIT_SUBCATEGORY:
     '/dashboard/categories/:categoryId/subcategories/:subCategoryId/edit',
-  PRODUCT: {
-    LIST: '/dashboard/products',
-    DETAIL: '/dashboard/products/:productId',
-    CREATE: '/dashboard/products/create',
-    UPDATE: '/products/update/:productId',
+  PRODUCTS: {
+    ROOT: 'products',
+    LIST: 'products', // ! remove this later
+    DETAILS: ':productId',
+    getDetailsLink: function (productId) {
+      return `${ROUTES.DASHBOARD}/${this.ROOT}/${productId}`;
+    },
+    CREATE: 'create',
+    UPDATE: 'update/:productId',
+    getUpdateLink: function (productId) {
+      return `${ROUTES.DASHBOARD}/${this.ROOT}/update/${productId}`;
+    },
+  },
+  ORDERS: {
+    ROOT: 'orders',
+    DETAILS: ':orderId',
+    CREATE: 'create',
+    UPDATE: ':orderId/update',
   },
   SHOP: {
     LIST: '/dashboard/shops',

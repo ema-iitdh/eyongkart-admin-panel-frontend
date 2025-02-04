@@ -42,7 +42,11 @@ function App() {
         <AppRoutes />
         <Toaster />
       </BrowserRouter>
-      <ReactQueryDevtools initialIsOpen={false} position='bottom-right' />
+      <ReactQueryDevtools
+        buttonPosition='bottom-right'
+        initialIsOpen={false}
+        position='bottom'
+      />
     </QueryClientProvider>
   );
 }

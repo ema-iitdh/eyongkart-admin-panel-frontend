@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { ROUTES } from '../constants/routes';
 import ProtectedRoute from './ProtectedRoutes';
 import Login from '@/pages/super_admin/auth/Login';
@@ -30,6 +30,8 @@ import { RedirectAuthenticatedUser } from './RedirectAuthenticatedUser';
 import SellerProductList from '@/pages/seller_admin/sellerProductList/SellerProductList';
 import SellerShop from '@/pages/seller_admin/sellerShop/SellerShop';
 import NewAdmin from '@/pages/super_admin/newAdmin';
+import { ROLES } from '@/constants';
+import UpdateProduct from '@/pages/@super-admin/products/[productId]/update/UpdateProduct';
 
 export default function AppRoutes() {
   const { user } = useAuthenticationStore();
@@ -37,74 +39,99 @@ export default function AppRoutes() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Routes>
-        {/* Protected Routes */}
-        <Route element={<ProtectedRoute />}>
-          <Route element={<SideBarLayout />}>
-            {/* Common Routes */}
-            <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
-            <Route path={ROUTES.PRODUCT.CREATE} element={<ProductCreate />} />
-            <Route path={ROUTES.SHOP.CREATE} element={<ShopCreate />} />
-            <Route path={ROUTES.PRODUCT.DETAIL} element={<ProductDetail />} />
-            <Route path={ROUTES.ORDERPAGE} element={<OrderPage />} />
-            <Route path={ROUTES.SPECIFICORDER} element={<OrderDetail />} />
-            <Route path={ROUTES.PRODUCT.LIST} element={<ProductPage />} />
-            <Route path={ROUTES.SHOP.LIST} element={<ShopPage />} />
-            <Route path={ROUTES.SHOP.DETAIL} element={<ShopDetail />} />
-            <Route path={ROUTES.SHOP.EDIT} element={<ShopEdit />} />
-            {/* Super Admin Routes */}
-            {user?.role === 'Super_Admin' && (
-              <>
-                <Route path={ROUTES.NEW_ADMIN} element={<NewAdmin />} />
-                <Route path={ROUTES.ANALYTICS} element={<Analytics />} />
-                <Route path={ROUTES.ALLCUSTOMERS} element={<CustomerPage />} />
-                <Route
-                  path={ROUTES.SPECIFICCUSTOMER}
-                  element={<CustomerDetail />}
-                />
-                <Route path={ROUTES.ALLCATEGORIES} element={<CategoryPage />} />
-                <Route
-                  path={ROUTES.SPECIFICCATEGORY}
-                  element={<CategoryDetail />}
-                />
-                <Route
-                  path={ROUTES.EDITCATEGORY}
-                  element={<CategoryUpdate />}
-                />
-                <Route
-                  path={ROUTES.PRODUCT.UPDATE}
-                  element={<ProductUpdate />}
-                />
-                <Route
-                  path={ROUTES.CATEGORY_CREATE}
-                  element={<CategoryCreate />}
-                />
-                <Route
-                  path={ROUTES.ADD_SUBCATEGORY}
-                  element={<AddSubCategory />}
-                />
-                <Route
-                  path={ROUTES.EDIT_SUBCATEGORY}
-                  element={<EditSubCategory />}
-                />
-              </>
-            )}
-
-            {/* Shop Seller Admin Routes */}
-            {user?.role === 'Shop_Seller_Site_Admin' && (
-              <>
-                <Route
-                  path={ROUTES.SELLER_PRODUCT}
-                  element={<SellerProductList />}
-                />
-                <Route path={ROUTES.SELLER_SHOP} element={<SellerShop />} />
-              </>
-            )}
-          </Route>
-        </Route>
-
         {/* Authentication Routes */}
+        <Route path={ROUTES.ROOT} element={<Navigate to={ROUTES.LOGIN} />} />
+
         <Route element={<RedirectAuthenticatedUser />}>
           <Route path={ROUTES.LOGIN} element={<Login />} />
+        </Route>
+
+        {/* Protected Routes */}
+        <Route element={<ProtectedRoute />}>
+          {/* <Route element={<SideBarLayout />}> */}
+          {/* Dashboard Routes */}
+          <Route path={ROUTES.DASHBOARD} element={<SideBarLayout />}>
+            <Route index element={<Dashboard />} />
+
+            {/* Analytics Routes */}
+            {user?.role === ROLES.Super_Admin && (
+              <Route path={ROUTES.ANALYTICS} element={<Analytics />} />
+            )}
+
+            {/* Orders Routes */}
+            <Route path={ROUTES.ORDERS.ROOT}>
+              <Route index element={<OrderPage />} />
+              <Route path={ROUTES.ORDERS.DETAILS} element={<OrderDetail />} />
+              {/* <Route path={ROUTES.ORDERS.UPDATE} element={<OrderUpdate />} /> */}
+            </Route>
+
+            {/* Product Routes */}
+            <Route path={ROUTES.PRODUCTS.ROOT}>
+              <Route index element={<ProductPage />} />
+              <Route
+                path={ROUTES.PRODUCTS.CREATE}
+                element={<ProductCreate />}
+              />
+              <Route
+                path={ROUTES.PRODUCTS.DETAILS}
+                element={<ProductDetail />}
+              />
+              <Route
+                path={ROUTES.PRODUCTS.UPDATE}
+                element={<UpdateProduct />}
+              />
+            </Route>
+          </Route>
+          <Route path={ROUTES.SHOP.CREATE} element={<ShopCreate />} />
+          {/* <Route path={ROUTES.PRODUCT.DETAIL} element={<ProductDetail />} /> */}
+          <Route path={ROUTES.ORDERPAGE} element={<OrderPage />} />
+          <Route path={ROUTES.SPECIFICORDER} element={<OrderDetail />} />
+          {/* <Route path={ROUTES.PRODUCT.LIST} element={<ProductPage />} /> */}
+          <Route path={ROUTES.SHOP.LIST} element={<ShopPage />} />
+          <Route path={ROUTES.SHOP.DETAIL} element={<ShopDetail />} />
+          <Route path={ROUTES.SHOP.EDIT} element={<ShopEdit />} />
+          {/* Super Admin Routes */}
+          {/* {user?.role === 'Super_Admin' && (
+            <>
+              <Route path={ROUTES.NEW_ADMIN} element={<NewAdmin />} />
+              <Route path={ROUTES.ANALYTICS} element={<Analytics />} />
+              <Route path={ROUTES.ALLCUSTOMERS} element={<CustomerPage />} />
+              <Route
+                path={ROUTES.SPECIFICCUSTOMER}
+                element={<CustomerDetail />}
+              />
+              <Route path={ROUTES.ALLCATEGORIES} element={<CategoryPage />} />
+              <Route
+                path={ROUTES.SPECIFICCATEGORY}
+                element={<CategoryDetail />}
+              />
+              <Route path={ROUTES.EDITCATEGORY} element={<CategoryUpdate />} />
+              <Route path={ROUTES.PRODUCT.UPDATE} element={<ProductUpdate />} />
+              <Route
+                path={ROUTES.CATEGORY_CREATE}
+                element={<CategoryCreate />}
+              />
+              <Route
+                path={ROUTES.ADD_SUBCATEGORY}
+                element={<AddSubCategory />}
+              />
+              <Route
+                path={ROUTES.EDIT_SUBCATEGORY}
+                element={<EditSubCategory />}
+              />
+            </>
+          )} */}
+          {/* Shop Seller Admin Routes */}
+          {/* {user?.role === 'Shop_Seller_Site_Admin' && (
+            <>
+              <Route
+                path={ROUTES.SELLER_PRODUCT}
+                element={<SellerProductList />}
+              />
+              <Route path={ROUTES.SELLER_SHOP} element={<SellerShop />} />
+            </>
+          )} */}
+          {/* </Route> */}
         </Route>
       </Routes>
     </Suspense>

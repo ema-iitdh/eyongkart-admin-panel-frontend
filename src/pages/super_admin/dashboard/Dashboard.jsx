@@ -9,10 +9,11 @@ import {
 import { ROUTES } from '@/constants/routes';
 import DashboardComponent from '@/components/DashboardComponent';
 import useAuthenticationStore from '@/store/useAuthenticationStore';
+import { ROLES } from '@/constants';
 
 export function Dashboard() {
   const { user } = useAuthenticationStore();
-  const isSuperAdmin = user?.role === 'Super_Admin';
+  const isSuperAdmin = user?.role === ROLES.Super_Admin;
 
   const superAdmin = [
     {
@@ -25,7 +26,7 @@ export function Dashboard() {
     {
       title: 'Products',
       icon: Package,
-      route: ROUTES.PRODUCT.LIST,
+      route: ROUTES.PRODUCTS.LIST,
       description: 'Manage your product catalog',
       color: 'from-green-500 to-emerald-500',
     },

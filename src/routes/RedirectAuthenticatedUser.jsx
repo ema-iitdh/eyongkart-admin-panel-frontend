@@ -1,7 +1,6 @@
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/features/auth/hooks/useAuth';
-import useAuthenticationStore from '@/store/useAuthenticationStore';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, redirect } from 'react-router-dom';
 
 export const RedirectAuthenticatedUser = () => {
   const { isAuthenticated } = useAuth();

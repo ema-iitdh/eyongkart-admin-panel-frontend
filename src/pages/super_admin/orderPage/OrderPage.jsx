@@ -227,6 +227,11 @@ export function OrderPage() {
                         >
                           {header.isPlaceholder ? null : (
                             <div
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  header.column.getToggleSortingHandler();
+                                }
+                              }}
                               className={
                                 header.column.getCanSort()
                                   ? 'cursor-pointer select-none flex items-center gap-2'

@@ -7,38 +7,58 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { BarChart3, ShoppingCart, Users, Package, FolderTree, CreditCard, Truck, Settings, X, LayoutDashboard, ShoppingBasket } from 'lucide-react'
-import { Link, useLocation } from "react-router-dom"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import useAuthenticationStore from "@/store/useAuthenticationStore"
-import { ROUTES } from "@/constants/routes"
+} from '@/components/ui/sidebar';
+import {
+  BarChart3,
+  ShoppingCart,
+  Users,
+  Package,
+  FolderTree,
+  CreditCard,
+  Truck,
+  Settings,
+  X,
+  LayoutDashboard,
+  ShoppingBasket,
+} from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import useAuthenticationStore from '@/store/useAuthenticationStore';
+import { ROUTES } from '@/constants/routes';
 
 const superAdminItems = [
-  { title: "Dashboard", url: "/", icon: LayoutDashboard},
-  { title: "Analytics", url: "/dashboard/analytics", icon: BarChart3 },
-  { title: "Orders Management", url: "/dashboard/orders", icon: ShoppingCart },
-  { title: "Customer Management", url: "/dashboard/customers", icon: Users },
-  { title: "Shop Management", url: "/dashboard/shops", icon: ShoppingBasket},
-  { title: "Product Management", url: "/dashboard/products", icon: Package },
-  { title: "Categories Management", url: "/dashboard/categories", icon: FolderTree },
-  { title: "Payments & Transactions", url: "/dashboard/payments", icon: CreditCard },
-  { title: "Shipping Management", url: "/dashboard/shipping", icon: Truck },
-  { title: "Settings", url: "/dashboard/settings", icon: Settings },
-]
+  { title: 'Dashboard', url: ROUTES.DASHBOARD, icon: LayoutDashboard },
+  { title: 'Analytics', url: '/dashboard/analytics', icon: BarChart3 },
+  { title: 'Orders Management', url: '/dashboard/orders', icon: ShoppingCart },
+  { title: 'Customer Management', url: '/dashboard/customers', icon: Users },
+  { title: 'Shop Management', url: '/dashboard/shops', icon: ShoppingBasket },
+  { title: 'Product Management', url: '/dashboard/products', icon: Package },
+  {
+    title: 'Categories Management',
+    url: '/dashboard/categories',
+    icon: FolderTree,
+  },
+  {
+    title: 'Payments & Transactions',
+    url: '/dashboard/payments',
+    icon: CreditCard,
+  },
+  { title: 'Shipping Management', url: '/dashboard/shipping', icon: Truck },
+  { title: 'Settings', url: '/dashboard/settings', icon: Settings },
+];
 
 const sellerAdminItems = [
-  { title: "Dashboard", url: ROUTES.SELLER_DASHBOARD, icon: LayoutDashboard },
-  { title: "Product Management", url: ROUTES.SELLER_PRODUCT, icon: Package },
-  { title: "Shop Settings", url: ROUTES.SELLER_SHOP, icon: ShoppingBasket}
-]
+  { title: 'Dashboard', url: ROUTES.SELLER_DASHBOARD, icon: LayoutDashboard },
+  { title: 'Product Management', url: ROUTES.SELLER_PRODUCT, icon: Package },
+  { title: 'Shop Settings', url: ROUTES.SELLER_SHOP, icon: ShoppingBasket },
+];
 
 export function AppSidebar({ open, setOpen }) {
   const location = useLocation();
   const { user } = useAuthenticationStore();
   let items;
-  if (user?.role === "Super_Admin") {
+  if (user?.role === 'Super_Admin') {
     items = superAdminItems;
   } else {
     items = sellerAdminItems;
@@ -50,8 +70,8 @@ export function AppSidebar({ open, setOpen }) {
     <>
       {/* Overlay for small screens */}
       {open && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden" 
+        <div
+          className='fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden'
           onClick={() => setOpen(false)}
         />
       )}
@@ -59,23 +79,25 @@ export function AppSidebar({ open, setOpen }) {
         open={open}
         onOpenChange={setOpen}
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 bg-gray-800 border-r transition-transform duration-300 ease-in-out transform",
-          open ? "translate-x-0" : "-translate-x-full",
-          "md:translate-x-0" // Always visible on md screens and up
+          'fixed inset-y-0 left-0 z-50 w-64 bg-gray-800 border-r transition-transform duration-300 ease-in-out transform',
+          open ? 'translate-x-0' : '-translate-x-full',
+          'md:translate-x-0' // Always visible on md screens and up
         )}
       >
-        <SidebarContent  className="bg-gray-800">
+        <SidebarContent className='bg-gray-800'>
           <SidebarGroup>
-            <div className="flex items-center justify-between px-4 py-2 my-4">
+            <div className='flex items-center justify-between px-4 py-2 my-4'>
               <SidebarGroupLabel>
-                <h2 className="text-xl font-bold text-white">Eyongkart Admin</h2>
+                <h2 className='text-xl font-bold text-white'>
+                  Eyongkart Admin
+                </h2>
               </SidebarGroupLabel>
               <Button
-                variant="ghost"
-                className="md:hidden text-white"
+                variant='ghost'
+                className='md:hidden text-white'
                 onClick={() => setOpen(false)}
               >
-                <X className="h-6 w-6" />
+                <X className='h-6 w-6' />
               </Button>
             </div>
             <SidebarGroupContent>
@@ -86,19 +108,21 @@ export function AppSidebar({ open, setOpen }) {
                       <Link
                         to={item.url}
                         className={cn(
-                          "flex items-center my-1 gap-3 py-2 px-4 rounded-md transition-colors duration-200 text-white hover:text-white",
+                          'flex items-center my-1 gap-3 py-2 px-4 rounded-md transition-colors duration-200 text-white hover:text-white',
                           isActiveRoute(item.url)
-                            ? "bg-black/50 font-medium hover:bg-black/50"
-                            : "hover:bg-black/40"
+                            ? 'bg-black/50 font-medium hover:bg-black/50'
+                            : 'hover:bg-black/40'
                         )}
                       >
                         <item.icon
                           className={cn(
-                            "h-5 w-5",
-                            isActiveRoute(item.url) ? "text-white" : "text-muted-foreground hover:bg-transparent hover:text-white"
+                            'h-5 w-5',
+                            isActiveRoute(item.url)
+                              ? 'text-white'
+                              : 'text-muted-foreground hover:bg-transparent hover:text-white'
                           )}
                         />
-                        <span className="text-sm">{item.title}</span>
+                        <span className='text-sm'>{item.title}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -109,6 +133,5 @@ export function AppSidebar({ open, setOpen }) {
         </SidebarContent>
       </Sidebar>
     </>
-  )
+  );
 }
-

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useProducts } from '@/features/products/hooks/useProducts';
 import {
   Table,
@@ -41,7 +41,7 @@ export function ProductPage() {
   const navigate = useNavigate();
   const [page, setPage] = React.useState(() => {
     const savedPage = sessionStorage.getItem('currentPage');
-    return savedPage ? parseInt(savedPage, 10) : 1;
+    return savedPage ? Number.parseInt(savedPage, 10) : 1;
   });
   const [sorting, setSorting] = React.useState([]);
   const [searchTerm, setSearchTerm] = React.useState('');
@@ -76,10 +76,6 @@ export function ProductPage() {
   const { products = [], pagination = {} } = data;
   const { currentPage, totalPages, hasNextPage, hasPrevPage, totalProducts } =
     pagination;
-
-  const handleViewProduct = (productId) => {
-    navigate(`/dashboard/products/${productId}`);
-  };
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -130,18 +126,12 @@ export function ProductPage() {
       id: 'actions',
       header: 'Actions',
       cell: ({ row }) => (
-        <Button
-          variant='ghost'
-          size='sm'
-          className='flex items-center gap-2'
-          onClick={(e) => {
-            e.stopPropagation();
-            handleViewProduct(row.original._id);
-          }}
-        >
-          <Eye className='w-4 h-4' />
-          View
-        </Button>
+        <Link to={ROUTES.PRODUCTS.getDetailsLink(row.original._id)}>
+          <Button variant='ghost' size='sm' className='flex items-center gap-2'>
+            <Eye className='w-4 h-4' />
+            View
+          </Button>
+        </Link>
       ),
     },
   ];
@@ -175,7 +165,7 @@ export function ProductPage() {
           <div className='flex gap-x-2'>
             <Button
               className='border border-input bg-green-500 shadow-sm hover:bg-green-400 text-white'
-              onClick={() => navigate(`${ROUTES.PRODUCT.CREATE}`)}
+              onClick={() => navigate(`${ROUTES.PRODUCTS.CREATE}`)}
             >
               Create a product
             </Button>
@@ -241,13 +231,12 @@ export function ProductPage() {
                     </Badge>
                   </div>
                 </div>
-                <Button
-                  className='w-full mt-4 flex items-center justify-center gap-2'
-                  onClick={() => handleViewProduct(product._id)}
-                >
-                  <Eye className='w-4 h-4' />
-                  View Details
-                </Button>
+                <Link to={ROUTES.PRODUCTS.getDetailsLink(product._id)}>
+                  <Button className='w-full mt-4 flex items-center justify-center gap-2'>
+                    <Eye className='w-4 h-4' />
+                    View Details
+                  </Button>
+                </Link>
               </div>
             ))}
           </div>
@@ -266,6 +255,7 @@ export function ProductPage() {
                         >
                           {header.isPlaceholder ? null : (
                             <div
+                              onKeyDown={header.column.getToggleSortingHandler()}
                               className={
                                 header.column.getCanSort()
                                   ? 'cursor-pointer select-none flex items-center gap-2'

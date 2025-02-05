@@ -15,7 +15,7 @@ import { toast } from '@/hooks/use-toast';
 import { ROUTES } from '@/constants/routes';
 import { useNavigate } from 'react-router-dom';
 
-const NewAdmin = () => {
+const AdminCreate = () => {
   const { mutate: createAdmin } = useCreateNewAdmin();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -94,7 +94,7 @@ const NewAdmin = () => {
   };
 
   return (
-    <div className='max-w-md mx-auto mt-10'>
+    <div className='max-w-md mx-auto mt-10 min-w-[400px]'>
       <Card className='shadow-lg'>
         <CardHeader>
           <CardTitle className='text-2xl font-bold text-center'>
@@ -166,4 +166,4 @@ const NewAdmin = () => {
   );
 };
 
-export default NewAdmin;
+export default AdminCreate;

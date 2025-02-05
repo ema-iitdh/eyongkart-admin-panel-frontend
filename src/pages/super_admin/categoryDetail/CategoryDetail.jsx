@@ -41,10 +41,10 @@ export function CategoryDetail() {
 
   useEffect(() => {
     refetch();
-  }, [categoryId, refetch]);
+  }, [refetch]);
 
   const navigateToAddSubCategory = () => {
-    navigate(`${ROUTES.ADD_SUBCATEGORY.replace(':categoryId', categoryId)}`);
+    navigate(ROUTES.SUBCATEGORIES.getCreateLink(categoryId));
   };
 
   const handleDeleteCategory = async () => {
@@ -56,7 +56,7 @@ export function CategoryDetail() {
             title: 'Success',
             description: 'Category deleted successfully',
           });
-          navigate(`${ROUTES.ALLCATEGORIES}`);
+          navigate(ROUTES.CATEGORIES.getRootLink());
         } else {
           toast({
             title: 'Error',
@@ -135,10 +135,9 @@ export function CategoryDetail() {
         <div className='flex gap-2 items-center'>
           <Link
             to={`/dashboard/categories/${categoryId}/edit`}
-            className={
-              buttonVariants({ variant: 'default' }) +
-              ' flex items-center gap-2'
-            }
+            className={`${buttonVariants({
+              variant: 'default',
+            })} flex items-center gap-2`}
           >
             <Edit className='w-4 h-4' /> Edit Category
           </Link>
@@ -230,19 +229,16 @@ export function CategoryDetail() {
               {category.subCategories.map((subCategory) => (
                 <div key={subCategory._id} className='space-y-2'>
                   <div className='flex items-center justify-between'>
-                    <span className='font-medium'>
-                      {subCategory.subCategoryName}
-                    </span>
+                    <span className='font-medium'>{subCategory.name}</span>
                     <div className='flex items-center gap-2'>
                       <Link
-                        to={ROUTES.EDIT_SUBCATEGORY.replace(
-                          ':categoryId',
-                          category._id
-                        ).replace(':subCategoryId', subCategory._id)}
-                        className={
-                          buttonVariants({ variant: 'link' }) +
-                          'flex items-center gap-2'
-                        }
+                        to={ROUTES.SUBCATEGORIES.getUpdateLink(
+                          category._id,
+                          subCategory._id
+                        )}
+                        className={`${buttonVariants({
+                          variant: 'link',
+                        })}flex items-center gap-2`}
                       >
                         <Edit className='w-2 h-2' />
                         Edit

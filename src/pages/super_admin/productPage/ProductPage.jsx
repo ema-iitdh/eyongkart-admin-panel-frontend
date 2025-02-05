@@ -165,7 +165,7 @@ export function ProductPage() {
           <div className='flex gap-x-2'>
             <Button
               className='border border-input bg-green-500 shadow-sm hover:bg-green-400 text-white'
-              onClick={() => navigate(`${ROUTES.PRODUCTS.CREATE}`)}
+              onClick={() => navigate(ROUTES.PRODUCTS.getCreateLink())}
             >
               Create a product
             </Button>

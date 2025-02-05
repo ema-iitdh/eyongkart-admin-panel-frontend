@@ -52,13 +52,13 @@ export function OrderDetail() {
           <CardContent className='space-y-4'>
             <div className='flex justify-between items-center'>
               <span className='text-muted-foreground'>Order ID</span>
-              <span className='font-medium'>{order._id}</span>
+              <span className='font-medium'>{order?._id}</span>
             </div>
             <Separator />
             <div className='flex justify-between items-center'>
               <span className='text-muted-foreground'>Order Date</span>
               <span className='font-medium'>
-                {new Date(order.createdAt).toLocaleDateString()}
+                {new Date(order?.createdAt).toLocaleDateString()}
               </span>
             </div>
             <Separator />
@@ -66,21 +66,23 @@ export function OrderDetail() {
               <span className='text-muted-foreground'>Payment Status</span>
               <Badge
                 variant={
-                  order.payment.status === 'Pending' ? 'warning' : 'success'
+                  order?.payment?.status === 'Pending' ? 'warning' : 'success'
                 }
               >
-                {order.payment.status}
+                {order?.payment?.status}
               </Badge>
             </div>
             <Separator />
             <div className='flex justify-between items-center'>
               <span className='text-muted-foreground'>Order Status</span>
-              <Badge variant={OrderStatus[order.status]}>{order.status}</Badge>
+              <Badge variant={OrderStatus[order?.status]}>
+                {order?.status}
+              </Badge>
             </div>
             <Separator />
             <div className='flex justify-between items-center'>
               <span className='text-muted-foreground'>Payment Method</span>
-              <span className='font-medium'>{order.payment_type}</span>
+              <span className='font-medium'>{order?.payment_type}</span>
             </div>
           </CardContent>
         </Card>
@@ -95,25 +97,26 @@ export function OrderDetail() {
               <MapPin className='w-5 h-5 mt-1 text-muted-foreground' />
               <div className='flex-1'>
                 <p className='font-medium'>
-                  {order.shipping_address.full_name}
+                  {order?.shipping_address?.full_name}
                 </p>
                 <p className='text-sm text-muted-foreground'>
-                  {order.shipping_address.address_line1}
-                  {order.shipping_address.address_line2 &&
-                    `, ${order.shipping_address.address_line2}`}
-                  {order.shipping_address.landmark &&
-                    `, ${order.shipping_address.landmark}`}
+                  {order?.shipping_address?.address_line1}
+                  {order?.shipping_address?.address_line2 &&
+                    `, ${order?.shipping_address?.address_line2}`}
+                  {order?.shipping_address?.landmark &&
+                    `, ${order?.shipping_address?.landmark}`}
                 </p>
                 <p className='text-sm text-muted-foreground'>
-                  {order.shipping_address.city}, {order.shipping_address.state}{' '}
-                  - {order.shipping_address.pincode}
+                  {order?.shipping_address?.city},{' '}
+                  {order?.shipping_address?.state} -{' '}
+                  {order?.shipping_address?.pincode}
                 </p>
               </div>
             </div>
             <Separator />
             <div className='flex items-center gap-3'>
               <Phone className='w-5 h-5 text-muted-foreground' />
-              <span>{order.shipping_address.phone}</span>
+              <span>{order?.shipping_address?.phone}</span>
             </div>
             <Separator />
             <div className='flex items-center gap-3'>
@@ -121,7 +124,7 @@ export function OrderDetail() {
               <span>
                 Estimated Delivery:{' '}
                 {new Date(
-                  order.shipping_details?.estimated_delivery_date
+                  order?.shipping_details?.estimated_delivery_date
                 ).toLocaleDateString()}
               </span>
             </div>
@@ -147,10 +150,13 @@ export function OrderDetail() {
                         product?.product?.images?.[0]?.url ||
                         product?.product?.image_id?.[0]
                       }`}
-                      alt={product.name}
+                      alt={product?.name}
                       className='w-16 h-16 object-cover rounded'
                     />
                     <div className='flex flex-col gap-2'>
+                      <p className='text-xs text-muted-foreground'>
+                        {product?._id}
+                      </p>
                       <p className='font-medium'>
                         {product?.variant?.color?.name}
                       </p>
@@ -187,20 +193,20 @@ export function OrderDetail() {
                 <span>
                   ₹
                   {(
-                    order.amount - order.shipping_details?.shipping_charge
+                    order?.amount - order?.shipping_details?.shipping_charge
                   ).toFixed(2)}
                 </span>
               </div>
               <div className='flex justify-between'>
                 <span className='font-medium'>Shipping</span>
                 <span>
-                  ₹{order.shipping_details?.shipping_charge?.toFixed(2)}
+                  ₹{order?.shipping_details?.shipping_charge?.toFixed(2)}
                 </span>
               </div>
               <Separator />
               <div className='flex justify-between text-lg font-semibold'>
                 <span>Total</span>
-                <span>₹{order.amount.toFixed(2)}</span>
+                <span>₹{order?.amount?.toFixed(2)}</span>
               </div>
             </div>
           </CardContent>

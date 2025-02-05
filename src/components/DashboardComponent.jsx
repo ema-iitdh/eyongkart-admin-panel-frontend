@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Card,
@@ -10,12 +10,13 @@ import {
 import { Button } from '@/components/ui/button';
 import useAuthenticationStore from '@/store/useAuthenticationStore';
 import { ROUTES } from '@/constants/routes';
+import { ROLES } from '@/constants';
 
 const MotionCard = motion(Card);
 
 function DashboardComponent({ dashboardCards = [] }) {
   const { user } = useAuthenticationStore();
-  const isSuperAdmin = user?.role === 'Super_Admin';
+  const isSuperAdmin = user?.role === ROLES.Super_Admin;
 
   const navigate = useNavigate();
   return (
@@ -29,17 +30,12 @@ function DashboardComponent({ dashboardCards = [] }) {
         >
           Admin Dashboard
         </motion.h1>
-        {isSuperAdmin && (
-          <Button onClick={() => navigate(`${ROUTES.NEW_ADMIN}`)}>
-            Create a new admin
-          </Button>
-        )}
       </div>
 
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
         {dashboardCards.map((card, index) => (
           <MotionCard
-            key={index}
+            key={card?.title}
             className='overflow-hidden relative transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl'
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

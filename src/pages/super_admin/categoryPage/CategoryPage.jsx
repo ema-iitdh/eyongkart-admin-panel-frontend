@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 
@@ -31,9 +31,12 @@ export function CategoryPage() {
   const [sorting, setSorting] = React.useState([]);
   const [globalFilter, setGlobalFilter] = React.useState('');
 
-  const handleViewCategory = (categoryId) => {
-    navigate(`/dashboard/categories/${categoryId}`);
-  };
+  const handleViewCategory = useCallback(
+    (categoryId) => {
+      navigate(ROUTES.CATEGORIES.getDetailsLink(categoryId));
+    },
+    [navigate]
+  );
 
   const columns = React.useMemo(
     () => [
@@ -121,7 +124,7 @@ export function CategoryPage() {
         <div className='flex gap-x-2'>
           <Button
             className='border border-input bg-green-500 shadow-sm hover:bg-green-400 text-white'
-            onClick={() => navigate(`${ROUTES.CATEGORY_CREATE}`)}
+            onClick={() => navigate(ROUTES.CATEGORIES.getCreateLink())}
           >
             Create a category
           </Button>
@@ -186,6 +189,11 @@ export function CategoryPage() {
                       <TableHead key={header.id}>
                         {header.isPlaceholder ? null : (
                           <div
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                header.column.getToggleSortingHandler();
+                              }
+                            }}
                             className={
                               header.column.getCanSort()
                                 ? 'cursor-pointer select-none flex items-center gap-2'

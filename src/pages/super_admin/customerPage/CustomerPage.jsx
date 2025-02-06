@@ -21,6 +21,7 @@ import {
 } from '@tanstack/react-table';
 import { useGetAllCustomers } from '@/features/customer/hooks/useCustomer';
 import { Loader } from '@/components/common/loader';
+import { ROUTES } from '@/constants/routes';
 
 export function CustomerPage() {
   const navigate = useNavigate();
@@ -78,7 +79,7 @@ export function CustomerPage() {
           className='flex items-center gap-2'
           onClick={(e) => {
             e.stopPropagation(); // Prevent event bubbling
-            navigate(`/dashboard/customers/${row.original._id}`);
+            navigate(ROUTES.CUSTOMERS.getDetailsLink(row.original._id));
           }}
         >
           <Eye className='w-4 h-4' />
@@ -153,7 +154,7 @@ export function CustomerPage() {
                   size='sm'
                   className='flex items-center gap-2 mt-2'
                   onClick={() =>
-                    navigate(`/dashboard/customers/${row.original._id}`)
+                    navigate(ROUTES.CUSTOMERS.getDetailsLink(row.original._id))
                   }
                 >
                   <Eye className='w-4 h-4' />
@@ -174,6 +175,11 @@ export function CustomerPage() {
                         <TableHead key={header.id}>
                           {header.isPlaceholder ? null : (
                             <div
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  header.column.getToggleSortingHandler();
+                                }
+                              }}
                               className={
                                 header.column.getCanSort()
                                   ? 'cursor-pointer select-none flex items-center gap-2'

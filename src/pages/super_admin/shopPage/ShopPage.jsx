@@ -30,9 +30,6 @@ export function ShopPage() {
   const [sorting, setSorting] = React.useState([]);
   const [globalFilter, setGlobalFilter] = React.useState('');
 
-  const handleViewShop = (shopId) => {
-    navigate(`/dashboard/shop/${shopId}`);
-  };
   const columns = React.useMemo(
     () => [
       {
@@ -67,7 +64,9 @@ export function ShopPage() {
             variant='ghost'
             size='sm'
             className='flex items-center gap-2'
-            onClick={() => navigate(`/dashboard/shops/${row.original._id}`)}
+            onClick={() =>
+              navigate(ROUTES.SHOP.getDetailsLink(row.original._id))
+            }
           >
             <Eye className='w-4 h-4' />
             View
@@ -108,7 +107,7 @@ export function ShopPage() {
         <div className='relative w-full max-w-sm flex gap-x-2'>
           <Button
             className='border border-input bg-green-500 shadow-sm hover:bg-green-400 text-white'
-            onClick={() => navigate(ROUTES.SHOP.CREATE)}
+            onClick={() => navigate(ROUTES.SHOP.getCreateLink())}
           >
             Create a shop
           </Button>
@@ -149,7 +148,9 @@ export function ShopPage() {
                 </div>
                 <Button
                   className='w-full flex items-center justify-center gap-2'
-                  onClick={() => handleViewShop(row.original._id)}
+                  onClick={() =>
+                    navigate(ROUTES.SHOP.getDetailsLink(row.original._id))
+                  }
                 >
                   <Eye className='w-4 h-4' />
                   View Details
@@ -172,6 +173,11 @@ export function ShopPage() {
                         >
                           {header.isPlaceholder ? null : (
                             <div
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  header.column.getToggleSortingHandler();
+                                }
+                              }}
                               className={
                                 header.column.getCanSort()
                                   ? 'cursor-pointer select-none flex items-center gap-2'

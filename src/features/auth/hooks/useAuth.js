@@ -46,8 +46,7 @@ export const useLogin = () => {
       setIsAuthenticated(true);
       setUser(data.user);
       queryClient.invalidateQueries('user');
-      const from = location.state?.from?.pathname || ROUTES.DASHBOARD;
-      navigate(`${from}`, { replace: true });
+      navigate(ROUTES.DASHBOARD, { replace: true });
     },
   });
 };

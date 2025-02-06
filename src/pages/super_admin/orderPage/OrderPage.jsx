@@ -33,6 +33,7 @@ import {
 } from '@tanstack/react-table';
 import { OrderStatus } from '@/constants';
 import { Loader } from '@/components/common/loader';
+import { ROUTES } from '@/constants/routes';
 
 export function OrderPage() {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ export function OrderPage() {
   const [globalFilter, setGlobalFilter] = React.useState('');
 
   const handleViewOrder = (orderId) => {
-    navigate(`/dashboard/orders/${orderId}`);
+    navigate(ROUTES.ORDERS.getDetailsLink(orderId));
   };
   const handleStatusChange = React.useCallback(
     (e, orderId, status) => {
@@ -124,7 +125,9 @@ export function OrderPage() {
             variant='ghost'
             size='sm'
             className='flex items-center gap-2'
-            onClick={() => navigate(`/dashboard/orders/${row.original._id}`)}
+            onClick={() =>
+              navigate(ROUTES.ORDERS.getDetailsLink(row.original._id))
+            }
           >
             <Eye className='w-4 h-4' />
             View
@@ -227,6 +230,11 @@ export function OrderPage() {
                         >
                           {header.isPlaceholder ? null : (
                             <div
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  header.column.getToggleSortingHandler();
+                                }
+                              }}
                               className={
                                 header.column.getCanSort()
                                   ? 'cursor-pointer select-none flex items-center gap-2'

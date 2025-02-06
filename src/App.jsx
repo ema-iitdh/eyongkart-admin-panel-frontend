@@ -6,6 +6,7 @@ import AppRoutes from './routes';
 
 import './App.css';
 import { Toaster } from './components/ui/toaster';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -37,13 +38,19 @@ const queryClient = new QueryClient({
 });
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter basename={basename}>
-        <AppRoutes />
-        <Toaster />
-      </BrowserRouter>
-      <ReactQueryDevtools initialIsOpen={false} position='bottom-right' />
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter basename={basename}>
+          <AppRoutes />
+          <Toaster />
+        </BrowserRouter>
+        <ReactQueryDevtools
+          buttonPosition='bottom-right'
+          initialIsOpen={false}
+          position='bottom'
+        />
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 

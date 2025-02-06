@@ -33,7 +33,6 @@ export const ROUTES = {
     getRootLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}`;
     },
-    LIST: 'products', // ! remove this later
     DETAILS: ':productId',
     getDetailsLink: function (productId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/${productId}`;
@@ -96,6 +95,10 @@ export const ROUTES = {
     getUpdateLink: function (customerId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/update/${customerId}`;
     },
+    CREATE: 'create',
+    getCreateLink: function () {
+      return `${ROUTES.DASHBOARD}/${this.ROOT}/create`;
+    }
   },
   CATEGORIES: {
     ROOT: 'categories',

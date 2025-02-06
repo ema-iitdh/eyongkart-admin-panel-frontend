@@ -1,39 +1,41 @@
-import { ROLES } from '@/constants';
-import SideBarLayout from '@/layouts/SidebarLayout';
-import AdminPage from '@/pages/@super-admin/admin/AdminPage';
-import AdminDetail from '@/pages/@super-admin/admin/[adminId]/AdminDetails';
-import AdminCreate from '@/pages/@super-admin/admin/create/AdminCreate';
-import AdminUpdate from '@/pages/@super-admin/admin/update/[adminId]/AdminUpdate';
-import PaymentPage from '@/pages/@super-admin/payments/PaymentPage';
-import UpdateProduct from '@/pages/@super-admin/products/[productId]/update/UpdateProduct';
-import ShippingPage from '@/pages/@super-admin/shipping/ShippingPage';
-import ShippingUpdate from '@/pages/@super-admin/shipping/update/ShippingUpdate';
-import { Analytics } from '@/pages/super_admin/analytics';
-import Login from '@/pages/super_admin/auth/Login';
-import CategoryCreate from '@/pages/super_admin/categoryCreate/CategoryCreate';
-import CategoryDetail from '@/pages/super_admin/categoryDetail/CategoryDetail';
-import CategoryPage from '@/pages/super_admin/categoryPage/CategoryPage';
-import CategoryUpdate from '@/pages/super_admin/categoryUpdate/CategoryUpdate';
-import CustomerDetail from '@/pages/super_admin/customerDetail/CustomerDetail';
-import CustomerPage from '@/pages/super_admin/customerPage/CustomerPage';
-import Dashboard from '@/pages/super_admin/dashboard/Dashboard';
-import { OrderDetail } from '@/pages/super_admin/orderDetail/OrderDetail';
-import { OrderPage } from '@/pages/super_admin/orderPage/OrderPage';
-import ProductCreate from '@/pages/super_admin/productCreate/ProductCreate';
-import ProductDetail from '@/pages/super_admin/productDetail/ProductDetail';
-import { ProductPage } from '@/pages/super_admin/productPage/ProductPage';
-import ShopCreate from '@/pages/super_admin/shopCreate/ShopCreate';
-import ShopDetail from '@/pages/super_admin/shopDetail/ShopDetail';
-import ShopEdit from '@/pages/super_admin/shopEdit/ShopEdit';
-import useAuthenticationStore from '@/store/useAuthenticationStore';
-import { Suspense } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
-import { ROUTES } from '../constants/routes';
-import ProtectedRoute from './ProtectedRoutes';
-import { RedirectAuthenticatedUser } from './RedirectAuthenticatedUser';
-import SettingPage from '@/pages/@super-admin/settings/SettingPage';
-import NotFound from '@/pages/notFound';
-import ShopPage from '@/pages/@super-admin/shop/ShopPage';
+import { ROLES } from "@/constants";
+import SideBarLayout from "@/layouts/SidebarLayout";
+import AdminPage from "@/pages/@super-admin/admin/AdminPage";
+import AdminDetail from "@/pages/@super-admin/admin/[adminId]/AdminDetails";
+import AdminCreate from "@/pages/@super-admin/admin/create/AdminCreate";
+import AdminUpdate from "@/pages/@super-admin/admin/update/[adminId]/AdminUpdate";
+import PaymentPage from "@/pages/@super-admin/payments/PaymentPage";
+import UpdateProduct from "@/pages/@super-admin/products/[productId]/update/UpdateProduct";
+import ShippingPage from "@/pages/@super-admin/shipping/ShippingPage";
+import ShippingUpdate from "@/pages/@super-admin/shipping/update/ShippingUpdate";
+import { Analytics } from "@/pages/super_admin/analytics";
+import Login from "@/pages/super_admin/auth/Login";
+import Dashboard from "@/pages/dashboard/Dashboard";
+import useAuthenticationStore from "@/store/useAuthenticationStore";
+import { Suspense } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { ROUTES } from "../constants/routes";
+import ProtectedRoute from "./ProtectedRoutes";
+import { RedirectAuthenticatedUser } from "./RedirectAuthenticatedUser";
+import SettingPage from "@/pages/@super-admin/settings/SettingPage";
+import NotFound from "@/pages/notFound";
+import ShopPage from "@/pages/@super-admin/shop/ShopPage";
+import OrderPage from "@/pages/@super-admin/order/OrderPage";
+import OrderDetail from "@/pages/@super-admin/order/detail/OrderDetail";
+import OrderCreate from "@/pages/@super-admin/order/create/OrderCreate";
+import CustomerPage from "@/pages/@super-admin/customer/CustomerPage";
+import CustomerDetail from "@/pages/@super-admin/customer/detail/CustomerDetail";
+import ShopDetail from "@/pages/@super-admin/shop/detail/ShopDetail";
+import ShopEdit from "@/pages/@super-admin/shop/edit/ShopEdit";
+import ShopCreate from "@/pages/@super-admin/shop/create/ShopCreate";
+import ProductPage from "@/pages/@super-admin/products/ProductPage";
+import ProductCreate from "@/pages/@super-admin/products/create/ProductCreate";
+import ProductDetail from "@/pages/@super-admin/products/[productId]/detail/ProductDetail";
+import CategoryPage from "@/pages/@super-admin/category/CategoryPage";
+import CategoryDetail from "@/pages/@super-admin/category/detail/CategoryDetail";
+import CategoryCreate from "@/pages/@super-admin/category/create/CategoryCreate";
+import CategoryUpdate from "@/pages/@super-admin/category/update/CategoryUpdate";
+import AddSubCategory from "@/pages/@super-admin/subcategory/create/AddSubCategory";
 
 export default function AppRoutes() {
   const { user } = useAuthenticationStore();
@@ -73,7 +75,26 @@ export default function AppRoutes() {
             <Route path={ROUTES.ORDERS.ROOT}>
               <Route index element={<OrderPage />} />
               <Route path={ROUTES.ORDERS.DETAILS} element={<OrderDetail />} />
+              <Route path={ROUTES.ORDERS.CREATE} element={<OrderCreate />} />
               {/* <Route path={ROUTES.ORDERS.UPDATE} element={<OrderUpdate />} /> */}
+            </Route>
+
+            {/* Customer Routes */}
+            <Route path={ROUTES.CUSTOMERS.ROOT}>
+              <Route index element={<CustomerPage />} />
+              <Route
+                path={ROUTES.CUSTOMERS.DETAILS}
+                element={<CustomerDetail />}
+              />
+              {/* <Route path={ROUTES.CUSTOMERS.UPDATE} element={<CustomerUpdate />} /> */}
+            </Route>
+
+            {/* Shop Routes */}
+            <Route path={ROUTES.SHOP.ROOT}>
+              <Route index element={<ShopPage />} />
+              <Route path={ROUTES.SHOP.DETAILS} element={<ShopDetail />} />
+              <Route path={ROUTES.SHOP.UPDATE} element={<ShopEdit />} />
+              <Route path={ROUTES.SHOP.CREATE} element={<ShopCreate />} />
             </Route>
 
             {/* Product Routes */}
@@ -93,30 +114,6 @@ export default function AppRoutes() {
               />
             </Route>
 
-            {/* Payment Routes */}
-            <Route path={ROUTES.PAYMENTS.ROOT}>
-              <Route index element={<PaymentPage />} />
-            </Route>
-
-            {/* Shop Routes */}
-            <Route path={ROUTES.SHOP.ROOT}>
-              <Route index element={<ShopPage />} />
-              <Route path={ROUTES.SHOP.DETAILS} element={<ShopDetail />} />
-              <Route path={ROUTES.SHOP.UPDATE} element={<ShopEdit />} />
-              <Route path={ROUTES.SHOP.CREATE} element={<ShopCreate />} />
-              {/* <Route path={ROUTES.SHOP.UPDATE} element={<ShopUpdate />} /> */}
-            </Route>
-
-            {/* Customer Routes */}
-            <Route path={ROUTES.CUSTOMERS.ROOT}>
-              <Route index element={<CustomerPage />} />
-              <Route
-                path={ROUTES.CUSTOMERS.DETAILS}
-                element={<CustomerDetail />}
-              />
-              {/* <Route path={ROUTES.CUSTOMERS.UPDATE} element={<CustomerUpdate />} /> */}
-            </Route>
-
             {/* Category Routes */}
             <Route path={ROUTES.CATEGORIES.ROOT}>
               <Route index element={<CategoryPage />} />
@@ -132,7 +129,21 @@ export default function AppRoutes() {
                 path={ROUTES.CATEGORIES.UPDATE}
                 element={<CategoryUpdate />}
               />
+
               {/* <Route path={ROUTES.CATEGORIES.UPDATE} element={<CategoryUpdate />} /> */}
+            </Route>
+
+            {/* Subcategories routes */}
+            <Route path={ROUTES.SUBCATEGORIES.ROOT}>
+              <Route
+                path={ROUTES.SUBCATEGORIES.CREATE}
+                element={<AddSubCategory />}
+              />
+            </Route>
+
+            {/* Payment Routes */}
+            <Route path={ROUTES.PAYMENTS.ROOT}>
+              <Route index element={<PaymentPage />} />
             </Route>
 
             {/* Shipping and Delivery Routes */}
@@ -243,7 +254,7 @@ export default function AppRoutes() {
             </>
           )} */}
           {/* </Route> */}
-          <Route path='*' element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </Suspense>

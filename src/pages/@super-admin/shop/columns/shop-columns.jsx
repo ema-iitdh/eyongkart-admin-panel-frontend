@@ -33,8 +33,7 @@ export const shopColumns = [
     header: 'Actions',
     cell: ({ row }) => (
       <Link to={ROUTES.SHOP.getDetailsLink(row.original._id)}>
-        <Button variant='ghost' size='sm' className='flex items-center gap-2'>
-          <Eye className='w-4 h-4' />
+        <Button variant='outline' size='sm' className='flex items-center gap-2'>
           View
         </Button>
       </Link>

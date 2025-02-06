@@ -248,11 +248,6 @@ export default function AppSideBar() {
       url: ROUTES.PAYMENTS.getRootLink(),
       icon: CreditCard,
     },
-    {
-      title: 'Shipping Management',
-      url: ROUTES.SHIPPING.getRootLink(),
-      icon: Truck,
-    },
     { title: 'Settings', url: ROUTES.SETTINGS.getRootLink(), icon: Settings },
   ];
 

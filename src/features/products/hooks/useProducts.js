@@ -1,18 +1,11 @@
 import { productService } from '@/api/services/product.service';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-export const useProducts = ({ filter = '' }, options) => {
+export const useProducts = ({ filter = '' }) => {
   return useQuery({
     queryKey: ['products', filter],
-    queryFn: async () => {
-      console.log('inside queryFn');
-      const response = await productService.getProducts({ filter });
-      return {
-        products: response.products,
-        pagination: response.pagination,
-      };
-    },
-    ...options,
+    queryFn: () => productService.getProducts({ filter }),
+    select: (data) => data.products,
   });
 };
 

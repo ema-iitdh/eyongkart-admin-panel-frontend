@@ -4,15 +4,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { toast } from '@/hooks/use-toast';
-import { FormNavigation } from './_components/form-navigation';
-import { BasicDetails } from './_components/basic-details';
-import { Categorization } from './_components/categorization';
-import { Specifications } from './_components/specifications';
-import { TargetAudience } from './_components/target-audience';
-import { StatusVisibility } from './_components/status-visibility';
-import { SEO } from './_components/seo';
-import { ImageUpload } from './_components/image-upload';
-import { Variants } from './_components/variants';
+import { FormNavigation } from '../_components/form-navigation';
+import { BasicDetails } from '../_components/basic-details';
+import { Categorization } from '../_components/categorization';
+import { Specifications } from '../_components/specifications';
+import { TargetAudience } from '../_components/target-audience';
+import { StatusVisibility } from '../_components/status-visibility';
+import { SEO } from '../_components/seo';
+import { ImageUpload } from '../_components/image-upload';
+import { Variants } from '../_components/variants';
 import { useCreateProductPost } from '@/features/products/hooks/useProducts';
 import { formSchema } from '@/constants';
 import { ROUTES } from '@/constants/routes';
@@ -121,7 +121,7 @@ export function ProductCreate() {
           // Optional: Reset form or redirect
           // form.reset();
           if (isSuperAdmin) {
-            navigate(`${ROUTES.PRODUCT.LIST}`);
+            navigate('/dashboard/products');
           } else {
             navigate(`${ROUTES.SELLER_PRODUCT}`);
           }

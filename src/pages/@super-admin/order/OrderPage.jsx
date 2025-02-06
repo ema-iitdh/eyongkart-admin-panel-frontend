@@ -1,20 +1,20 @@
 import DataTable from '@/components/common/data-table';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants/routes';
-import { useGetAllAdmins } from '@/features/admin/hooks/useAdmin';
 import { Loader, Plus } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { adminColumns } from './columns/admins-columns';
-import BatchDeleteButton from '@/components/common/BatchDeleteButton';
+import BatchDeleteButton from '../../../components/common/BatchDeleteButton';
+import { useOrders } from '@/features/orders/hooks/useOrders';
+import { orderColumns } from './columns/orders-columns';
 
-const AdminPage = () => {
-  const { data: admins, isLoading, isError } = useGetAllAdmins();
-  const [selectedAdmins, setSelectedAdmins] = useState([]);
+const OrderPage = () => {
+  const { data: orders = [], isLoading, isError } = useOrders();
+  const [selectedOrders, setSelectedOrders] = useState([]);
 
-  const handleDeleteAdmins = useCallback((selectedAdmins) => {
-    setSelectedAdmins(selectedAdmins);
-    console.log('Selected Admins:', selectedAdmins);
+  const handleDeleteOrders = useCallback((selectedOrders) => {
+    setSelectedOrders(selectedOrders);
+    console.log('Selected orders:', selectedOrders);
   }, []);
 
   if (isLoading) {
@@ -27,35 +27,35 @@ const AdminPage = () => {
 
   if (isError) {
     return (
-      <div className='text-center text-red-500'>Error fetching admins</div>
+      <div className='text-center text-red-500'>Error fetching orders</div>
     );
   }
 
   return (
     <div className='p-4 sm:p-6'>
       <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6'>
-        <h1 className='text-2xl font-bold'>Admin Management</h1>
+        <h1 className='text-2xl font-bold'>Order Management</h1>
         <div className='flex gap-2'>
           <BatchDeleteButton
-            selectedRows={selectedAdmins}
-            handleBatchDelete={handleDeleteAdmins}
+            selectedRows={selectedOrders}
+            handleBatchDelete={handleDeleteOrders}
           />
-          <Link to={ROUTES.ADMIN.getCreateLink()}>
+          <Link to={ROUTES.ORDERS.getCreateLink()}>
             <Button>
               <Plus className='h-4 w-4 mr-2' />
-              Create New Admin
+              Create New Order
             </Button>
           </Link>
         </div>
       </div>
       <DataTable
-        data={admins}
-        columns={adminColumns}
+        data={orders}
+        columns={orderColumns}
         enableSelection={true}
-        onSelectionChange={handleDeleteAdmins}
+        onSelectionChange={handleDeleteOrders}
       />
     </div>
   );
 };
 
-export default AdminPage;
+export default OrderPage;

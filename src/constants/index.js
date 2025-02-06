@@ -8,6 +8,12 @@ export const OrderStatus = {
   Cancelled: 'destructive',
 };
 
+export const PaymentStatus = {
+  Pending: 'warning',
+  Success: 'success',
+  Failed: 'destructive',
+}
+
 export const ROLES = {
   Super_Admin: 'Super_Admin',
   Shop_Seller_Site_Admin: 'Shop_Seller_Site_Admin',

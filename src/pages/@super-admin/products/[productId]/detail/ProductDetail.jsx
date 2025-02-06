@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { CloudinaryConfig } from '../../../../Cloudinary';
+import { CloudinaryConfig } from '../../../../../../Cloudinary';
 import {
   Card,
   CardContent,

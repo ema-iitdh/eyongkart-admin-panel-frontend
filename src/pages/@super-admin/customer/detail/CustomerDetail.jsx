@@ -14,7 +14,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useGetAllCustomers } from '@/features/customer/hooks/useCustomer';
 import { Loader } from '@/components/common/loader';
-import { CloudinaryConfig } from '../../../../Cloudinary';
+import { CloudinaryConfig } from '../../../../../Cloudinary';
 
 export function CustomerDetail() {
   const { customerId } = useParams();
@@ -30,6 +30,8 @@ export function CustomerDetail() {
     );
 
   const customer = customers.find((customer) => customer._id === customerId);
+
+  console.log(customer);
 
   if (!customer)
     return (
@@ -150,9 +152,9 @@ export function CustomerDetail() {
                         `${CloudinaryConfig.CLOUDINARY_URL}/${
                           item?.product?.variants?.find(
                             (variant) => variant._id === item?.variantId?.[0]
-                          )?.images?.[0]?.url || item?.product?.image?.[0]
+                          )?.images?.[0]?.url || item?.product?.baseImage?.url
                         }` ||
-                        `${CloudinaryConfig.CLOUDINARY_URL2}/${
+                        `${CloudinaryConfig.CLOUDINARY_URL}/${
                           item?.product?.variants?.find(
                             (variant) => variant._id === item?.variantId?.[0]
                           )?.images?.[0]?.url || item?.product?.image?.[0]

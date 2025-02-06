@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useGetAllAdmins } from '@/features/admin/hooks/useAdmin';
-import { ImageUpload } from './_components/image-uploads';
+import { ImageUpload } from '../_components/image-uploads';
 import { useCreateShopPost } from '@/features/shop/hooks/useShop';
 import { useNavigate } from 'react-router-dom';
 import useAuthenticationStore from '@/store/useAuthenticationStore';

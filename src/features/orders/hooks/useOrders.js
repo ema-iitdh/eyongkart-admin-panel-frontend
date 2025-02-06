@@ -5,13 +5,20 @@ export const useOrders = () => {
     return useQuery({
         queryKey: ['orders'],
         queryFn: () => orderService.getAllOrders(),
-        select:(data)=>data.orders,
+        select:(data) => data.orders,
     });
 };
 
-export const useUpdatateOrderStatus = () => {
+export const useUpdateOrderStatus = () => {
     return useMutation({
         mutationKey: ["order"],
         mutationFn: ({ orderId, status }) => orderService.updateOrderStatus(orderId, status),
     })
-}
+};
+
+export const useUpdatePaymnetStatus = () => {
+    return useMutation({
+        mutationKey: ["order"],
+        mutationFn: ({ orderId, paymentStatus }) => orderService.updatePaymentStatus(orderId, paymentStatus),
+    })
+};

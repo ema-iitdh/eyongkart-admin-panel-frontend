@@ -6,7 +6,7 @@ import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, MapPin, Phone, Calendar } from 'lucide-react';
 import { OrderStatus } from '@/constants';
 import { useOrders } from '@/features/orders/hooks/useOrders';
-import { CloudinaryConfig } from '../../../../Cloudinary';
+import { CloudinaryConfig } from '../../../../../Cloudinary';
 import { Loader } from '@/components/common/loader';
 
 export function OrderDetail() {

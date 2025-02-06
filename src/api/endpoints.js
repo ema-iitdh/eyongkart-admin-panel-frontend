@@ -52,6 +52,7 @@ export const API_ENDPOINTS = {
       // !!! ADMIN ONLY
       add: '/order/create',
       updateStatus: (orderId) => `/order/updateOrderStatus/${orderId}`,
+      updatePaymentStatus: (orderId) => `/order/updatePaymentStatus/${orderId}`,
       getOrdersByUserId: (userId) => `/order/getAllOrdersForCustomer/${userId}`,
       // !!! SUPER ADMIN ONLY
       getAllOrderForAllUsers: '/order/getAllOrders',

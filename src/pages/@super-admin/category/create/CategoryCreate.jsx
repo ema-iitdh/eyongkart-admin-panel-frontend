@@ -52,12 +52,13 @@ export function CategoryCreate() {
       if (response.success) {
         toast({
           title: 'Success',
-          description: 'Product created successfully',
+          description: 'Category created successfully',
         });
+        navigate('/dashboard/categories')
       } else {
         toast({
           title: 'Error',
-          description: response?.message || 'Failed to create product',
+          description: response?.message || 'Failed to create category',
           variant: 'destructive',
         });
       }

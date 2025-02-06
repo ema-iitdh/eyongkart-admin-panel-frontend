@@ -154,7 +154,7 @@ export function CustomerDetail() {
                             (variant) => variant._id === item?.variantId?.[0]
                           )?.images?.[0]?.url || item?.product?.baseImage?.url
                         }` ||
-                        `${CloudinaryConfig.CLOUDINARY_URL}/${
+                        `${CloudinaryConfig.CLOUDINARY_URL2}/${
                           item?.product?.variants?.find(
                             (variant) => variant._id === item?.variantId?.[0]
                           )?.images?.[0]?.url || item?.product?.image?.[0]

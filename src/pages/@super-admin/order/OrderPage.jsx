@@ -5,17 +5,37 @@ import { Loader, Plus } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 import BatchDeleteButton from '../../../components/common/BatchDeleteButton';
-import { useOrders } from '@/features/orders/hooks/useOrders';
+import { useDeleteOrder, useOrders } from '@/features/orders/hooks/useOrders';
 import { orderColumns } from './columns/orders-columns';
 
 const OrderPage = () => {
   const { data: orders = [], isLoading, isError } = useOrders();
+  const { mutate: deleteOrder, isPending: deletingOrder } = useDeleteOrder();
   const [selectedOrders, setSelectedOrders] = useState([]);
 
-  const handleDeleteOrders = useCallback((selectedOrders) => {
-    setSelectedOrders(selectedOrders);
-    console.log('Selected orders:', selectedOrders);
-  }, []);
+  const handleDeleteOrders = useCallback(async () => {
+    const results = await Promise.allSettled(
+      selectedOrders.map((order) => {
+        return new Promise((resolve, reject) => {
+          deleteOrder(
+            {
+              orderId: order._id,
+            },
+            {
+              onSuccess: resolve,
+              onError: reject,
+            }
+          );
+        });
+      })
+    );
+
+    if (results.some((result) => result.status === 'rejected')) {
+      return;
+    }
+
+    setSelectedOrders([]);
+  }, [deleteOrder, selectedOrders]);
 
   if (isLoading) {
     return (
@@ -37,22 +57,18 @@ const OrderPage = () => {
         <h1 className='text-2xl font-bold'>Order Management</h1>
         <div className='flex gap-2'>
           <BatchDeleteButton
+            isLoading={deletingOrder}
             selectedRows={selectedOrders}
             handleBatchDelete={handleDeleteOrders}
           />
-          <Link to={ROUTES.ORDERS.getCreateLink()}>
-            <Button>
-              <Plus className='h-4 w-4 mr-2' />
-              Create New Order
-            </Button>
-          </Link>
         </div>
       </div>
       <DataTable
+        key={orders.length}
         data={orders}
         columns={orderColumns}
         enableSelection={true}
-        onSelectionChange={handleDeleteOrders}
+        onSelectionChange={setSelectedOrders}
       />
     </div>
   );

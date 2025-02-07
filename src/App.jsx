@@ -7,6 +7,7 @@ import AppRoutes from './routes';
 import './App.css';
 import { Toaster } from './components/ui/toaster';
 import ErrorBoundary from './components/ErrorBoundary';
+import { toast } from './hooks/use-toast';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,6 +33,11 @@ const queryClient = new QueryClient({
         if (error.response?.status === 401) {
           window.location.href = ROUTES.LOGIN;
         }
+        toast({
+          title: 'Error',
+          description: error.response?.data?.message || 'An error occurred',
+          variant: 'destructive',
+        });
       },
     },
   },
@@ -42,7 +48,6 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <BrowserRouter basename={basename}>
           <AppRoutes />
-          <Toaster />
         </BrowserRouter>
         <ReactQueryDevtools
           buttonPosition='bottom-right'

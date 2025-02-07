@@ -36,6 +36,7 @@ import CategoryDetail from "@/pages/@super-admin/category/detail/CategoryDetail"
 import CategoryCreate from "@/pages/@super-admin/category/create/CategoryCreate";
 import CategoryUpdate from "@/pages/@super-admin/category/update/CategoryUpdate";
 import AddSubCategory from "@/pages/@super-admin/subcategory/create/AddSubCategory";
+import EditSubCategory from "@/pages/@super-admin/subcategory/edit/EditSubCategory";
 
 export default function AppRoutes() {
   const { user } = useAuthenticationStore();
@@ -138,6 +139,10 @@ export default function AppRoutes() {
               <Route
                 path={ROUTES.SUBCATEGORIES.CREATE}
                 element={<AddSubCategory />}
+              />
+              <Route
+                path={ROUTES.SUBCATEGORIES.UPDATE}
+                element={<EditSubCategory />}
               />
             </Route>
 

@@ -1,21 +1,21 @@
 // src/constants/routes.ts - Route definitions
-export const basename = '/admin';
+export const basename = "/admin";
 
 export const ROUTES = {
-  ROOT: '/',
-  DASHBOARD: '/dashboard',
+  ROOT: "/",
+  DASHBOARD: "/dashboard",
   getDashboardLink: function () {
     return `${this.DASHBOARD}`;
   },
-  LOGIN: '/login',
+  LOGIN: "/login",
   getLoginLink: function () {
     return `${this.LOGIN}`;
   },
-  SIGNUP: '/signup',
+  SIGNUP: "/signup",
   getSignupLink: function () {
     return `${this.SIGNUP}`;
   },
-  ANALYTICS: 'analytics',
+  ANALYTICS: "analytics",
   getAnalyticsLink: function () {
     return `${this.DASHBOARD}/${this.ANALYTICS}`;
   },
@@ -29,215 +29,215 @@ export const ROUTES = {
   // EDIT_SUBCATEGORY:
   //   '/dashboard/categories/:categoryId/subcategories/:subCategoryId/edit',
   PRODUCTS: {
-    ROOT: 'products',
+    ROOT: "products",
     getRootLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}`;
     },
-    DETAILS: ':productId',
+    DETAILS: ":productId",
     getDetailsLink: function (productId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/${productId}`;
     },
-    CREATE: 'create',
+    CREATE: "create",
     getCreateLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/create`;
     },
-    UPDATE: 'update/:productId',
+    UPDATE: "update/:productId",
     getUpdateLink: function (productId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/update/${productId}`;
     },
   },
   ORDERS: {
-    ROOT: 'orders',
+    ROOT: "orders",
     getRootLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}`;
     },
-    DETAILS: ':orderId',
+    DETAILS: ":orderId",
     getDetailsLink: function (orderId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/${orderId}`;
     },
-    UPDATE: 'update/:orderId',
+    UPDATE: "update/:orderId",
     getUpdateLink: function (orderId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/update/${orderId}`;
     },
   },
   SHOP: {
-    ROOT: 'shops',
+    ROOT: "shops",
     getRootLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}`;
     },
-    DETAILS: ':shopId',
+    DETAILS: ":shopId",
     getDetailsLink: function (shopId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/${shopId}`;
     },
-    UPDATE: 'update/:shopId',
+    UPDATE: "update/:shopId",
     getUpdateLink: function (shopId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/update/${shopId}`;
     },
-    CREATE: 'create',
+    CREATE: "create",
     getCreateLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/create`;
     },
   },
   CUSTOMERS: {
-    ROOT: 'customers',
+    ROOT: "customers",
     getRootLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}`;
     },
-    DETAILS: ':customerId',
+    DETAILS: ":customerId",
     getDetailsLink: function (customerId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/${customerId}`;
     },
-    UPDATE: 'update/:customerId',
+    UPDATE: "update/:customerId",
     getUpdateLink: function (customerId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/update/${customerId}`;
     },
   },
   CATEGORIES: {
-    ROOT: 'categories',
+    ROOT: "categories",
     getRootLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}`;
     },
-    DETAILS: ':categoryId',
+    DETAILS: ":categoryId",
     getDetailsLink: function (categoryId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/${categoryId}`;
     },
-    CREATE: 'create',
+    CREATE: "create",
     getCreateLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/create`;
     },
-    UPDATE: 'update/:categoryId',
+    UPDATE: "update/:categoryId",
     getUpdateLink: function (categoryId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/update/${categoryId}`;
     },
   },
   SUBCATEGORIES: {
-    ROOT: 'subcategories',
+    ROOT: "subcategories",
     getRootLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}`;
     },
-    DETAILS: ':subCategoryId',
+    DETAILS: ":subCategoryId",
     getDetailsLink: function (subCategoryId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/${subCategoryId}`;
     },
-    CREATE: 'create',
+    CREATE: "create/:categoryId",
     getCreateLink: function (categoryId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/create/${categoryId}`;
     },
-    UPDATE: 'update/:categoryId/:subCategoryId',
+    UPDATE: "update/:categoryId/:subCategoryId",
     getUpdateLink: function (categoryId, subCategoryId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/update/${categoryId}/${subCategoryId}`;
     },
   },
   PAYMENTS: {
-    ROOT: 'payments',
+    ROOT: "payments",
     getRootLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}`;
     },
-    DETAILS: ':paymentId',
+    DETAILS: ":paymentId",
     getDetailsLink: function (paymentId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/${paymentId}`;
     },
-    CREATE: 'create',
+    CREATE: "create",
     getCreateLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/create`;
     },
-    UPDATE: 'update/:paymentId',
+    UPDATE: "update/:paymentId",
     getUpdateLink: function (paymentId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/update/${paymentId}`;
     },
   },
   SHIPPING: {
-    ROOT: 'shipping',
+    ROOT: "shipping",
     getRootLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}`;
     },
-    DETAILS: ':shippingId',
+    DETAILS: ":shippingId",
     getDetailsLink: function (shippingId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/${shippingId}`;
     },
-    CREATE: 'create',
+    CREATE: "create",
     getCreateLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/create`;
     },
-    UPDATE: 'update/:shippingId',
+    UPDATE: "update/:shippingId",
     getUpdateLink: function (shippingId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/update/${shippingId}`;
     },
   },
   ADMIN: {
-    ROOT: 'admin',
+    ROOT: "admin",
     getRootLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}`;
     },
-    CREATE: 'create',
+    CREATE: "create",
     getCreateLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/create`;
     },
-    DETAILS: ':adminId',
+    DETAILS: ":adminId",
     getDetailsLink: function (adminId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/${adminId}`;
     },
-    UPDATE: 'update/:adminId',
+    UPDATE: "update/:adminId",
     getUpdateLink: function (adminId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/update/${adminId}`;
     },
   },
   PRIVACY_POLICY: {
-    ROOT: 'privacy-policy',
+    ROOT: "privacy-policy",
     getRootLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}`;
     },
-    UPDATE: 'update',
+    UPDATE: "update",
     getUpdateLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/update`;
     },
   },
   TERMS_AND_CONDITIONS: {
-    ROOT: 'terms-and-conditions',
+    ROOT: "terms-and-conditions",
     getRootLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}`;
     },
-    UPDATE: 'update',
+    UPDATE: "update",
     getUpdateLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/update`;
     },
   },
   SHIPPING_AND_DELIVERY: {
-    ROOT: 'shipping-and-delivery',
+    ROOT: "shipping-and-delivery",
     getRootLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}`;
     },
-    UPDATE: 'update',
+    UPDATE: "update",
     getUpdateLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/update`;
     },
   },
   CONTACT: {
-    ROOT: 'contact',
+    ROOT: "contact",
     getRootLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}`;
     },
-    UPDATE: 'update',
+    UPDATE: "update",
     getUpdateLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/update`;
     },
   },
   CANCELLATION_AND_REFUND: {
-    ROOT: 'cancellation-and-refund',
+    ROOT: "cancellation-and-refund",
     getRootLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}`;
     },
-    UPDATE: 'update',
+    UPDATE: "update",
     getUpdateLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/update`;
     },
   },
   SETTINGS: {
-    ROOT: 'settings',
+    ROOT: "settings",
     getRootLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}`;
     },
-    UPDATE: 'update',
+    UPDATE: "update",
     getUpdateLink: function () {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/update`;
     },

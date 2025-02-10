@@ -5,33 +5,25 @@ import { basename, ROUTES } from './constants/routes';
 import AppRoutes from './routes';
 
 import './App.css';
-import { Toaster } from './components/ui/toaster';
 import ErrorBoundary from './components/ErrorBoundary';
 import { toast } from './hooks/use-toast';
 
+// Create queryClient outside of App component so it can be passed to ErrorBoundary
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: true,
       retry: 1,
       staleTime: 5 * 1000,
-      onError: (error) => {
-        console.log('Query error: ', error);
-        if (error.response?.status === 401) {
-          window.location.href = ROUTES.LOGIN;
-        } else if (error.response?.status === 404) {
-          console.log('Resource not found');
-        } else if (error.response?.status >= 500) {
-          console.log('Server error');
-        }
-      },
+      useErrorBoundary: true, // This will make errors propagate to error boundary
+      throwOnError: true, // This ensures errors are thrown and can be caught
     },
     mutations: {
       retry: 0,
       onError: (error) => {
         console.log('Mutation error: ', error);
         if (error.response?.status === 401) {
-          window.location.href = ROUTES.LOGIN;
+          window.location.href = ROUTES.getLoginLink();
         }
         toast({
           title: 'Error',
@@ -42,10 +34,12 @@ const queryClient = new QueryClient({
     },
   },
 });
+
 function App() {
   return (
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
+    // Wrap ErrorBoundary inside QueryClientProvider so it has access to queryClient
+    <QueryClientProvider client={queryClient}>
+      <ErrorBoundary>
         <BrowserRouter basename={basename}>
           <AppRoutes />
         </BrowserRouter>
@@ -54,8 +48,8 @@ function App() {
           initialIsOpen={false}
           position='bottom'
         />
-      </QueryClientProvider>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </QueryClientProvider>
   );
 }
 

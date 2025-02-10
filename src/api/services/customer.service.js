@@ -12,4 +12,17 @@ export const customerService = {
     );
     return response.data;
   },
+  getCustomerById: async (customerId) => {
+    const response = await Axios.get(
+      API_ENDPOINTS.customer.getCustomerById(customerId)
+    );
+    return response.data;
+  },
+  updateCustomer: async (customerId, customer) => {
+    const response = await Axios.put(
+      API_ENDPOINTS.customer.updateCustomer(customerId),
+      customer
+    );
+    return response.data;
+  },
 };

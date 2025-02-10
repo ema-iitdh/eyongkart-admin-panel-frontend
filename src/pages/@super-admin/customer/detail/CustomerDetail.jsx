@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -10,11 +10,13 @@ import {
   Mail,
   ShoppingCart,
   Calendar,
+  Pencil,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useGetAllCustomers } from '@/features/customer/hooks/useCustomer';
 import { Loader } from '@/components/common/loader';
 import { CloudinaryConfig } from '../../../../../Cloudinary';
+import { ROUTES } from '@/constants/routes';
 
 export function CustomerDetail() {
   const { customerId } = useParams();
@@ -51,6 +53,22 @@ export function CustomerDetail() {
         <ArrowLeft className='w-8 h-8' />{' '}
         <span className='text-lg'>Back to Customers</span>
       </Button>
+
+      <div className='flex justify-between items-center'>
+        <h1 className='text-3xl font-bold'>Customer Details</h1>
+        <Link
+          to={ROUTES.CUSTOMERS.getUpdateLink(customerId)}
+          className='flex items-center gap-2'
+        >
+          <Button
+            variant='secondary'
+            className='bg-blue-500 hover:bg-blue-600 text-white'
+          >
+            <Pencil className='w-4 h-4 mr-2' />
+            Edit Customer
+          </Button>
+        </Link>
+      </div>
 
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
         {/* Customer Summary Card */}

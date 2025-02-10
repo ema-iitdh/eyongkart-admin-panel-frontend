@@ -1,42 +1,42 @@
-import { ROLES } from "@/constants";
-import SideBarLayout from "@/layouts/SidebarLayout";
-import AdminPage from "@/pages/@super-admin/admin/AdminPage";
-import AdminDetail from "@/pages/@super-admin/admin/[adminId]/AdminDetails";
-import AdminCreate from "@/pages/@super-admin/admin/create/AdminCreate";
-import AdminUpdate from "@/pages/@super-admin/admin/update/[adminId]/AdminUpdate";
-import PaymentPage from "@/pages/@super-admin/payments/PaymentPage";
-import UpdateProduct from "@/pages/@super-admin/products/[productId]/update/UpdateProduct";
-import ShippingPage from "@/pages/@super-admin/shipping/ShippingPage";
-import ShippingUpdate from "@/pages/@super-admin/shipping/update/ShippingUpdate";
-import { Analytics } from "@/pages/super_admin/analytics";
-import Login from "@/pages/super_admin/auth/Login";
-import Dashboard from "@/pages/dashboard/Dashboard";
-import useAuthenticationStore from "@/store/useAuthenticationStore";
-import { Suspense } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
-import { ROUTES } from "../constants/routes";
-import ProtectedRoute from "./ProtectedRoutes";
-import { RedirectAuthenticatedUser } from "./RedirectAuthenticatedUser";
-import SettingPage from "@/pages/@super-admin/settings/SettingPage";
-import NotFound from "@/pages/notFound";
-import ShopPage from "@/pages/@super-admin/shop/ShopPage";
-import OrderPage from "@/pages/@super-admin/order/OrderPage";
-import OrderDetail from "@/pages/@super-admin/order/detail/OrderDetail";
-import OrderCreate from "@/pages/@super-admin/order/create/OrderCreate";
-import CustomerPage from "@/pages/@super-admin/customer/CustomerPage";
-import CustomerDetail from "@/pages/@super-admin/customer/detail/CustomerDetail";
-import ShopDetail from "@/pages/@super-admin/shop/detail/ShopDetail";
-import ShopEdit from "@/pages/@super-admin/shop/edit/ShopEdit";
-import ShopCreate from "@/pages/@super-admin/shop/create/ShopCreate";
-import ProductPage from "@/pages/@super-admin/products/ProductPage";
-import ProductCreate from "@/pages/@super-admin/products/create/ProductCreate";
-import ProductDetail from "@/pages/@super-admin/products/[productId]/detail/ProductDetail";
-import CategoryPage from "@/pages/@super-admin/category/CategoryPage";
-import CategoryDetail from "@/pages/@super-admin/category/detail/CategoryDetail";
-import CategoryCreate from "@/pages/@super-admin/category/create/CategoryCreate";
-import CategoryUpdate from "@/pages/@super-admin/category/update/CategoryUpdate";
-import AddSubCategory from "@/pages/@super-admin/subcategory/create/AddSubCategory";
-import EditSubCategory from "@/pages/@super-admin/subcategory/edit/EditSubCategory";
+import { ROLES } from '@/constants';
+import SideBarLayout from '@/layouts/SidebarLayout';
+import AdminPage from '@/pages/@super-admin/admin/AdminPage';
+import AdminDetail from '@/pages/@super-admin/admin/[adminId]/AdminDetails';
+import AdminCreate from '@/pages/@super-admin/admin/create/AdminCreate';
+import AdminUpdate from '@/pages/@super-admin/admin/update/[adminId]/AdminUpdate';
+import PaymentPage from '@/pages/@super-admin/payments/PaymentPage';
+import UpdateProduct from '@/pages/@super-admin/products/[productId]/update/UpdateProduct';
+import ShippingPage from '@/pages/@super-admin/shipping/ShippingPage';
+import ShippingUpdate from '@/pages/@super-admin/shipping/update/ShippingUpdate';
+import { Analytics } from '@/pages/super_admin/analytics';
+import Login from '@/pages/super_admin/auth/Login';
+import Dashboard from '@/pages/dashboard/Dashboard';
+import useAuthenticationStore from '@/store/useAuthenticationStore';
+import { Suspense } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { ROUTES } from '../constants/routes';
+import ProtectedRoute from './ProtectedRoutes';
+import { RedirectAuthenticatedUser } from './RedirectAuthenticatedUser';
+import SettingPage from '@/pages/@super-admin/settings/SettingPage';
+import NotFound from '@/pages/notFound';
+import ShopPage from '@/pages/@super-admin/shop/ShopPage';
+import OrderPage from '@/pages/@super-admin/order/OrderPage';
+import OrderDetail from '@/pages/@super-admin/order/detail/OrderDetail';
+import OrderCreate from '@/pages/@super-admin/order/create/OrderCreate';
+import CustomerPage from '@/pages/@super-admin/customer/CustomerPage';
+import CustomerDetail from '@/pages/@super-admin/customer/detail/CustomerDetail';
+import ShopDetail from '@/pages/@super-admin/shop/detail/ShopDetail';
+import ShopEdit from '@/pages/@super-admin/shop/edit/ShopEdit';
+import ShopCreate from '@/pages/@super-admin/shop/create/ShopCreate';
+import ProductPage from '@/pages/@super-admin/products/ProductPage';
+import ProductCreate from '@/pages/@super-admin/products/create/ProductCreate';
+import ProductDetail from '@/pages/@super-admin/products/[productId]/detail/ProductDetail';
+import CategoryPage from '@/pages/@super-admin/category/CategoryPage';
+import CategoryDetail from '@/pages/@super-admin/category/detail/CategoryDetail';
+import CategoryCreate from '@/pages/@super-admin/category/create/CategoryCreate';
+import CategoryUpdate from '@/pages/@super-admin/category/update/CategoryUpdate';
+import AddSubCategory from '@/pages/@super-admin/subcategory/create/AddSubCategory';
+import CustomerUpdate from '@/pages/@super-admin/customer/update/CustomerUpdate';
 
 export default function AppRoutes() {
   const { user } = useAuthenticationStore();
@@ -87,7 +87,10 @@ export default function AppRoutes() {
                 path={ROUTES.CUSTOMERS.DETAILS}
                 element={<CustomerDetail />}
               />
-              {/* <Route path={ROUTES.CUSTOMERS.UPDATE} element={<CustomerUpdate />} /> */}
+              <Route
+                path={ROUTES.CUSTOMERS.UPDATE}
+                element={<CustomerUpdate />}
+              />
             </Route>
 
             {/* Shop Routes */}
@@ -259,7 +262,7 @@ export default function AppRoutes() {
             </>
           )} */}
           {/* </Route> */}
-          <Route path="*" element={<NotFound />} />
+          <Route path='*' element={<NotFound />} />
         </Route>
       </Routes>
     </Suspense>

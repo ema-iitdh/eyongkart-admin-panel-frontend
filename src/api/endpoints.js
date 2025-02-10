@@ -79,6 +79,7 @@ export const API_ENDPOINTS = {
     update: (adminId = '') => `/admin/update/${adminId}`,
     getAll: '/admin/getAllAdmins',
     delete: (adminId) => `/admin/delete/${adminId}`,
+    getById: (adminId) => `/admin/getAdminById/${adminId}`,
   },
   seller: {
     getSellerById: (sellerId) => `/admin/seller/${sellerId}`,
@@ -96,5 +97,7 @@ export const API_ENDPOINTS = {
   customer: {
     getAllCustomer: '/user/getAllCustomers',
     deleteCustomer: (customerId) => `/user/delete/${customerId}`,
+    getCustomerById: (customerId) => `/user/getCustomerById/${customerId}`,
+    updateCustomer: (customerId) => `/user/update/${customerId}`,
   },
 };

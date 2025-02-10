@@ -41,3 +41,35 @@ export const useDeleteAdmin = () => {
     },
   });
 };
+
+export const useAdminById = (adminId) => {
+  const queryClient = useQueryClient();
+
+  return useQuery({
+    queryKey: ['admin', adminId],
+    queryFn: () => adminServices.getAdminById(adminId),
+    select: (data) => data?.admin,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', adminId] });
+    },
+  });
+};
+
+export const useUpdateAdmin = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ['updateAdmin'],
+    mutationFn: (data) => {
+      return adminServices.updateAdmin(data);
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['admins'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', data?.admin?._id] });
+      toast({
+        title: 'Success',
+        description: 'Admin updated successfully',
+      });
+    },
+  });
+};

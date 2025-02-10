@@ -13,7 +13,7 @@ import BatchDeleteButton from '@/components/common/BatchDeleteButton';
 import { toast } from '@/hooks/use-toast';
 
 const AdminPage = () => {
-  const { data: admins, isLoading, isError } = useGetAllAdmins();
+  const { data: admins, isLoading, isError, error } = useGetAllAdmins();
   const { mutate: deleteAdmin, isPending } = useDeleteAdmin();
   const [selectedAdmins, setSelectedAdmins] = useState([]);
 
@@ -55,7 +55,9 @@ const AdminPage = () => {
 
   if (isError) {
     return (
-      <div className='text-center text-red-500'>Error fetching admins</div>
+      <div className='text-center text-red-500'>
+        Error fetching admins: {error?.message}
+      </div>
     );
   }
 

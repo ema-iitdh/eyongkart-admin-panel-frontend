@@ -13,8 +13,19 @@ export const adminServices = {
     );
     return response.data;
   },
+  getAdminById: async (adminId) => {
+    const response = await Axios.get(API_ENDPOINTS.admin.getById(adminId));
+    return response.data;
+  },
   deleteAdmin: async (adminId) => {
     const response = await Axios.delete(API_ENDPOINTS.admin.delete(adminId));
+    return response.data;
+  },
+  updateAdmin: async (formData) => {
+    const response = await Axios.put(
+      API_ENDPOINTS.admin.update(formData.adminId),
+      formData
+    );
     return response.data;
   },
 };

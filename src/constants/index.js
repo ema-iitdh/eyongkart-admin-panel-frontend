@@ -12,7 +12,15 @@ export const PaymentStatus = {
   Pending: 'warning',
   Success: 'success',
   Failed: 'destructive',
-}
+};
+
+export const OrderStatusText = {
+  Pending: 'Pending',
+  Processing: 'Processing',
+  Shipped: 'Shipped',
+  Delivered: 'Delivered',
+  Cancelled: 'Cancelled',
+};
 
 export const ROLES = {
   Super_Admin: 'Super_Admin',

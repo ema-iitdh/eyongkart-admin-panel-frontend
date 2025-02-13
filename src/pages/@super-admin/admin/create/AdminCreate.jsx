@@ -82,13 +82,8 @@ const AdminCreate = () => {
 
     createAdmin(submissionData, {
       onSuccess: () => {
-        toast({
-          title: 'Success',
-          description: 'Product created successfully',
-        });
-        console.log('Form submitted:', submissionData);
         setFormData({ role: '', name: '', email: '', password: '' });
-        navigate(`${ROUTES.DASHBOARD}`);
+        navigate(ROUTES.ADMIN.getRootLink(), { replace: true });
       },
     });
   };

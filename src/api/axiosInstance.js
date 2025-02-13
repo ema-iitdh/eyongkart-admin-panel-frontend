@@ -10,14 +10,14 @@ const Axios = axios.create({
   withCredentials: API_CONFIG.WITH_CREDENTIALS,
 });
 
-Axios.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
-  }
-);
+// Axios.interceptors.response.use(
+//   (response) => response,
+//   (error) => {
+//     if (error.response?.status === 401) {
+//       window.location.href = basename + ROUTES.getLoginLink();
+//     }
+//     return Promise.reject(error);
+//   }
+// );
 
 export default Axios;

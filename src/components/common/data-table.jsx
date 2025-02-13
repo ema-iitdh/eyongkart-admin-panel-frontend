@@ -45,6 +45,7 @@ const DataTable = ({ data, columns, enableSelection, onSelectionChange }) => {
           id: 'select',
           header: ({ table }) => (
             <Checkbox
+              key={table.getIsAllPageRowsSelected()}
               checked={table.getIsAllPageRowsSelected()}
               onCheckedChange={(value) =>
                 table.toggleAllPageRowsSelected(!!value)
@@ -54,6 +55,7 @@ const DataTable = ({ data, columns, enableSelection, onSelectionChange }) => {
           ),
           cell: ({ row }) => (
             <Checkbox
+              key={row.original._id}
               checked={row.getIsSelected()}
               onCheckedChange={(value) => row.toggleSelected(!!value)}
               aria-label='Select row'

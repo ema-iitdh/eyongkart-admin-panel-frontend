@@ -6,7 +6,7 @@
 const BASE_URL =
   import.meta.env.MODE === 'production'
     ? `${window.location.origin}/api`
-    : 'https://localhost:3000';
+    : 'https://localhost:5000';
 
 console.log('MODE', import.meta.env.MODE);
 

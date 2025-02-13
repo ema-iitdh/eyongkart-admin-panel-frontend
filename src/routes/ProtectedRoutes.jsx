@@ -7,7 +7,9 @@ const ProtectedRoute = () => {
   const location = useLocation();
 
   if (!isAuthenticated) {
-    return <Navigate to={ROUTES.LOGIN} state={{ from: location }} replace />;
+    return (
+      <Navigate to={ROUTES.getLoginLink()} state={{ from: location }} replace />
+    );
   }
 
   return <Outlet />;

@@ -4,10 +4,64 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, MapPin, Phone, Calendar } from 'lucide-react';
-import { OrderStatus } from '@/constants';
-import { useOrders } from '@/features/orders/hooks/useOrders';
+import { OrderStatus, PaymentStatus } from '@/constants';
+import {
+  useOrders,
+  useUpdateEstimatedDeliveryDate,
+} from '@/features/orders/hooks/useOrders';
 import { CloudinaryConfig } from '../../../../../Cloudinary';
 import { Loader } from '@/components/common/loader';
+import { Input } from '@/components/ui/input';
+import { Form, FormControl, FormField, FormLabel } from '@/components/ui/form';
+import { useForm } from 'react-hook-form';
+import { format } from 'date-fns';
+
+function UpdateEstimatedDeliveryDateComponent({ order }) {
+  const { mutate: updateEstimatedDeliveryDate, isPending } =
+    useUpdateEstimatedDeliveryDate();
+
+  const form = useForm({
+    defaultValues: {
+      estimatedDeliveryDate: order?.shipping_details?.estimated_delivery_date
+        ? format(
+            new Date(order.shipping_details.estimated_delivery_date),
+            'yyyy-MM-dd'
+          )
+        : '',
+    },
+  });
+
+  const onSubmit = (data) => {
+    updateEstimatedDeliveryDate({
+      orderId: order._id,
+      estimatedDeliveryDate: data.estimatedDeliveryDate,
+    });
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name='estimatedDeliveryDate'
+          render={({ field }) => (
+            <>
+              <FormLabel htmlFor='estimatedDeliveryDate'>
+                Update Estimated Delivery Date
+              </FormLabel>
+              <FormControl>
+                <Input type='date' id='estimatedDeliveryDate' {...field} />
+              </FormControl>
+            </>
+          )}
+        />
+        <Button type='submit' className='mt-4 w-full' disabled={isPending}>
+          {isPending ? 'Updating...' : 'Update'}
+        </Button>
+      </form>
+    </Form>
+  );
+}
 
 export function OrderDetail() {
   const { orderId } = useParams();
@@ -64,11 +118,7 @@ export function OrderDetail() {
             <Separator />
             <div className='flex justify-between items-center'>
               <span className='text-muted-foreground'>Payment Status</span>
-              <Badge
-                variant={
-                  order?.payment?.status === 'Pending' ? 'warning' : 'success'
-                }
-              >
+              <Badge variant={PaymentStatus[order?.payment?.status]}>
                 {order?.payment?.status}
               </Badge>
             </div>
@@ -128,6 +178,7 @@ export function OrderDetail() {
                 ).toLocaleDateString()}
               </span>
             </div>
+            <UpdateEstimatedDeliveryDateComponent order={order} />
           </CardContent>
         </Card>
 

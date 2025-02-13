@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ROUTES } from '../../../constants/routes';
 import { authService } from '../../../api/services/auth.service';
 import { useEffect } from 'react';
-
+import { redirect } from 'react-router-dom';
 export const useAuth = () => {
   const { isAuthenticated, user, setIsAuthenticated, setUser } =
     useAuthenticationStore();
@@ -67,13 +67,13 @@ export const useSignup = () => {
 export const useLogout = () => {
   const queryClient = useQueryClient();
   const { logout } = useAuthenticationStore();
-  const navigate = useNavigate();
+
   return useMutation({
     mutationFn: authService.logout,
     onSuccess: () => {
       logout();
       queryClient.clear();
-      navigate(`${ROUTES.LOGIN}`);
+      redirect(ROUTES.getLoginLink());
     },
     onError() {
       console.log('error while logging out');

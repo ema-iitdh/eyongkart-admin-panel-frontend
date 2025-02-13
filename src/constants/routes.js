@@ -55,10 +55,6 @@ export const ROUTES = {
     getDetailsLink: function (orderId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/${orderId}`;
     },
-    CREATE: 'create',
-    getCreateLink: function () {
-      return `${ROUTES.DASHBOARD}/${this.ROOT}/create`;
-    },
     UPDATE: 'update/:orderId',
     getUpdateLink: function (orderId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/update/${orderId}`;
@@ -95,10 +91,6 @@ export const ROUTES = {
     getUpdateLink: function (customerId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/update/${customerId}`;
     },
-    CREATE: 'create',
-    getCreateLink: function () {
-      return `${ROUTES.DASHBOARD}/${this.ROOT}/create`;
-    }
   },
   CATEGORIES: {
     ROOT: 'categories',
@@ -127,7 +119,7 @@ export const ROUTES = {
     getDetailsLink: function (subCategoryId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/${subCategoryId}`;
     },
-    CREATE: 'create',
+    CREATE: 'create/:categoryId',
     getCreateLink: function (categoryId) {
       return `${ROUTES.DASHBOARD}/${this.ROOT}/create/${categoryId}`;
     },

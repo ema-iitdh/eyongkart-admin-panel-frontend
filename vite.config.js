@@ -10,8 +10,8 @@ export default defineConfig({
   },
   server: {
     https: {
-      key: './certificates/eyongkart-privateKey.key',
-      cert: './certificates/eyongkart.crt',
+      key: './certificates/localhost-key.pem',
+      cert: './certificates/localhost.pem',
     },
   },
   resolve: {

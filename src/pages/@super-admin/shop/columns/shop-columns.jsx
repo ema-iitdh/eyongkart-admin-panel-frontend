@@ -17,7 +17,7 @@ export const shopColumns = [
     header: 'Description',
   },
   {
-    accessorKey: 'owner',
+    accessorKey: 'owner.name',
     header: 'Owner',
   },
   {

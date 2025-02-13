@@ -49,6 +49,7 @@ const CustomerPage = () => {
         <h1 className='text-2xl font-bold'>Customer Management</h1>
         <div className='flex gap-2'>
           <BatchDeleteButton
+            key={selectedCustomers?.length}
             selectedRows={selectedCustomers}
             handleBatchDelete={handleDeleteCustomers}
             isLoading={isPending}

@@ -1,9 +1,9 @@
-import { categoryServices } from "@/api/services/category.service";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { categoryServices } from '@/api/services/category.service';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const useGetAllCategories = () => {
   return useQuery({
-    queryKey: ["categories"],
+    queryKey: ['categories'],
     queryFn: () => categoryServices.getAllCategories(),
     select: (data) => data.categories,
   });
@@ -11,7 +11,7 @@ export const useGetAllCategories = () => {
 
 export const useUpdateCategory = () => {
   return useMutation({
-    mutationKey: ["category"],
+    mutationKey: ['category'],
     mutationFn: ({ categoryId, ...formData }) =>
       categoryServices.updateCategory(categoryId, formData),
   });
@@ -19,14 +19,19 @@ export const useUpdateCategory = () => {
 
 export const useCreateCategory = () => {
   return useMutation({
-    mutationKey: ["createCategory"],
+    mutationKey: ['createCategory'],
     mutationFn: (formData) => categoryServices.createCategory(formData),
   });
 };
 
 export const useDeleteCategory = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
-    mutationKey: ["deleteCategory"],
+    mutationKey: ['deleteCategory'],
     mutationFn: (categoryId) => categoryServices.deleteCategory(categoryId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['categories']);
+    },
   });
 };

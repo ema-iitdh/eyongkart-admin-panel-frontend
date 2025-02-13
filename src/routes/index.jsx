@@ -38,6 +38,7 @@ import CategoryUpdate from '@/pages/@super-admin/category/update/CategoryUpdate'
 import AddSubCategory from '@/pages/@super-admin/subcategory/create/AddSubCategory';
 import CustomerUpdate from '@/pages/@super-admin/customer/update/CustomerUpdate';
 import EditSubCategory from '@/pages/@super-admin/subcategory/edit/EditSubCategory';
+import PaymentDetails from '@/pages/@super-admin/payments/[paymentId]/PaymentDetails';
 
 export default function AppRoutes() {
   const { user } = useAuthenticationStore();
@@ -153,6 +154,10 @@ export default function AppRoutes() {
             {/* Payment Routes */}
             <Route path={ROUTES.PAYMENTS.ROOT}>
               <Route index element={<PaymentPage />} />
+              <Route
+                path={ROUTES.PAYMENTS.DETAILS}
+                element={<PaymentDetails />}
+              />
             </Route>
 
             {/* Shipping and Delivery Routes */}

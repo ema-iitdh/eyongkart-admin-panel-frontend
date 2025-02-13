@@ -1,31 +1,36 @@
-import { Button } from "@/components/ui/button";
-import { ROUTES } from "@/constants/routes";
-import { Link } from "react-router-dom";
-import StatusSelect from "../_components/StatusSelect";
-import PaymentStatusSelect from "../_components/PaymentStatusSelect";
+import { Button } from '@/components/ui/button';
+import { ROUTES } from '@/constants/routes';
+import { Link } from 'react-router-dom';
+import StatusSelect from '../_components/StatusSelect';
+import PaymentStatusSelect from '../_components/PaymentStatusSelect';
 
 export const orderColumns = [
   {
-    accessorKey: "_id",
-    header: "Order ID",
+    accessorKey: '_id',
+    header: 'Order ID',
     enableSorting: true,
   },
   {
-    accessorKey: "shipping_address.full_name",
-    header: "Customer Name",
+    accessorKey: 'shipping_address.full_name',
+    header: 'Customer Name',
     enableSorting: true,
   },
   {
-    accessorKey: "createdAt",
-    header: "Order Date",
+    accessorKey: 'shipping_address.phone',
+    header: 'Customer Phone',
+    enableSorting: true,
+  },
+  {
+    accessorKey: 'createdAt',
+    header: 'Order Date',
     cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
     enableSorting: true,
   },
   {
-    accessorKey: "payment.status",
-    header: "Payment Status",
+    accessorKey: 'payment.status',
+    header: 'Payment Status',
     cell: ({ row }) => (
-      <PaymentStatusSelect 
+      <PaymentStatusSelect
         orderId={row.original._id}
         currentPaymentStatus={row.original.payment.status}
       />
@@ -33,16 +38,16 @@ export const orderColumns = [
     enableSorting: true,
   },
   {
-    accessorKey: "amount",
-    header: "Total Amount",
+    accessorKey: 'amount',
+    header: 'Total Amount',
     cell: ({ row }) => `₹${row.original.amount.toFixed(2)}`,
     enableSorting: true,
   },
   {
-    accessorKey: "status",
-    header: "Order Status",
+    accessorKey: 'status',
+    header: 'Order Status',
     cell: ({ row }) => (
-      <StatusSelect 
+      <StatusSelect
         orderId={row.original._id}
         currentStatus={row.original.status}
       />
@@ -50,11 +55,11 @@ export const orderColumns = [
     enableSortning: true,
   },
   {
-    id: "actions",
-    header: "Actions",
+    id: 'actions',
+    header: 'Actions',
     cell: ({ row }) => (
       <Link to={ROUTES.ORDERS.getDetailsLink(row.original._id)}>
-        <Button variant="outline" size="sm">
+        <Button variant='outline' size='sm'>
           View
         </Button>
       </Link>

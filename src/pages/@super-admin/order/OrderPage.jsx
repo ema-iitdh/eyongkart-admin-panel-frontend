@@ -57,6 +57,7 @@ const OrderPage = () => {
         <h1 className='text-2xl font-bold'>Order Management</h1>
         <div className='flex gap-2'>
           <BatchDeleteButton
+            key={selectedOrders?.length}
             isLoading={deletingOrder}
             selectedRows={selectedOrders}
             handleBatchDelete={handleDeleteOrders}

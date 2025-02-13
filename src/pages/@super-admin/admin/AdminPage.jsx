@@ -67,6 +67,7 @@ const AdminPage = () => {
         <h1 className='text-2xl font-bold'>Admin Management</h1>
         <div className='flex gap-2'>
           <BatchDeleteButton
+            key={selectedAdmins?.length}
             selectedRows={selectedAdmins}
             handleBatchDelete={handleDeleteAdmins}
             isLoading={isPending}

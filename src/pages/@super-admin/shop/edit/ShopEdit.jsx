@@ -1,46 +1,47 @@
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { useToast } from "@/hooks/use-toast";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { Button } from '@/components/ui/button';
+import { Form } from '@/components/ui/form';
+import { useToast } from '@/hooks/use-toast';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from '@/components/ui/form';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { useGetAllAdmins } from "@/features/admin/hooks/useAdmin";
-import { ImageUpload } from "../_components/image-uploads";
-import { useUpdateShopPost, useShopById } from "@/features/shop/hooks/useShop";
-import { useNavigate, useParams } from "react-router-dom";
-import { ROUTES } from "@/constants/routes";
+} from '@/components/ui/select';
+import { useGetAllAdmins } from '@/features/admin/hooks/useAdmin';
+import { ImageUpload } from '../_components/image-uploads';
+import { useUpdateShopPost, useShopById } from '@/features/shop/hooks/useShop';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ROUTES } from '@/constants/routes';
+import { Loader } from '@/components/common/loader';
 
 const formSchema = z.object({
-  name: z.string().min(1, "Shop name is required").max(100),
-  description: z.string().min(1, "Description is required"),
-  owner: z.string().min(1, "Owner selection is required"),
-  contactEmail: z.string().email("Invalid email address"),
-  contactPhone: z.string().min(1, "Contact phone is required"),
-  street: z.string().min(1, "Street address is required"),
-  city: z.string().min(1, "City is required"),
-  state: z.string().min(1, "State is required"),
-  pincode: z.string().min(1, "Pincode is required"),
-  country: z.string().default("India"),
-  status: z.enum(["active", "inactive", "suspended"]).default("active"),
+  name: z.string().min(1, 'Shop name is required').max(100),
+  description: z.string().min(1, 'Description is required'),
+  owner: z.string().min(1, 'Owner selection is required'),
+  contactEmail: z.string().email('Invalid email address'),
+  contactPhone: z.string().min(1, 'Contact phone is required'),
+  street: z.string().min(1, 'Street address is required'),
+  city: z.string().min(1, 'City is required'),
+  state: z.string().min(1, 'State is required'),
+  pincode: z.string().min(1, 'Pincode is required'),
+  country: z.string().default('India'),
+  status: z.enum(['active', 'inactive', 'suspended']).default('active'),
   facebook: z.string().optional(),
   instagram: z.string().optional(),
   twitter: z.string().optional(),
@@ -53,44 +54,44 @@ export function ShopEdit() {
   const [logoFile, setLogoFile] = useState(null);
   const [bannerFile, setBannerFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [currentTab, setCurrentTab] = useState("basic");
+  const [currentTab, setCurrentTab] = useState('basic');
   const { toast } = useToast();
   const updateShopMutation = useUpdateShopPost();
   const navigate = useNavigate();
   const { shopId } = useParams();
-  const isSuperAdmin = "Super_Admin";
-  const { data: shop } = useShopById(shopId);
+  const isSuperAdmin = 'Super_Admin';
+  const { data: shop, isLoading: isLoadingShop } = useShopById(shopId);
   const { data: admins = [], isLoading: isLoadingAdmins } = useGetAllAdmins();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: shop?.name || "",
-      description: shop?.description || "",
-      owner: shop?.owner || "",
-      contactEmail: shop?.contactEmail || "",
-      contactPhone: shop?.contactPhone || "",
-      street: shop?.address?.street || "",
-      city: shop?.address?.city || "",
-      state: shop?.address?.state || "",
-      pincode: shop?.address?.pincode || "",
-      country: shop?.address?.country || "India",
-      status: shop?.status || "active",
-      facebook: shop?.socialMedia?.facebook || "",
-      instagram: shop?.socialMedia?.instagram || "",
-      twitter: shop?.socialMedia?.twitter || "",
-      website: shop?.socialMedia?.website || "",
-      logoAltText: shop?.logo?.altText || "",
-      bannerImageAltText: shop?.bannerImage?.altText || "",
+      name: shop?.name || '',
+      description: shop?.description || '',
+      owner: shop?.owner || '',
+      contactEmail: shop?.contactEmail || '',
+      contactPhone: shop?.contactPhone || '',
+      street: shop?.address?.street || '',
+      city: shop?.address?.city || '',
+      state: shop?.address?.state || '',
+      pincode: shop?.address?.pincode || '',
+      country: shop?.address?.country || 'India',
+      status: shop?.status || 'active',
+      facebook: shop?.socialMedia?.facebook || '',
+      instagram: shop?.socialMedia?.instagram || '',
+      twitter: shop?.socialMedia?.twitter || '',
+      website: shop?.socialMedia?.website || '',
+      logoAltText: shop?.logo?.altText || '',
+      bannerImageAltText: shop?.bannerImage?.altText || '',
     },
   });
 
   useEffect(() => {
-    if (shop) {
+    if (shop && !isLoadingShop && !isLoadingAdmins) {
       form.reset({
         name: shop.name,
         description: shop.description,
-        owner: shop.owner,
+        owner: shop.owner._id,
         contactEmail: shop.contactEmail,
         contactPhone: shop.contactPhone,
         street: shop.address.street,
@@ -107,18 +108,18 @@ export function ShopEdit() {
         bannerImageAltText: shop.bannerImage.altText,
       });
     }
-  }, [shop, form]);
+  }, [shop, form, isLoadingShop, isLoadingAdmins]);
 
   const goToNextTab = () => {
     switch (currentTab) {
-      case "basic":
-        setCurrentTab("address");
+      case 'basic':
+        setCurrentTab('address');
         break;
-      case "address":
-        setCurrentTab("social");
+      case 'address':
+        setCurrentTab('social');
         break;
-      case "social":
-        setCurrentTab("images");
+      case 'social':
+        setCurrentTab('images');
         break;
       default:
         break;
@@ -132,15 +133,15 @@ export function ShopEdit() {
     try {
       const formData = new FormData();
 
-      Object.entries(values).forEach(([key, value]) => {
+      for (const [key, value] of Object.entries(values)) {
         if (value) formData.append(key, value);
-      });
+      }
 
       if (logoFile) {
-        formData.append("logo", logoFile);
+        formData.append('logo', logoFile);
       }
       if (bannerFile) {
-        formData.append("bannerImage", bannerFile);
+        formData.append('bannerImage', bannerFile);
       }
 
       const response = await updateShopMutation.mutateAsync({
@@ -148,78 +149,88 @@ export function ShopEdit() {
         formData,
       });
       if (!response.success) {
-        throw new Error("Failed to update shop");
+        throw new Error('Failed to update shop');
       }
 
       toast({
-        title: "Success",
-        description: "Shop updated successfully",
+        title: 'Success',
+        description: 'Shop updated successfully',
       });
 
       form.reset();
       isSuperAdmin
-        ? navigate("/dashboard/shops")
+        ? navigate('/dashboard/shops')
         : navigate(ROUTES.SELLER_SHOP);
     } catch (error) {
-      console.error("Shop update error:", error);
+      console.error('Shop update error:', error);
       toast({
-        title: "Error",
-        description: error.message || "Failed to update shop",
-        variant: "destructive",
+        title: 'Error',
+        description: error.message || 'Failed to update shop',
+        variant: 'destructive',
       });
     } finally {
       setIsSubmitting(false);
     }
   }
 
+  if (isLoadingShop || isLoadingAdmins) {
+    return <Loader />;
+  }
+
   return (
-    <div className="container mx-auto py-6 px-4 space-y-6">
-      <h1 className="text-3xl font-bold">Edit Shop</h1>
+    <div className='container mx-auto py-6 px-4 space-y-6'>
+      <h1 className='text-3xl font-bold'>Edit Shop</h1>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
           <Tabs
-            defaultValue="basic"
+            defaultValue='basic'
             value={currentTab}
             onValueChange={setCurrentTab}
-            className="space-y-4"
+            className='space-y-4'
           >
             <TabsList>
-              <TabsTrigger value="basic">Basic Details</TabsTrigger>
-              <TabsTrigger value="address">Address</TabsTrigger>
-              <TabsTrigger value="social">Social Media</TabsTrigger>
-              <TabsTrigger value="images">Images</TabsTrigger>
+              <TabsTrigger value='basic'>Basic Details</TabsTrigger>
+              <TabsTrigger value='address'>Address</TabsTrigger>
+              <TabsTrigger value='social'>Social Media</TabsTrigger>
+              <TabsTrigger value='images'>Images</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="basic">
+            <TabsContent value='basic'>
               <Card>
-                <CardContent className="pt-6 space-y-4">
+                <CardContent className='pt-6 space-y-4'>
                   <FormField
                     control={form.control}
-                    name="owner"
+                    name='owner'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Shop Owner</FormLabel>
                         <FormControl>
                           <Select
+                            key={field?.value}
                             onValueChange={field.onChange}
                             defaultValue={field.value}
-                            disabled={isLoadingAdmins || !isSuperAdmin}
+                            disabled={
+                              isLoadingAdmins || !isSuperAdmin || isLoadingShop
+                            }
                           >
-                            <SelectTrigger className="w-full">
+                            <SelectTrigger className='w-full'>
                               <SelectValue
                                 placeholder={
-                                  isSuperAdmin
-                                    ? "Select shop owner"
-                                    : `${shop.owner.name} (${shop.owner.email})`
+                                  field.value
+                                    ? `${shop?.owner?.name} (${shop?.owner?.email})`
+                                    : 'Select shop owner'
                                 }
                               />
                             </SelectTrigger>
                             {isSuperAdmin ? (
                               <SelectContent>
-                                {admins.map((admin) => (
-                                  <SelectItem key={admin._id} value={admin._id}>
-                                    {admin.name} ({admin.email})
+                                {admins?.map((admin) => (
+                                  <SelectItem
+                                    key={admin?._id}
+                                    value={admin?._id}
+                                  >
+                                    {admin?.name} ({admin?.email})
                                   </SelectItem>
                                 ))}
                               </SelectContent>
@@ -233,12 +244,12 @@ export function ShopEdit() {
 
                   <FormField
                     control={form.control}
-                    name="name"
+                    name='name'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Shop Name</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Enter shop name" />
+                          <Input {...field} placeholder='Enter shop name' />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -247,14 +258,14 @@ export function ShopEdit() {
 
                   <FormField
                     control={form.control}
-                    name="description"
+                    name='description'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Description</FormLabel>
                         <FormControl>
                           <Textarea
                             {...field}
-                            placeholder="Enter shop description"
+                            placeholder='Enter shop description'
                           />
                         </FormControl>
                         <FormMessage />
@@ -264,15 +275,15 @@ export function ShopEdit() {
 
                   <FormField
                     control={form.control}
-                    name="contactEmail"
+                    name='contactEmail'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Contact Email</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            type="email"
-                            placeholder="Enter contact email"
+                            type='email'
+                            placeholder='Enter contact email'
                           />
                         </FormControl>
                         <FormMessage />
@@ -282,12 +293,12 @@ export function ShopEdit() {
 
                   <FormField
                     control={form.control}
-                    name="contactPhone"
+                    name='contactPhone'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Contact Phone</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Enter contact phone" />
+                          <Input {...field} placeholder='Enter contact phone' />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -296,7 +307,7 @@ export function ShopEdit() {
 
                   <FormField
                     control={form.control}
-                    name="status"
+                    name='status'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Status</FormLabel>
@@ -305,12 +316,12 @@ export function ShopEdit() {
                           defaultValue={field.value}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="Select status" />
+                            <SelectValue placeholder='Select status' />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="active">Active</SelectItem>
-                            <SelectItem value="inactive">Inactive</SelectItem>
-                            <SelectItem value="suspended">Suspended</SelectItem>
+                            <SelectItem value='active'>Active</SelectItem>
+                            <SelectItem value='inactive'>Inactive</SelectItem>
+                            <SelectItem value='suspended'>Suspended</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -319,17 +330,17 @@ export function ShopEdit() {
                   />
                 </CardContent>
               </Card>
-              <div className="mt-4 flex justify-end">
+              <div className='mt-4 flex justify-end'>
                 <Button
-                  type="button"
+                  type='button'
                   onClick={async () => {
                     const result = await form.trigger([
-                      "owner",
-                      "name",
-                      "description",
-                      "contactEmail",
-                      "contactPhone",
-                      "status",
+                      'owner',
+                      'name',
+                      'description',
+                      'contactEmail',
+                      'contactPhone',
+                      'status',
                     ]);
                     if (result) {
                       goToNextTab();
@@ -341,19 +352,19 @@ export function ShopEdit() {
               </div>
             </TabsContent>
 
-            <TabsContent value="address">
+            <TabsContent value='address'>
               <Card>
-                <CardContent className="pt-6 space-y-4">
+                <CardContent className='pt-6 space-y-4'>
                   <FormField
                     control={form.control}
-                    name="street"
+                    name='street'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Street Address</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="Enter street address"
+                            placeholder='Enter street address'
                           />
                         </FormControl>
                         <FormMessage />
@@ -363,12 +374,12 @@ export function ShopEdit() {
 
                   <FormField
                     control={form.control}
-                    name="city"
+                    name='city'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>City</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Enter city" />
+                          <Input {...field} placeholder='Enter city' />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -377,12 +388,12 @@ export function ShopEdit() {
 
                   <FormField
                     control={form.control}
-                    name="state"
+                    name='state'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>State</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Enter state" />
+                          <Input {...field} placeholder='Enter state' />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -391,12 +402,12 @@ export function ShopEdit() {
 
                   <FormField
                     control={form.control}
-                    name="pincode"
+                    name='pincode'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Pincode</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Enter pincode" />
+                          <Input {...field} placeholder='Enter pincode' />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -405,14 +416,14 @@ export function ShopEdit() {
 
                   <FormField
                     control={form.control}
-                    name="country"
+                    name='country'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Country</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="Enter country"
+                            placeholder='Enter country'
                             disabled
                           />
                         </FormControl>
@@ -422,16 +433,16 @@ export function ShopEdit() {
                   />
                 </CardContent>
               </Card>
-              <div className="mt-4 flex justify-end">
+              <div className='mt-4 flex justify-end'>
                 <Button
-                  type="button"
+                  type='button'
                   onClick={async () => {
                     const result = await form.trigger([
-                      "street",
-                      "city",
-                      "state",
-                      "pincode",
-                      "country",
+                      'street',
+                      'city',
+                      'state',
+                      'pincode',
+                      'country',
                     ]);
                     if (result) {
                       goToNextTab();
@@ -443,17 +454,17 @@ export function ShopEdit() {
               </div>
             </TabsContent>
 
-            <TabsContent value="social">
+            <TabsContent value='social'>
               <Card>
-                <CardContent className="pt-6 space-y-4">
+                <CardContent className='pt-6 space-y-4'>
                   <FormField
                     control={form.control}
-                    name="facebook"
+                    name='facebook'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Facebook</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Enter Facebook URL" />
+                          <Input {...field} placeholder='Enter Facebook URL' />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -462,12 +473,12 @@ export function ShopEdit() {
 
                   <FormField
                     control={form.control}
-                    name="instagram"
+                    name='instagram'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Instagram</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Enter Instagram URL" />
+                          <Input {...field} placeholder='Enter Instagram URL' />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -476,12 +487,12 @@ export function ShopEdit() {
 
                   <FormField
                     control={form.control}
-                    name="twitter"
+                    name='twitter'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Twitter</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Enter Twitter URL" />
+                          <Input {...field} placeholder='Enter Twitter URL' />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -490,12 +501,12 @@ export function ShopEdit() {
 
                   <FormField
                     control={form.control}
-                    name="website"
+                    name='website'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Website</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Enter website URL" />
+                          <Input {...field} placeholder='Enter website URL' />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -503,15 +514,15 @@ export function ShopEdit() {
                   />
                 </CardContent>
               </Card>
-              <div className="mt-4 flex justify-end">
+              <div className='mt-4 flex justify-end'>
                 <Button
-                  type="button"
+                  type='button'
                   onClick={async () => {
                     const result = await form.trigger([
-                      "facebook",
-                      "instagram",
-                      "twitter",
-                      "website",
+                      'facebook',
+                      'instagram',
+                      'twitter',
+                      'website',
                     ]);
                     if (result) {
                       goToNextTab();
@@ -523,29 +534,29 @@ export function ShopEdit() {
               </div>
             </TabsContent>
 
-            <TabsContent value="images">
+            <TabsContent value='images'>
               <Card>
-                <CardContent className="pt-6 space-y-4">
-                  <div className="space-y-4">
+                <CardContent className='pt-6 space-y-4'>
+                  <div className='space-y-4'>
                     <FormLabel>Shop Logo</FormLabel>
                     <ImageUpload
-                      title="Logo"
-                      description="Upload your shop logo"
+                      title='Logo'
+                      description='Upload your shop logo'
                       value={logoFile}
                       onChange={setLogoFile}
                       multiple={false}
-                      className="w-full max-w-md"
+                      className='w-full max-w-md'
                     />
                     <FormField
                       control={form.control}
-                      name="logoAltText"
+                      name='logoAltText'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Logo Alt Text</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
-                              placeholder="Describe the logo for accessibility"
+                              placeholder='Describe the logo for accessibility'
                             />
                           </FormControl>
                           <FormMessage />
@@ -554,26 +565,26 @@ export function ShopEdit() {
                     />
                   </div>
 
-                  <div className="space-y-4">
+                  <div className='space-y-4'>
                     <FormLabel>Banner Image</FormLabel>
                     <ImageUpload
-                      title="Banner"
-                      description="Upload your shop banner"
+                      title='Banner'
+                      description='Upload your shop banner'
                       value={bannerFile}
                       onChange={setBannerFile}
                       multiple={false}
-                      className="w-full max-w-md"
+                      className='w-full max-w-md'
                     />
                     <FormField
                       control={form.control}
-                      name="bannerImageAltText"
+                      name='bannerImageAltText'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Banner Alt Text</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
-                              placeholder="Describe the banner for accessibility"
+                              placeholder='Describe the banner for accessibility'
                             />
                           </FormControl>
                           <FormMessage />
@@ -583,12 +594,12 @@ export function ShopEdit() {
                   </div>
                 </CardContent>
               </Card>
-              <div className="mt-4 flex justify-end">
+              <div className='mt-4 flex justify-end'>
                 <Button
-                  type="submit"
+                  type='submit'
                   disabled={isSubmitting || isLoadingAdmins}
                 >
-                  {isSubmitting ? "Updating..." : "Update Shop"}
+                  {isSubmitting ? 'Updating...' : 'Update Shop'}
                 </Button>
               </div>
             </TabsContent>

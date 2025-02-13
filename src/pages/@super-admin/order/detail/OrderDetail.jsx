@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, MapPin, Phone, Calendar } from 'lucide-react';
-import { OrderStatus, PaymentStatus } from '@/constants';
+import { ORDER_STATUS, OrderStatus, PaymentStatus } from '@/constants';
 import {
   useOrders,
   useUpdateEstimatedDeliveryDate,
@@ -15,6 +15,9 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormLabel } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
 import { format } from 'date-fns';
+import PaymentStatusSelect from '../_components/PaymentStatusSelect';
+import StatusSelect from '../_components/StatusSelect';
+import CopyableText from '@/components/common/CopyableText';
 
 function UpdateEstimatedDeliveryDateComponent({ order }) {
   const { mutate: updateEstimatedDeliveryDate, isPending } =
@@ -106,7 +109,7 @@ export function OrderDetail() {
           <CardContent className='space-y-4'>
             <div className='flex justify-between items-center'>
               <span className='text-muted-foreground'>Order ID</span>
-              <span className='font-medium'>{order?._id}</span>
+              <CopyableText text={order?._id} />
             </div>
             <Separator />
             <div className='flex justify-between items-center'>
@@ -122,6 +125,10 @@ export function OrderDetail() {
                 {order?.payment?.status}
               </Badge>
             </div>
+            <PaymentStatusSelect
+              orderId={order?._id}
+              currentPaymentStatus={order?.payment?.status}
+            />
             <Separator />
             <div className='flex justify-between items-center'>
               <span className='text-muted-foreground'>Order Status</span>
@@ -129,6 +136,7 @@ export function OrderDetail() {
                 {order?.status}
               </Badge>
             </div>
+            <StatusSelect orderId={order?._id} currentStatus={order?.status} />
             <Separator />
             <div className='flex justify-between items-center'>
               <span className='text-muted-foreground'>Payment Method</span>
@@ -166,19 +174,40 @@ export function OrderDetail() {
             <Separator />
             <div className='flex items-center gap-3'>
               <Phone className='w-5 h-5 text-muted-foreground' />
-              <span>{order?.shipping_address?.phone}</span>
+              <CopyableText text={order?.shipping_address?.phone} />
             </div>
             <Separator />
             <div className='flex items-center gap-3'>
               <Calendar className='w-5 h-5 text-muted-foreground' />
               <span>
-                Estimated Delivery:{' '}
-                {new Date(
-                  order?.shipping_details?.estimated_delivery_date
-                ).toLocaleDateString()}
+                {order?.status === ORDER_STATUS.DELIVERED ? (
+                  <>
+                    Delivered On:{' '}
+                    {new Date(
+                      order?.shipping_details?.estimated_delivery_date
+                    ).toLocaleDateString('en-IN', {
+                      day: '2-digit',
+                      month: 'short',
+                      year: 'numeric',
+                    })}
+                  </>
+                ) : (
+                  <>
+                    Estimated Delivery:{' '}
+                    {new Date(
+                      order?.shipping_details?.estimated_delivery_date
+                    ).toLocaleDateString('en-IN', {
+                      day: '2-digit',
+                      month: 'short',
+                      year: 'numeric',
+                    })}
+                  </>
+                )}
               </span>
             </div>
-            <UpdateEstimatedDeliveryDateComponent order={order} />
+            {order?.status !== ORDER_STATUS.DELIVERED && (
+              <UpdateEstimatedDeliveryDateComponent order={order} />
+            )}
           </CardContent>
         </Card>
 

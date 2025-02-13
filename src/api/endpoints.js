@@ -100,4 +100,18 @@ export const API_ENDPOINTS = {
     getCustomerById: (customerId) => `/user/getCustomerById/${customerId}`,
     updateCustomer: (customerId) => `/user/update/${customerId}`,
   },
+  payment: {
+    getAllPayments: '/payment/get',
+    getPaymentById: (paymentId) => `/payment/getById/${paymentId}`,
+    updatePayment: (paymentId) => `/payment/update/${paymentId}`,
+    deletePayment: (paymentId) => `/payment/delete/${paymentId}`,
+  },
+  settings: {
+    getEyongkartInfo: '/eyongkartInfo/get',
+    updateEyongkartInfo: (eyongkartInfoId) =>
+      `/eyongkartInfo/update/${eyongkartInfoId}`,
+    deleteEyongkartInfo: (eyongkartInfoId) =>
+      `/eyongkartInfo/delete/${eyongkartInfoId}`,
+    createEyongkartInfo: '/eyongkartInfo/create',
+  },
 };

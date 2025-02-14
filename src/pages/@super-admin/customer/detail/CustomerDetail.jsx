@@ -17,7 +17,7 @@ import { useGetAllCustomers } from '@/features/customer/hooks/useCustomer';
 import { Loader } from '@/components/common/loader';
 import { CloudinaryConfig } from '../../../../../Cloudinary';
 import { ROUTES } from '@/constants/routes';
-
+import CopyableText from '@/components/common/CopyableText';
 export function CustomerDetail() {
   const { customerId } = useParams();
   const navigate = useNavigate();
@@ -89,24 +89,34 @@ export function CustomerDetail() {
             </div>
             <div className='flex items-center gap-3'>
               <Phone className='w-5 h-5 text-muted-foreground' />
-              <span>{customer?.phone}</span>
+              <span>
+                <CopyableText text={customer?.phone} />
+              </span>
             </div>
             <div className='flex items-center gap-3'>
               <Calendar className='w-5 h-5 text-muted-foreground' />
               <span>
                 Member since:{' '}
-                {new Date(customer?.createdAt)?.toLocaleDateString()}
+                {new Date(customer?.createdAt)?.toLocaleDateString('en-IN', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric',
+                })}
               </span>
             </div>
             <Separator />
             <div className='flex justify-between items-center'>
               <span className='text-muted-foreground'>Customer ID</span>
-              <span className='font-medium'>{customer?._id}</span>
+              <span className='font-medium'>
+                <CopyableText text={customer?._id} />
+              </span>
             </div>
-            {customer.googleId && (
+            {customer?.googleId && (
               <div className='flex justify-between items-center'>
                 <span className='text-muted-foreground'>Google ID</span>
-                <span className='font-medium'>{customer?.googleId}</span>
+                <span className='font-medium'>
+                  <CopyableText text={customer?.googleId} />
+                </span>
               </div>
             )}
           </CardContent>

@@ -5,8 +5,9 @@ import {
   SelectContent,
   SelectItem,
 } from '@/components/ui/select';
-import { PAYMENT_STATUS } from '@/constants';
+import { PAYMENT_STATUS, UI_COLORS } from '@/constants';
 import { useUpdatePaymnetStatus } from '@/features/orders/hooks/useOrders';
+import { CreditCard } from 'lucide-react';
 
 const PaymentStatusSelect = ({ orderId, currentPaymentStatus }) => {
   const { mutate: updatePaymentStatus } = useUpdatePaymnetStatus();
@@ -16,10 +17,28 @@ const PaymentStatusSelect = ({ orderId, currentPaymentStatus }) => {
     updatePaymentStatus({ orderId, paymentStatus });
   };
 
+  const selectStyle =
+    currentPaymentStatus === PAYMENT_STATUS.PENDING
+      ? UI_COLORS.warning
+      : currentPaymentStatus === PAYMENT_STATUS.FAILED
+      ? UI_COLORS.destructive
+      : currentPaymentStatus === PAYMENT_STATUS.COMPLETED
+      ? UI_COLORS.success
+      : currentPaymentStatus === PAYMENT_STATUS.REFUNDED
+      ? UI_COLORS.info
+      : UI_COLORS.secondary;
+
   return (
     <Select onValueChange={handlePaymentStatusChange}>
-      <SelectTrigger>
-        <SelectValue placeholder={currentPaymentStatus} />
+      <SelectTrigger className={`${selectStyle}`}>
+        <SelectValue
+          placeholder={
+            <span className='flex items-center gap-2'>
+              <CreditCard className='mr-1' size={18} />
+              {currentPaymentStatus}
+            </span>
+          }
+        />
       </SelectTrigger>
       <SelectContent>
         {Object.values(PAYMENT_STATUS).map((paymentStatus) => (

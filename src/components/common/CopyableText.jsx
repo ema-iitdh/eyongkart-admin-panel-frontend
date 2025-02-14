@@ -17,10 +17,21 @@ export default function CopyableText({ text }) {
   };
 
   return (
-    <div className='flex items-center flex-wrap  gap-2'>
-      <span className='font-bold text-muted-foreground break-words w-full'>
-        {text}
-      </span>
+    <div className='flex items-center  gap-2'>
+      <TooltipProvider delayDuration={0}>
+        <Tooltip>
+          <TooltipTrigger>
+            <span className='font-bold tracking-wider text-gray-700 break-words w-full'>
+              {text.length > 12
+                ? `${text.slice(0, 3)}...${text.slice(-3)}`
+                : text}
+            </span>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{text}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       <TooltipProvider delayDuration={0}>
         <Tooltip>
           <TooltipTrigger>

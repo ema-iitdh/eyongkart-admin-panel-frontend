@@ -3,13 +3,10 @@ import { ROUTES } from '@/constants/routes';
 import { Link } from 'react-router-dom';
 import StatusSelect from '../_components/StatusSelect';
 import PaymentStatusSelect from '../_components/PaymentStatusSelect';
+import CopyableText from '@/components/common/CopyableText';
+import { Phone } from 'lucide-react';
 
 export const orderColumns = [
-  {
-    accessorKey: '_id',
-    header: 'Order ID',
-    enableSorting: true,
-  },
   {
     accessorKey: 'shipping_address.full_name',
     header: 'Customer Name',
@@ -18,12 +15,26 @@ export const orderColumns = [
   {
     accessorKey: 'shipping_address.phone',
     header: 'Customer Phone',
+    cell: ({ row }) => (
+      <span className='flex items-center gap-1'>
+        <Phone size={18} />
+        <CopyableText text={row.original.shipping_address.phone} />
+      </span>
+    ),
     enableSorting: true,
   },
   {
     accessorKey: 'createdAt',
     header: 'Order Date',
-    cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
+    cell: ({ row }) =>
+      new Date(row.original.createdAt).toLocaleDateString('en-IN', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+      }),
     enableSorting: true,
   },
   {
@@ -40,7 +51,11 @@ export const orderColumns = [
   {
     accessorKey: 'amount',
     header: 'Total Amount',
-    cell: ({ row }) => `₹${row.original.amount.toFixed(2)}`,
+    cell: ({ row }) => (
+      <span className='font-bold text-lg'>
+        ₹{row.original.amount.toFixed(2)}
+      </span>
+    ),
     enableSorting: true,
   },
   {
@@ -53,6 +68,12 @@ export const orderColumns = [
       />
     ),
     enableSortning: true,
+  },
+  {
+    accessorKey: '_id',
+    header: 'Order ID',
+    cell: ({ row }) => <CopyableText text={row.original._id} />,
+    enableSorting: true,
   },
   {
     id: 'actions',

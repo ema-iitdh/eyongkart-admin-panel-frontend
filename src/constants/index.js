@@ -70,6 +70,20 @@ export const PRODUCT_VARIANT_STATUS = {
   LOW_STOCK: 'low_stock',
 };
 
+export const UI_COLORS = {
+  success:
+    'bg-green-400 hover:bg-green-500 text-gray-800 transition-colors duration-200 tracking-wider',
+  warning:
+    'bg-yellow-400 hover:bg-yellow-500 text-gray-800 transition-colors duration-200 tracking-wider',
+  destructive:
+    'bg-red-400 hover:bg-red-500 text-gray-800 transition-colors duration-200 tracking-wider',
+  info: 'bg-blue-600 hover:bg-blue-500 text-slate-100 transition-colors duration-200 tracking-wider',
+  secondary:
+    'bg-gray-600 hover:bg-gray-500 text-slate-100 transition-colors duration-200 tracking-wider',
+  primary:
+    'bg-primary hover:bg-primary/90 text-white transition-colors duration-200 tracking-wider  ',
+};
+
 export const PAYMENT_TYPE = {
   COD: 'COD',
   ONLINE_PAYMENT: 'Online Payment',

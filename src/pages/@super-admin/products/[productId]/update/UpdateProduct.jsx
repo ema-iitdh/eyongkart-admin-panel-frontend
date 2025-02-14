@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import {
   useProductById,
   useUpdateProduct,
@@ -31,10 +31,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 import { CloudinaryConfig } from '../../../../../../Cloudinary';
 import { useDropzone } from 'react-dropzone';
-import { PlusCircle, Trash2, Upload } from 'lucide-react';
+import { ArrowLeft, PlusCircle, Trash2, Upload } from 'lucide-react';
 import { useGetAllCategories } from '@/features/categories/hooks/useCategory';
 import { useGetSubcategoryByCategoryId } from '@/features/subcategories/hooks/useSubcategory';
 import { useGetAllShops } from '@/features/shop/hooks/useShop';
+import { ROUTES } from '@/constants/routes';
 
 const productSchema = z.object({
   name: z.string().min(3, 'Product name must be at least 3 characters'),
@@ -432,6 +433,13 @@ export default function UpdateProduct() {
 
   return (
     <div className='container mx-auto py-6 space-y-6'>
+      {/* Back Button */}
+      <Link to={ROUTES.PRODUCTS.getDetailsLink(productId)} replace>
+        <Button variant='outline' size='sm'>
+          <ArrowLeft className='w-4 h-4 mr-2' />
+          Back
+        </Button>
+      </Link>
       <div className='flex items-center justify-between'>
         <h1 className='text-3xl font-bold'>Update Product</h1>
       </div>

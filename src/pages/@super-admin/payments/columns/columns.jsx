@@ -1,22 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { PAYMENT_STATUS } from '@/constants';
+import { PAYMENT_STATUS, UI_COLORS } from '@/constants';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
+import CopyableText from '@/components/common/CopyableText';
+import { Phone } from 'lucide-react';
 
 export const paymentColumns = [
-  {
-    accessorKey: '_id',
-    header: 'Payment ID',
-  },
-  {
-    accessorKey: 'order._id',
-    header: 'Order ID',
-  },
-  {
-    accessorKey: 'userId',
-    header: 'User ID',
-  },
   {
     accessorKey: 'order.shipping_address.full_name',
     header: 'User Name',
@@ -24,6 +14,12 @@ export const paymentColumns = [
   {
     accessorKey: 'order.shipping_address.phone',
     header: 'User Phone',
+    cell: ({ row }) => (
+      <span className='flex items-center gap-1'>
+        <Phone size={18} />
+        <CopyableText text={row.original.order.shipping_address.phone} />
+      </span>
+    ),
   },
   {
     accessorKey: 'order.shipping_address.email',
@@ -32,6 +28,11 @@ export const paymentColumns = [
   {
     accessorKey: 'amount',
     header: 'Amount',
+    cell: ({ row }) => (
+      <span className='font-bold text-lg tracking-wider'>
+        ₹{row.original.amount}
+      </span>
+    ),
   },
   {
     accessorKey: 'paymentMethod',
@@ -44,19 +45,19 @@ export const paymentColumns = [
       const status = row.original.status;
       return (
         <Badge
-          variant={
+          className={`${
             status === PAYMENT_STATUS.COMPLETED
-              ? 'default'
+              ? UI_COLORS.success
               : status === PAYMENT_STATUS.FAILED
-              ? 'destructive'
+              ? UI_COLORS.destructive
               : status === PAYMENT_STATUS.PENDING
-              ? 'warning'
+              ? UI_COLORS.warning
               : status === PAYMENT_STATUS.REFUNDED
-              ? 'secondary'
+              ? UI_COLORS.info
               : status === PAYMENT_STATUS.CANCELLED
-              ? 'destructive'
-              : 'outline'
-          }
+              ? UI_COLORS.destructive
+              : UI_COLORS.default
+          }`}
         >
           {status}
         </Badge>
@@ -69,8 +70,11 @@ export const paymentColumns = [
     cell: ({ row }) =>
       new Date(row.original.createdAt).toLocaleDateString('en-IN', {
         day: '2-digit',
-        month: '2-digit',
+        month: 'short',
         year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
       }),
   },
   {
@@ -79,9 +83,32 @@ export const paymentColumns = [
     cell: ({ row }) =>
       new Date(row.original.updatedAt).toLocaleDateString('en-IN', {
         day: '2-digit',
-        month: '2-digit',
+        month: 'short',
         year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
       }),
+  },
+  {
+    accessorKey: '_id',
+    header: 'Payment ID',
+    cell: ({ row }) => <CopyableText text={row.original._id} />,
+  },
+  {
+    accessorKey: 'order._id',
+    header: 'Order ID',
+    cell: ({ row }) => <CopyableText text={row.original.order._id} />,
+  },
+  {
+    accessorKey: 'userId',
+    header: 'User ID',
+    cell: ({ row }) => <CopyableText text={row.original.userId} />,
+  },
+  {
+    accessorKey: 'transactionId',
+    header: 'Transaction ID',
+    cell: ({ row }) => <CopyableText text={row.original.transactionId} />,
   },
   {
     accessorKey: 'actions',

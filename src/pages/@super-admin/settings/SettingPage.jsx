@@ -106,7 +106,7 @@ const CompanyInfoSection = ({ form }) => (
         <FormItem>
           <FormLabel>Company Description</FormLabel>
           <FormControl>
-            <Textarea {...field} />
+            <Textarea rows={5} {...field} />
           </FormControl>
           <FormMessage />
         </FormItem>
@@ -258,7 +258,7 @@ const OtherInfoSection = ({ form }) => (
         <FormItem>
           <FormLabel>Newsletter Description</FormLabel>
           <FormControl>
-            <Textarea {...field} />
+            <Textarea rows={5} {...field} />
           </FormControl>
           <FormMessage />
         </FormItem>

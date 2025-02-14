@@ -1,13 +1,10 @@
 import { ROUTES } from '@/constants/routes';
 import { Button } from '@/components/ui/button';
-import { Eye } from 'lucide-react';
+import { Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import CopyableText from '@/components/common/CopyableText';
 
 export const shopColumns = [
-  {
-    accessorKey: '_id',
-    header: 'Shop ID',
-  },
   {
     accessorKey: 'name',
     header: 'Shop Name',
@@ -27,6 +24,17 @@ export const shopColumns = [
   {
     accessorKey: 'contactPhone',
     header: 'Phone',
+    cell: ({ row }) => (
+      <span className='flex items-center gap-1'>
+        <Phone size={18} />
+        <CopyableText text={row.original.contactPhone} />
+      </span>
+    ),
+  },
+  {
+    accessorKey: '_id',
+    header: 'Shop ID',
+    cell: ({ row }) => <CopyableText text={row.original._id} />,
   },
   {
     id: 'actions',

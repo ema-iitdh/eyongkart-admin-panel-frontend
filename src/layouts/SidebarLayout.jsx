@@ -17,12 +17,14 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useSidebarStore } from '@/store/useSidebarStore';
 import { Menu, User } from 'lucide-react';
 import { Suspense, useLayoutEffect, useState } from 'react';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 function SuperAdminHeader() {
   const { mutate: logout, isPending } = useLogout();
   const { toggleSidebar } = useSidebarStore();
 
+  const navigate = useNavigate();
+  
   return (
     <header className='sticky top-0 z-50 w-full h-14 bg-background/95 border-b backdrop-blur supports-[backdrop-filter]:bg-background/60'>
       <div className='flex h-full items-center px-4 justify-between'>
@@ -43,6 +45,7 @@ function SuperAdminHeader() {
             <DropdownMenuItem
               onSelect={() => {
                 /* Navigate to profile settings */
+                navigate(ROUTES.SETTINGS.getRootLink())
               }}
             >
               Profile Settings
